@@ -1,0 +1,14 @@
+import(methods)
+importFrom(graphics, plot)
+exportPattern("^[[:alpha:]]+")
+
+exportMethods(
+    "coerce",
+    "plot",
+    "show",
+    "getOmega"
+)
+exportClasses(
+    "actuarialtable",
+     "lifetable" 
+)

@@ -1,0 +1,61 @@
+
+\documentclass[a4paper]{article}
+\usepackage[OT1]{fontenc}
+\usepackage{Sweave}
+\usepackage{myVignette}
+%\bibliographystyle{plainnat}
+%\VignetteIndexEntry{An introduction to lifecontingencies package}
+%\VignetteKeywords{vig1}
+%\VignettePackage{lifecontingencies}
+\begin{document}
+
+\title{An introduction to lifecontingencies package}
+\author{Giorgio A. Spedicato}
+
+\maketitle
+
+\section{Overview}
+I've decided to submit to the cran package to perform life contingencies calculation in order to fill a current
+lack within the CRAN archive. I will fill this  vignette further, nevertheless I anticipate the structure:
+
+\begin{enumerate}
+	\item Section \ref{sec:package} provides an overview of R usage within actuarial 
+	fields and describes the package structure.
+	\item Section \ref{sec:examples} gives a wide choice of lifecontingencies packages example.
+	\item Finally section \label{sec:discussion} will provide a discussion of results and further potential
+	developments.
+
+\end{enumerate}
+
+\section{Lifecontingencies package description} \label{sec:package}
+
+\subsection{Current R actuarial packages}
+
+
+\subsection{The structure of the package}
+
+\clearpage
+\newpage
+
+
+\section{Examples} \label{sec:examples}
+
+\subsection{Classical financial mathematics example}
+
+\subsection{Working with lifetable objects}
+
+\subsection{Classical actuarial mathematics examples}
+
+\subsection{A thorough examples}
+
+\clearpage
+\newpage
+
+\section{Discussion} \label{sec:discussion}
+
+\subsection{Analysis of software capabilities}
+\subsection{Prospective developments}
+
+%\bibliography{packagebiblio}
+
+\end{document}
