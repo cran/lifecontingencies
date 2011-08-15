@@ -1,4 +1,10 @@
 CHANGELOG
+-Version 0.0.2
+	Specific interest rate can be given directly to the actuarial life contingencies functions that override lifetable one
+	Update Axn for fractional ages
+	pxn function now allows non integer x
+	correct coerce methods to data.frame
+	Some minor changes in the documentation
 
 -Version 0.0.1
 	First version of life contingencies

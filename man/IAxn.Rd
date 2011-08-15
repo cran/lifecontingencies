@@ -9,7 +9,7 @@ This function evaluate the actuarial value of capital increasing
 life insurance. The amount payable at the end of year of death are: \eqn{1, 2, \ldots, n-1, n}. N can be set as \eqn{\omega-x-1}.
 }
 \usage{
-IAxn(actuarialtable, x, n, m = 0, type = "EV")
+IAxn(actuarialtable, x, n,i, m = 0, type = "EV")
 }
 \arguments{
   \item{actuarialtable}{
@@ -20,6 +20,9 @@ The age of the insured.
 }
   \item{n}{
 The term of life insurance. If missing it is assumed to be whole - life.
+}
+\item{i}{
+	Interest rate (overrides the interest rate of the actuarial table object).
 }
   \item{m}{
 The deferring period. If missing m=0

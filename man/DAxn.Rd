@@ -9,7 +9,7 @@
 	stochastic value can be obtained.
 }
 \usage{
-	DAxn(actuarialtable, x, n, m = 0, type = "EV")
+	DAxn(actuarialtable, x, n, i,m = 0, type = "EV")
 }
 
 \arguments{
@@ -17,10 +17,13 @@
 	An actuarial table object.
 }
   \item{x}{
-	Age of the annuity.
+	Age of the insured.
 }
   \item{n}{
-	Number of termso the annuity, if missing annuity is intended to last until death.
+	Insurance periods length.
+}
+  \item{i}{
+	Interest rate (overrides the interest rate of the actuarial table object).
 }
   \item{m}{
 	Postponement period, even fractional, if missing assumed to be 1.
@@ -58,13 +61,13 @@
 \code{\link{Axn}}, \code{\link{IAxn}}
 }
 \examples{
-%	\dontrun{
+
 		#assumes SOA example life table to be load
 		data(soaLt)
 		soa08Act=with(soaLt, new("actuarialtable",interest=0.06,
 		x=x,lx=Ix,name="SOA2008"))
 		#evaluate the value of a 10 years decreasing term life insurance for an aged 25
 		DAxn(actuarialtable=soa08Act, x=25, n=10) 
-%	}
+
 }
 

@@ -9,7 +9,7 @@ Annuity immediate and due function.
 	evaluated.	Moreover it can be used to simulate the stochastic distribution of the annuity value.
 }
 \usage{
-	axn(actuarialtable, x, n, m, k = 1, type = "EV")
+	axn(actuarialtable, x, n, i, m,  k = 1, type = "EV")
 }
 	
 \arguments{
@@ -20,7 +20,10 @@ Annuity immediate and due function.
 	Age of the annuity.
 }
   \item{n}{
-	Number of termso the annuity, if missing annuity is intended to last until death.
+	Number of terms of the annuity, if missing annuity is intended to last until death.
+}
+  \item{i}{
+	Interest rate (overrides the interest rate of the actuarial table object).
 }
   \item{m}{
 	Postponement period, even fractional, if missing assumed to be 1.
@@ -53,13 +56,13 @@ Annuity immediate and due function.
 	\code{\link{annuity}}, \code{\link{Exn}}
 }
 \examples{
-%	\dontrun{
+
 		#assumes SOA example life table to be load
 		data(soaLt)
 		soa08Act=with(soaLt, new("actuarialtable",interest=0.06,
 		x=x,lx=Ix,name="SOA2008"))
 		#evaluate and life-long annuity for an aged 65
 		axn(soa08Act, x=65) 
-%	}
+
 }
 

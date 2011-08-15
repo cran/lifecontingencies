@@ -8,7 +8,7 @@
 	Given an actuarial table, this function evaluate the pure endowment. 
 }
 \usage{
-Exn(actuarialtable, x, n, type = "EV")
+Exn(actuarialtable, x, n, i, type = "EV")
 }
 
 \arguments{
@@ -16,10 +16,13 @@ Exn(actuarialtable, x, n, type = "EV")
 	An actuarial table object.
 }
   \item{x}{
-	Age of the annuity.
+	Age of the insured.
 }
   \item{n}{
-	Number of termso the annuity, if missing annuity is intended to last until death.
+	Length of the pure endowment.
+}
+  \item{i}{
+	Interest rate (overrides the interest rate of the actuarial table object)
 }
   \item{type}{
 	A string, eithed "EV" (default value),  "ST" (stocastic realization) or "VR" if the value of the variance is needed.
@@ -49,14 +52,14 @@ Giorgio A. Spedicato
 \code{\link{axn}}
 }
 \examples{
-%	\dontrun{
+
 		#assumes SOA example life table to be load
 		data(soaLt)
 		soa08Act=with(soaLt, new("actuarialtable",interest=0.06,
 		x=x,lx=Ix,name="SOA2008"))
 		#evaluate the pure endowment for a man aged 30 for a time span of 35
 		Exn(soa08Act, x=30, n=35) 
-%	}
+
 
 }
 

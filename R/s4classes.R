@@ -7,7 +7,7 @@ setClass("lifetable", #classe lifetable
 		representation(x="numeric",lx="numeric",name="character"),
 		prototype(x=c(0,1,2,3),
 				lx=c(100,90,50,10),
-				name="GenericLifeTable"
+				name="Generic life table"
 					)
 		)
 #actuarial classes

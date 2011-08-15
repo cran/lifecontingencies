@@ -5,10 +5,10 @@
 	Function to evaluate life insurance.
 }
 \description{
-	This function evaluates life insurance payable at the moment of deaths.
+	This function evaluates n-year term life insurance and whole life.
 }
 \usage{
-	Axn(actuarialtable, x, n, m, type = "EV")
+	Axn(actuarialtable, x, n, i,m, k=1, type = "EV")
 }
 
 \arguments{
@@ -16,16 +16,22 @@
 	An actuarial table object.
 }
   \item{x}{
-	Age of the annuity.
+	Age of the insured.
 }
   \item{n}{
-	Number of termso the annuity, if missing annuity is intended to last until death.
+	Duration of insurance, if missing the insurance is considered whole life \eqn{n=\omega-x-m-1}
+}
+  \item{i}{
+	Interest rate (overrides the interest rate of the actuarial table object).
 }
   \item{m}{
-	Postponement period, even fractional, if missing assumed to be 1.
+	Deferring period, even fractional, if missing assumed to be 0.
+}
+  \item{k}{
+	Number of periods per year, default=1.
 }
   \item{type}{
-	A string, eithed "EV" (default value) or "ST".
+	A string, either "EV" (default value) or "ST".
 }
 }
 \details{
@@ -43,7 +49,8 @@
 	Giorgio A. Spedicato
 }
 \note{
-	Stochastic calculations have not been implemented yet in case of payments at the end of the month of death.
+	The accuracy of stochastic simulation is questionable. It will be checked with details in 
+	successive releases of the package.
 }
 
 
@@ -57,13 +64,19 @@
 	\code{\link{axn}}, \code{\link{Exn}}
 }
 \examples{
-	\dontrun{
+	
 		#assumes SOA example life table to be load
 		data(soaLt)
 		soa08Act=with(soaLt, new("actuarialtable",interest=0.06,
 		x=x,lx=Ix,name="SOA2008"))
 		#evaluate the value of a 40 years term life insurance for an aged 25
 		Axn(actuarialtable=soa08Act, x=25, n=40) 
-	}
+		#check an actuarial relevant relationship
+		k=12
+		i=0.06
+		j=k*((1+i)^(1/k)-1)
+		Axn(soa08Act, 30,k=12)
+		i/j*Axn(soa08Act, 30,k=1)
+	
 }
 

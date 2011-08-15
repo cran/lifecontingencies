@@ -16,18 +16,6 @@ setValidity("lifetable",
 )
 
 
-#set method for number of deaths	
-#setGeneric("dxt",function(object, x, t) standardGeneric("dxt"))
-#setMethod("dxt",signature("lifetable"), function(object,x,t){
-#			if(missing(x)) stop("Error! Missing x")
-#			if(missing(t)) t=1
-#			omega=max(object@x)+1
-#			lx=object@lx[which(object@x==x)]
-#			if((x+t)>=omega) out=lx else
-#				out=lx-object@lx[which(object@x==t+x)]
-#			return(out)
-#		}
-#)
 
 dxt<-function(object, x, t) {
 	#checks
@@ -42,27 +30,6 @@ dxt<-function(object, x, t) {
 	return(out)
 }
 
-#sets method for survival probability
-
-#setGeneric("pxt", function(object,x,t) standardGeneric("pxt"))
-#setMethod("pxt",signature("lifetable"),function(object,x,t)
-#		{
-#			if(missing(x)) stop("Missing x")
-#			if(any(x<0,t<0)) stop("Check x or t domain")
-#			if(missing(t)) t=1 #default 1
-#			omega=max(object@x)+1 #gets omega
-#			if((x+t)>=omega) out=0 else  #linearly interpolates if fractional age
-#				{ if((t%%1)==0) out=object@lx[which(object@x==t+x)]/object@lx[which(object@x==x)] else {
-#				  ph=object@lx[which(object@x==ceiling(t+x))]/object@lx[which(object@x==x)]
-#				  pl=object@lx[which(object@x==floor(t+x))]/object@lx[which(object@x==x)]		
-#				  z=t%%1
-#				  out=z*ph+(1-z)*pl
-#				}			
-#			}
-#		return(out)
-#		}
-#	)
-
 
 pxt<-function(object, x, t)
 {
@@ -72,7 +39,14 @@ pxt<-function(object, x, t)
 	if(missing(x)) stop("Missing x")
 	if(any(x<0,t<0)) stop("Check x or t domain")
 	if(missing(t)) t=1 #default 1
-	omega=max(object@x)+1 #gets omega
+	omega=getOmega(object)
+	#if the starting age is fractional apply probability laws
+	if((x-floor(x))>0) {
+		integerAge=floor(x)
+		excess=x-floor(x)
+		out=pxt(object=object, x=integerAge,t=excess+t)/pxt(object=object, x=integerAge,t=excess)
+		return(out)
+	}
 	if((x+t)>=omega) out=0 else  #linearly interpolates if fractional age
 	{ if((t%%1)==0) out=object@lx[which(object@x==t+x)]/object@lx[which(object@x==x)] else {
 			ph=object@lx[which(object@x==ceiling(t+x))]/object@lx[which(object@x==x)]
@@ -156,7 +130,22 @@ exn<-function(object,x,n) {
 	return(out)
 }
 
-
+#function to create lifetable cols
+.createLifeTableCols<-function(object)
+{
+	omega<-length(object@lx)+1
+	#vector used to obtain px
+	lxplus<-object@lx[2:length(object@lx)]
+	lxplus<-c(lxplus,0)
+	#ex
+	lenlx=length(object@lx)
+	Tx=numeric(lenlx)
+	for(i in 1:lenlx) Tx[i]=sum(object@lx[i:lenlx])
+	out<-data.frame(x=object@x, lx=object@lx,px=lxplus/object@lx, 
+			ex=Tx/object@lx)
+	rownames(out)=NULL
+	return(out)
+}
 
 #show method 4 lifetable: prints x, lx, px, ex
 setMethod("show","lifetable", #metodo show
@@ -164,52 +153,47 @@ setMethod("show","lifetable", #metodo show
 			cat(paste("Life table",object@name),"\n")
 			cat("\n")
 			#get omega
-			omega<-length(object@lx)+1
-			#vector used to obtain px
-			lxplus<-object@lx[2:length(object@lx)]
-			lxplus<-c(lxplus,0)
-			#ex
-			lenlx=length(object@lx)
-			Tx=numeric(lenlx)
-			for(i in 1:lenlx) Tx[i]=sum(object@lx[i:lenlx])
-			
-			out<-data.frame(x=object@x, lx=object@lx,px=lxplus/object@lx, 
-					ex=Tx/object@lx)
-			rownames(out)=NULL
+			out<-.createLifeTableCols(object)
 			print(out)
 			cat("\n")
 		}
 		)
+#internal function to create the actuarial table object
+.createActuarialTableCols<-function(object)
+{
+	omega<-length(object@lx)+1
+	#vector used to obtain px
+	lxplus<-object@lx[2:length(object@lx)]
+	lxplus<-c(lxplus,0)
+	#Dx
+	Dx=object@lx*(1+object@interest)^(-object@x)
+	lnDx=length(Dx)
+	#Cx
+	dx=object@lx-lxplus
+	Cx=dx*(1+object@interest)^(-object@x-1)	
+	#Nx
+	Nx=numeric(length(Dx))
+	for(i in 1:length(Dx)) Nx[i]=sum(Dx[i:lnDx])
+	#Mx
+	Mx=Dx-(object@interest/(1+object@interest))*Nx
+	#Rx
+	Rx=numeric(length(Mx))
+	lnMx=length(Mx)
+	for(i in 1:length(Rx)) Rx[i]=sum(Mx[i:lnMx])
+	out<-data.frame(x=object@x, lx=object@lx, Dx=Dx, Nx=Nx, Cx=Cx,
+			Mx=Mx, Rx=Rx)
+	rownames(out)=NULL
+	return(out)
+	
+}
 		
 setMethod("show","actuarialtable", #metodo show
 				function(object){
 					out<-NULL
 					cat(paste("Actuarial table ",object@name, "interest rate ", object@interest*100,"%"),"\n")
 					cat("\n")
-					#get omega
-					omega<-length(object@lx)+1
-					#vector used to obtain px
-					lxplus<-object@lx[2:length(object@lx)]
-					lxplus<-c(lxplus,0)
-					#Dx
-					Dx=object@lx*(1+object@interest)^(-object@x)
-					lnDx=length(Dx)
-					#Cx
-					dx=object@lx-lxplus
-					Cx=dx*(1+object@interest)^(-object@x-1)
-				
-					#Nx
-					Nx=numeric(length(Dx))
-					for(i in 1:length(Dx)) Nx[i]=sum(Dx[i:lnDx])
-					#Mx
-					Mx=Dx-(object@interest/(1+object@interest))*Nx
-					#Rx
-					Rx=numeric(length(Mx))
-					lnMx=length(Mx)
-					for(i in 1:length(Rx)) Rx[i]=sum(Mx[i:lnMx])
-					out<-data.frame(x=object@x, lx=object@lx, Dx=Dx, Nx=Nx, Cx=Cx,
-					Mx=Mx, Rx=Rx
-								)					
+					#create the actuarial table object
+					out<-.createActuarialTableCols(object=object)
 					print(out)
 					cat("\n")
 				}
@@ -225,21 +209,14 @@ setMethod("plot","lifetable",
 #saves lifeTableObj as data frame
 setAs("lifetable","data.frame",
 		function(from){
-			out<-data.frame(x=from@x, 
-			lx=from@lx
-			#,px=from@px
-			#,ex=from@ex
-			)
+			out<-.createLifeTableCols(object=from)
 			return(out)
 		}
 )
 #saves actuarialtable as data frame (have same slots as life - table)
 setAs("actuarialtable","data.frame",
 		function(from){
-			out<-data.frame(x=from@x, 
-			lx=from@lx
-			#,ex=from@ex
-			)
+			out<-.createActuarialTableCols(object=from)
 			return(out)
 		}
 )

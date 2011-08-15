@@ -1,0 +1,183 @@
+
+\documentclass[a4paper]{article}
+\usepackage[OT1]{fontenc}
+\usepackage{Sweave}
+\usepackage{graphicx}
+\usepackage{myVignette}
+%\bibliographystyle{plainnat}
+%\VignetteIndexEntry{An introduction to lifecontingencies package}
+%\VignetteKeywords{vig1}
+%\VignettePackage{lifecontingencies}
+\begin{document}
+
+
+
+\title{An introduction to lifecontingencies package}
+\author{Giorgio A. Spedicato}
+
+\maketitle
+
+\section{Overview}
+I've decided to submit to the cran package to perform life contingencies calculation in order to fill a current
+lack within the CRAN archive. I will fill this  vignette further, nevertheless I anticipate the structure:
+
+\begin{enumerate}
+	\item Section \ref{sec:package} provides an overview of R usage within actuarial 
+	fields and describes the package structure.
+	\item Section \ref{sec:examples} gives a wide choice of lifecontingencies packages example.
+	\item Finally section \label{sec:discussion} will provide a discussion of results and further potential
+	developments.
+\end{enumerate}
+
+Please note these vignette are a work in progress.
+
+\section{Lifecontingencies package description} \label{sec:package}
+
+\subsection{Current R actuarial packages}
+R \cite{rSoftware} represents a powerful enviromnent for statistical analysis and simulation. Thus many packages 
+dedicated to P\&C actuarial software have been available from some years. Among those we shall cite:
+\begin{itemize}
+	\item The package \textbf{actuar} \cite{Dutang2008} provides functions to fit relevant loss distribution and perform credibility 
+	analysis. It represents the computational side of the classical book \cite{lossDistributions}.
+	\item The package \textbf{chainladder} \cite{chainLadder} provides functions to estimate non-life loss reserve.
+\end{itemize}
+The choice of statistical functions to perform rate - making is more wide as R provides a wide range of statistical function to 
+perform classification and predictive modelling task (e.g. GLMs, data - mining techniques) performed by pricing actuaries.\\
+
+Life actuaries works more with demographic and financial data. While R has a dedicated view to packages dedicated to financial analysis and 
+few packages exists to perform demographic analysis (see for examples \cite{demography}) as of August 2011 no package exists to perform 
+life contingencies calculation.\\
+This is the reason I dediced to write functions to perform life contingencies calculation, even if my professional histories lies in the non-life 
+side by far.\\
+
+
+\subsection{The structure of the package}
+
+The package contains R function, classes and methods to perform classical financial mathematics calculations, working with 
+lifetable objects and classical life contingencies calculations.\\
+Demos and vignettes (like this document) are also available.\\
+
+The package is load within the R working environment as follows:
+
+<<>>=
+	library(lifecontingencies)
+@
+
+
+
+\clearpage
+\newpage
+
+
+\section{Examples} \label{sec:examples}
+
+\subsection{Classical financial mathematics example}
+
+Two examples will show classical financial mathematics applications of package lifecontingencies. The 
+amortization of a loan and a savings account projection.\\
+
+\subsubsection{Loan amortization}
+
+<<capital amortization>>=
+capital=100000
+interest=0.05 #assume 5% of interest
+payments_per_year=2 #montly paymentsa
+effectiveRate=(1+interest)^(1/payments_per_year)-1
+years=10 #ten years length of the loan
+installment=capital/annuity(i=effectiveRate, periods=years*payments_per_year)
+installment	
+#compute the balance fue
+balance_due=numeric(years*payments_per_year)
+balance_due[1]=capital*(1+effectiveRate)-installment
+for(i in 2:length(balance_due)) 
+{
+	balance_due[i]=balance_due[i-1]*(1+effectiveRate)-installment
+	cat("Payment ",i, " balance due:",round(balance_due[i]),"\n")
+}
+
+@
+
+\subsubsection{Saving account projection}
+
+<<savings account projection>>=
+	#assume the bank will grant a yearly interest of 2.5% on effectively 
+	#invested amounts
+	#the bank will charge a service charge of $1 and a service fee of 
+	#0.01 on the amount between 0 and 100, 0.005 on the amounts between 100 and 150 and 0 thereafter
+
+
+	cumulatedSavings<-function(amount, rate, periods)
+	{
+		service_charge=1
+		service_fee=(0.01*min(100,amount)+0.005*max(0,min(50,amount-100)))
+		invested_amount=amount-service_charge-service_fee
+		out=invested_amount*accumulatedValue(interestRates=rate, periods=periods)
+		return(out)
+	}
+	
+	savings_sequence=seq(from=50, to=300, by=10) #possible montly savings
+	periods=30*12 #suppose 30 years of savings
+	yearly_rate=0.025 #suppose a APR of 2.5 that is a 
+	montly_effective_rate=(1+yearly_rate)^(1/12)-1
+	
+	cumulated_value=sapply(savings_sequence, cumulatedSavings, montly_effective_rate, periods)
+	#plot(savings_sequence, cumulated_value, type="l")	
+@
+
+\subsection{Working with lifetable and actuarial table objects}
+
+Lifetable objects represent the basic class designed to handle life table calculations needed to evaluate
+life contingencies. Actuarialtable class inherits from lifetable class.\\
+Both have been designed using the S4 class framework.
+To build a lifetable class object three items are needed:
+\begin{enumerate}
+	\item The years sequence, that is an integer sequence $0,1,\ldots, \omega-1$. It shall starts from zero and going 
+	to the $\omega-1$ age (the age $x$ as $p_x=0$).
+	\item The $l_x$ vector, that is the number of subjects living at the beginning of age $x$.
+	\item The name of the life table.
+\end{enumerate}
+
+<<create a lifecontingencies object>>=
+	x_example=seq(from=0,to=9, by=1)
+	lx_example=c(1000,950,850,700,680,600,550,400,200,50)
+	fakeLt=new("lifetable",x=x_example, lx=lx_example, name="fake lifetable")
+@
+
+After a lifecontingencies table has been created, basic probability calculations may be performed.
+
+<<probability and demographics>>=
+	pxt(fakeLt,2,1) #probability to survive one year, being at age 2
+	qxt(fakeLt,3,2) #probability to die within two years, being at age 3
+	exn(fakeLt, 5,2) #expected life time between 5 an 7 years
+@
+
+A print (or show - equivalent) method is also available, reporting the x, lx, px and ex in tabular form.
+
+<<print - show>>=
+	print(fakeLt)
+@
+
+An actuarialtable class inherits from the lifecontingencies class, but contains and additional slot: the interest rate
+slot.\\
+
+<<create a actuarialtable object>>=
+	irate=0.03
+	fakeAct=new("actuarialtable",x=fakeLt@x, lx=fakeLt@lx, interest=irate, name="fake actuarialtable")
+@
+
+\subsection{Classical actuarial mathematics examples}
+
+\subsection{A thorough examples}
+
+\clearpage
+\newpage
+
+\section{Discussion} \label{sec:discussion}
+
+\subsection{Analysis of software capabilities}
+\subsection{Prospective developments}
+
+
+\bibliography{packagebiblio}
+
+\end{document}
