@@ -29,14 +29,14 @@ life table objects and actuarial tables object.
 }
 \source{
 	These tables comes from Italian national statistical bureau (ISTAT) for SI series, government Ministry of Economics (Ragioneria Generale dello Stato) for
-	RG48 or from Insurers' industrial association IPS55. 
+	RG48 or from Insurers' industrial association IPS55. RG48 represents the projected survival table for the 1948 born cohort, while IPS55 represents 
+	the projected survival table for the 1955 born cohort.
 }
 \references{
 	\url{http://www.ania.it/private/documents/comunicazioni2005/PROT0252COMU.pdf}
 	\url{http://demo.istat.it/unitav/index.html?lingua=ita}
 }
 \examples{
-%\dontrun{
 	#loads and show
 	data(demoita)
 	head(demoita)
@@ -47,6 +47,6 @@ life table objects and actuarial tables object.
 	xsim92<-seq(0,length(lxsim92)-1,1)
 	#create the table
 	sim92lt=new("lifetable",x=xsim92,lx=lxsim92,name="SIM92")
-%}
+	plot(sim92lt)
 }
 \keyword{datasets}

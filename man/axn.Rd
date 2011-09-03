@@ -49,7 +49,12 @@ Annuity immediate and due function.
 	Giorgio A. Spedicato
 }
 \note{
-	We disclaim any financial responsability arising from the use of this package.
+	When x = omega zero is returned.
+}
+
+\section{Warning }{
+	The function is provided as is, without any warranty regarding the accuracy of calculations. The author disclaims any liability for eventual 
+	losses arising from direct or indirect use of this software.
 }
 
 \seealso{

@@ -17,119 +17,15 @@ setValidity("lifetable",
 
 
 
-dxt<-function(object, x, t) {
-	#checks
-	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
-	out<-NULL
-	if(missing(x)) stop("Error! Missing x")
-	if(missing(t)) t=1
-	omega=max(object@x)+1
-	lx=object@lx[which(object@x==x)]
-	if((x+t)>=omega) out=lx else
-		out=lx-object@lx[which(object@x==t+x)]
-	return(out)
-}
-
-
-pxt<-function(object, x, t)
-{
-	out<-NULL
-	#checks
-	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
-	if(missing(x)) stop("Missing x")
-	if(any(x<0,t<0)) stop("Check x or t domain")
-	if(missing(t)) t=1 #default 1
-	omega=getOmega(object)
-	#if the starting age is fractional apply probability laws
-	if((x-floor(x))>0) {
-		integerAge=floor(x)
-		excess=x-floor(x)
-		out=pxt(object=object, x=integerAge,t=excess+t)/pxt(object=object, x=integerAge,t=excess)
-		return(out)
-	}
-	if((x+t)>=omega) out=0 else  #linearly interpolates if fractional age
-	{ if((t%%1)==0) out=object@lx[which(object@x==t+x)]/object@lx[which(object@x==x)] else {
-			ph=object@lx[which(object@x==ceiling(t+x))]/object@lx[which(object@x==x)]
-			pl=object@lx[which(object@x==floor(t+x))]/object@lx[which(object@x==x)]		
-			z=t%%1
-			out=z*ph+(1-z)*pl
-		}			
-	}
-	return(out)
-}
-
-
-
-	
-#set method fo qxt
-#setGeneric("qxt",function(object,x,t) standardGeneric("qxt"))
-#setMethod("qxt",signature("lifetable"),function(object,x,t){
-#			out=1-pxt(object=object,x=x,t=t)
-#			return(out)
-#		}	
-#			)
-
-
 #set methods of getting omega
 setGeneric("getOmega", function(object) standardGeneric("getOmega"))
 setMethod("getOmega","lifetable", 
 		function(object) {
 		out=numeric(1)
-		out=max(object@x)+1
+#		out=max(object@x)+1
+		out=max(object@x)
 		return(out)}
 				)
-
-#getOmega<-function(object)
-#{
-#		out=numeric(1)
-#		if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
-#		out=max(object@x)+1
-#		return(out)
-#}
-				
-
-qxt<-function(object, x, t)
-{
-	out<-NULL
-	#checks
-	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
-	if(missing(x)) stop("Missing x")
-	if(any(x<0,t<0)) stop("Check x or t domain")
-	if(missing(t)) t=1 #default 1
-	#complement of pxt
-	out<-1-pxt(object=object, x=x, t=t)
-	return(out)
-}
-
-
-
-#set method for exn
-#setGeneric("exn", function(object, x, n) standardGeneric("exn"))
-#setMethod("exn", signature("lifetable"), 
-#		function(object,x,n) {
-#			if(missing(x)) stop("Error! Missing x")
-#			if(missing(n)) n=getOmega(object)-x
-#			if(n==0) return(0)
-#			probs=numeric(n)
-#			for(i in 1:n) probs[i]=pxt(object,x,i)
-#			out=sum(probs)
-#			return(out)
-#		}
-#)
-
-exn<-function(object,x,n) {
-	out<-NULL
-	#checks
-	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
-	if(missing(x)) stop("Error! Missing x")
-	if(missing(n)) n=getOmega(object)-x
-	if(n==0) return(0)
-	probs=numeric(n)
-	for(i in 1:n) probs[i]=pxt(object,x,i)
-	out=sum(probs)
-	return(out)
-}
-
 #function to create lifetable cols
 .createLifeTableCols<-function(object)
 {
@@ -152,7 +48,7 @@ setMethod("show","lifetable", #metodo show
 		function(object){
 			cat(paste("Life table",object@name),"\n")
 			cat("\n")
-			#get omega
+
 			out<-.createLifeTableCols(object)
 			print(out)
 			cat("\n")

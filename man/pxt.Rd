@@ -1,41 +1,58 @@
 \name{pxt}
+\alias{dxt}
 \alias{pxt}
+\alias{qxt}
 
 \title{
-Function to return conditional survival probability.
+Function to evaluate survival, death probabilities and deaths.
 }
 \description{
-Given a lifetable or actuariatable object, this function return the conditional survival probability.
+These functions evalutate survival and raw death probabilities between age x and x+t
 }
 \usage{
-pxt(object, x, t)
+
+dxt(object, x, t)
+
+pxt(object, x, t, fractional = "linear")
+
+qxt(object, x, t, fractional = "linear")
 }
 
 \arguments{
+
   \item{object}{
-A lifetable or actuarialtable object.
+	A \code{lifetable} object.
 }
   \item{x}{
-Age
+	Age of life X.
 }
   \item{t}{
-Time span, even fractiona.
+	Period until which the age shall be evaluated. Default value is 1
 }
+
+  \item{fractional}{
+	Assumptions for fractional age. One of "linear", "hyperbolic", "constant force".
+}
+
 }
 \details{
-If t is fractional, linear interpolation is used among life tables.
+	Fractional assumptions are:
+		-linear: linear interpolation between consecutive ages.
+		-constant force of mortality: constant force of mortality.
+		-hyperbolic: Balducci assumptions. See reference book for details.
 }
 \value{
-A numeric value representing survival probability}
+A numeric value
+}
 \references{
 	Actuarial Mathematics (Second Edition), 1997, by Bowers, N.L., Gerber, H.U., Hickman, J.C., 
 	Jones, D.A. and Nesbitt, C.J.
 }
 \author{
-Giorgio A. Spedicato.
+Giorgio A. Spedicato
 }
 \note{
-This is an S4 method. A function would have been written instead.
+This function is the core of many other functions.
 }
 
 \section{Warning }{
@@ -44,21 +61,15 @@ This is an S4 method. A function would have been written instead.
 }
 
 \seealso{
-\code{\linkS4class{lifetable}}
+ \code{\link{exn}}, \code{\linkS4class{lifetable}}
 }
 \examples{
-\dontrun{
-	#loads and show
-	data(demoita)
-	head(demoita)
-	#creates ips55 life and actuarial table
-	lxIPS55M<-with(demoita, IPS55M)
-	pos2Remove<-which(lxIPS55M %in% c(0,NA)) #remove missing and zeros
-	lxIPS55M<-lxIPS55M[-pos2Remove]
-	xIPS55M<-seq(0,length(lxIPS55M)-1,1)
-	#create the table
-	IPS55Mlt=new("lifetable",x=xIPS55M,lx=lxIPS55M,name="IPS55M")
-	#shows survival probability between 90 and 92
-	pxt(object=IPS55Mlt, x=90, t=2)
+	#dxt example
+	data(soa08Act)
+	dxt(object=soa08Act, x=90, t=2)
+	#qxt example
+	qxt(object=soa08Act, x=90, t=2)
+	#pxt example
+	pxt(object=soa08Act, x=90, t=2, "constant force" )
 }
-}
+

@@ -1,0 +1,38 @@
+# TODO: Add comment
+# 
+# Author: Giorgio
+###############################################################################
+
+library(lifecontingencies)
+data(soa08Act)
+
+#effetto tassi di interesse life insurance
+irates=seq(from=0.01, to=0.06, by=0.0025)
+insurance=numeric(length(irates))
+for(i in 1:length(irates)) insurance[i]=Axn(soa08Act,40,10,irates[i])
+
+
+#distribuzione annuity 
+nsim=5000
+simAnnuity<-numeric(nsim)
+for (i in 1:nsim) simAnnuity[i]=axn(soa08Act, x=65, type="ST")
+
+setwd("./images")
+
+png("Fig1.png")
+
+	plot(x=irates, y=insurance, 
+			main="Effect of interest on APV of term life insurance"
+	,lty=3)
+
+dev.off()
+
+
+png("Fig2.png")
+
+hist(simAnnuity, col="dark red", main="Annuity distribution simulation")
+
+dev.off()
+
+
+setwd("../")

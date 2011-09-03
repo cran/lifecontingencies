@@ -18,7 +18,7 @@ A life table object.
 }
 
 \value{
-A numeric value representing the omega value of a life table object}
+A numeric value representing the \eqn{\omega} value of a life table object}
 \references{
 	Actuarial Mathematics (Second Edition), 1997, by Bowers, N.L., Gerber, H.U., Hickman, J.C., 
 	Jones, D.A. and Nesbitt, C.J.

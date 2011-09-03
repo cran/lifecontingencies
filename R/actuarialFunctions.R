@@ -33,8 +33,13 @@ axn<-function(actuarialtable, x, n,i, m,k=1, type="EV")
 	out<-NULL
 	if(missing(actuarialtable)) stop("Error! Need an actuarial actuarialtable")
 	if(missing(x)) stop("Error! Need age!")
+	
+	if(x>getOmega(actuarialtable)) {
+		out=0
+		return(out)
+	}
 	if(missing(m)) m=0
-	if(missing(n)) n=getOmega(actuarialtable)-x-m-1
+	if(missing(n)) n=getOmega(actuarialtable)-x-m #n=getOmega(actuarialtable)-x-m-1
 	if(!missing(i)) interest=i else interest=actuarialtable@interest #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
 	if(any(x<0,m<0,n<0)) stop("Error! Negative parameters")
 	#computation of quantities, assuming fractional payments
@@ -54,6 +59,42 @@ axn<-function(actuarialtable, x, n,i, m,k=1, type="EV")
 	}
 	return(out)
 }
+
+#shall write the Rd file
+axyn<-function(tablex, tabley, x,y, n,i, m,k=1, status="joint", type="EV")
+{
+	out<-NULL
+	if(missing(tablex)) stop("Error! Need table for X life")
+	if(missing(tabley)) stop("Error! Need table for Y life")
+	if(missing(x)) stop("Error! Need age for X!")
+	if(missing(y)) stop("Error! Need age for Y!")
+	if(missing(m)) m=0
+	if(missing(n)) n=max(getOmega(tablex)-x,getOmega(tabley)-y)-m #maximum sequence of payments
+	if(tablex@interest!=tabley@interest) {
+		warning("Warning! Intesters differ between tablex and tabley. Using average")
+		}
+	if(!missing(i)) interest=i else interest=0.5*(tablex@interest+tabley@interest) #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
+	if(any(x<0,y<0,m<0,n<0)) stop("Error! Negative parameters")
+	#computation of quantities, assuming fractional payments
+		payments=rep(1/k,n*k)
+		probs=numeric(n*k)		
+		times=m+seq(from=0, to=(n-1/k),by=1/k)
+		
+		for(i in 1:length(times)) probs[i]=pxyt(objectx=tablex,objecty=tabley, 
+			x=x,y=y,t=times[i],status=status)
+		#discounts=(1+actuarialtable@interest)^-times
+		#out<-sum(payments*discounts*probs)
+	if(type=="EV") {
+		out<-presentValue(cashFlows=payments, timeIds=times, interestRates=interest, probabilities=probs)
+	}
+	if(type=="ST"){
+		out=0
+		for(i in 1:length(times)) out=out+1/k*rbinom(n=1, size=1, prob=probs[i])*(1+interest)^-times[i]
+	}
+	return(out)
+}
+
+
 
 #function to obtain the Life Insurance
 #actuarialtable: an actuarial actuarialtable object
@@ -86,7 +127,6 @@ Axn<-function(actuarialtable, x, n,i, m, k=1, type="EV")
 	#gets outpus
 	
 	if(type=="EV") {
-	
 		out<-sum(payments*discounts*probs)
 	}
 	if(type=="ST"){
@@ -100,6 +140,53 @@ Axn<-function(actuarialtable, x, n,i, m, k=1, type="EV")
 	return(out)
 }
 
+
+Axyn<-function(tablex, x,tabley, y, n,i, m, k=1, status="joint", type="EV")
+{
+	out<-NULL
+	if(any(missing(tablex),missing(tabley))) stop("Error! Need tables")
+	if(any(missing(x),missing(y))) stop("Error! Need ages!")
+	if(k<1) stop("Error! Periods in a year shall be no less than 1")
+	if(missing(m)) m=0
+	if(missing(n)) n=max(getOmega(tablex)-x,getOmega(tabley)-y)-m-1
+
+	if(tablex@interest!=tabley@interest) {
+		warning("Warning! Intesters differ between tablex and tabley. Using average")
+		}
+	if(!missing(i)) interest=i else interest=0.5*(tablex@interest+tabley@interest) #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
+	
+	if(n==0) return(0)
+	if(any(x<0,y<0,m<0,n<0)) stop("Error! Negative parameters")
+	
+	#perform calculations
+		
+		payments=rep(1,n*k)
+		probs=numeric(n*k)		
+		times=m+seq(from=0, to=(n-1/k),by=1/k)
+		for(i in 1:length(times)) probs[i]=(pxyt(objectx=tablex,objecty=tabley, x=x,y=y, status=status, t=times[i])*qxyt(objectx=tablex,objecty=tabley, 
+								x=x+times[i],y=y+times[i],
+								t=1/k,status=status))
+		#for(i in 1:length(times)) probs[i]=(pxt(actuarialtable, x,times[i])*qxt(actuarialtable, x+times[i],1))
+		discounts=(1+interest)^-(times+1/k)
+	#gets outpus
+	
+	if(type=="EV") {
+		out<-sum(payments*discounts*probs)
+	}
+	if(type=="ST"){
+		out=0
+		for(i in 1:length(times)) 
+		{
+			out=((1+interest)^-(times[i]+1/k))*rbinom(n=1, size=1, prob=probs[i])
+			if(out>0) break
+		}
+	}
+	return(out)
+}
+
+
+
+
 #n-year term whole life
 #recursive function
 IAxn<-function(actuarialtable, x, n,i, m=0, type="EV")
@@ -109,7 +196,7 @@ IAxn<-function(actuarialtable, x, n,i, m=0, type="EV")
 	if(missing(m)) m=0
 	if(missing(x)) stop("Error! Need age!")
 	m=0 #m is set equal to zero at the moment
-	if(missing(n)) n=getOmega(actuarialtable)-x-m-1
+	if(missing(n)) n=getOmega(actuarialtable)-x-m #n=getOmega(actuarialtable)-x-m-1
 	if(!missing(i)) interest=i else interest=actuarialtable@interest #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
 	y=x+n
 	
@@ -146,7 +233,7 @@ DAxn<-function(actuarialtable, x, n,i, m=0, type="EV")
 	if(missing(x)) stop("Error! Need age!")
 	if(missing(m)) m=0
 	m=0 #m is set equal to zero at the moment
-	if(missing(n)) n=getOmega(actuarialtable)-x-m-1
+	if(missing(n)) n=getOmega(actuarialtable)-x-m #n=getOmega(actuarialtable)-x-m-1
 	if(!missing(i)) interest=i else interest=actuarialtable@interest #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
 	y=x+n
 	if(type=="EV") {

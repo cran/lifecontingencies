@@ -34,7 +34,6 @@ Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition), 2008, AC
 	Moreover as an R packages user I'm aware that the 
 	current documentation is somewhat inadequate. Nevertheless the current version has been submitted in a hurry in order to provide CRAN the first
 	package to evaluate life contingencies.\\
-	Currently multiple heads actuarial functions have not been implemented yet.
 }
 
 \seealso{
