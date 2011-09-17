@@ -1,4 +1,8 @@
 CHANGELOG
+-Version 0.0.5
+	Added methods for lifecontingencies objects
+	improved vignettes (added JSS template).
+	
 -Version 0.0.4
 	Improved documentation
 	Added demographic functions

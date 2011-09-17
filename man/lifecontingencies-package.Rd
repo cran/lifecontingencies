@@ -14,8 +14,8 @@ Calculates life contingencies and financial mathematics functions.
 \tabular{ll}{
 Package: \tab lifecontingencies\cr
 Type: \tab Package\cr
-Version: \tab 0.0.3\cr
-Date: \tab 2011-09-17\cr
+Version: \tab 0.0.5\cr
+Date: \tab 2011-09-30\cr
 License: \tab GPL-2.0\cr
 LazyLoad: \tab yes\cr
 }

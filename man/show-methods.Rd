@@ -12,7 +12,7 @@
 
 \item{\code{signature(object = "actuarialtable")}}{
 This method plots the Survival function implied in the number at risk per age
-in the life table.
+in the life table. Following entries are reported:
 }
 
 \item{\code{signature(object = "lifetable")}}{

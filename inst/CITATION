@@ -1,13 +1,12 @@
 citHeader("To cite package lifecontingencies in publications use:")
 
-citEntry(entry="Unpublished",
-         title = "{Lifecontingencies}: A General Framework for life actuarial function in {R}",
+citEntry(entry="Manual",
+         title = "{Lifecontingencies}: an R package to perform life contingencies calculations",
          author = person(first="Giorgio Alfredo", last="Spedicato"),
-         month="08",
+         month="09",
          year="2011",
-         note="Unpublished yet",
-         textVersion = "Giorgio Alfredo Spedicato. Life contingencies. A general framework for life actuarial function in R"
+         note="R package version 0.0.4",
+         textVersion = "Giorgio Alfredo Spedicato. 
+		 Lifecontingencies. An R package to perform life contingencies calculations"
          )
-         
-
-         
+    

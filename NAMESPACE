@@ -1,5 +1,9 @@
 import(methods)
 importFrom(graphics, plot)
+
+importFrom(utils, head)
+importFrom(utils, tail)
+
 exportPattern("^[[:alpha:]]+")
 
 exportMethods(

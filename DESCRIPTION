@@ -1,7 +1,7 @@
 Package: lifecontingencies
 Type: Package
 Title: Package to perform actuarial evaluation of life contingencies
-Version: 0.0.4
+Version: 0.0.5
 Date: 2011-09-17
 Author: Giorgio A. Spedicato
 Maintainer: Giorgio A. Spedicato
@@ -11,6 +11,6 @@ Description: Financial and actuarial functions to evaluate life
 Depends: R (>= 2.10.0), methods
 License: GPL (>= 2.0)
 LazyLoad: yes
-Packaged: 2011-09-17 12:37:21 UTC; Packard Bell
+Packaged: 2011-09-30 22:13:57 UTC; Packard Bell
 Repository: CRAN
-Date/Publication: 2011-09-17 17:22:14
+Date/Publication: 2011-10-01 08:18:57

@@ -1,90 +1,206 @@
 
-\documentclass[a4paper]{article}
+\documentclass[nojss]{jss}
 \usepackage[OT1]{fontenc}
-\usepackage{Sweave}
+
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{lifecon}
-\usepackage{myVignette}
-%\bibliographystyle{plainnat}
+%\usepackage{myVignette}
+
 %\VignetteIndexEntry{An introduction to lifecontingencies package}
 %\VignetteKeywords{vig1}
 %\VignettePackage{lifecontingencies}
+% need no \usepackage{Sweave.sty}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% declarations for jss.cls %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% almost as usual
+\author{Giorgio Alfredo Spedicato\\StatisticalAdvisor Inc}
+\title{Introduction to \pkg{lifecontingencies} Package}
+
+%% for pretty printing and a nice hypersummary also set:
+\Plainauthor{Giorgio Alfredo Spedicato} %% comma-separated
+\Plaintitle{Introduction to lifecontingencies package} %% without formatting
+\Shorttitle{A package to evaluate actuarial present values} %% a short title (if necessary)
+
+%% an abstract and keywords
+\Abstract{
+  \pkg{lifecontingencies} performs actuarial present value calculation for life insurances. This paper briefly recapitulate 
+  the theory regarding life contingencies (life tables, financial mathematics and related probabilities) on life contingencies. Then it shows 
+  how \pkg{lifecontingencies} functions represent a perfect cookbook to perform life insurance actuarial analysis and related 
+  stochastic simulations.
+}
+\Keywords{life tables, financial mathematics, actuarial mathematics, life insurance, \proglang{R}}
+\Plainkeywords{life tables, financial mathematics, actuarial mathematics, life insurance, R} %% without formatting
+%% at least one keyword must be supplied
+
+%% publication information
+%% NOTE: Typically, this can be left commented and will be filled out by the technical editor
+%% \Volume{13}
+%% \Issue{9}
+%% \Month{September}
+%% \Year{2004}
+%% \Submitdate{2004-09-29}
+%% \Acceptdate{2004-09-29}
+
+%% The address of (at least) one author should be given
+%% in the following format:
+\Address{
+  Giorgio Alfredo Spedicato\\
+  StatisticalAdvisor Inc.\\
+  Via Firenze 11
+  20037 Italy\\
+  Telephone: +39/334/6634384\\
+  E-mail: \email{lifecontingencies@statisticaladvisor.com}\\
+  URL: \url{www.statisticaladvisor.com}
+}
+
+
+%% for those who use Sweave please include the following line (with % symbols):
+%% need no \usepackage{Sweave.sty}
+
+%% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
 \begin{document}
 
+<<echo=FALSE, results=hide>>=
+	options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
+	library(lifecontingencies)
+	source("calculations1.R")
+@
 
 
-\title{An introduction to lifecontingencies package}
-\author{Giorgio A. Spedicato, Ph.D}
+<<eval=FALSE, echo=FALSE>>=
+	source("calculations2.R")
+@
 
 \maketitle
 
-\section{Overview}
-I've decided to submit to the cran package to perform life contingencies calculation in order to fill a current
-lack within the CRAN archive. The structure of the vignette document (uncompleted yet) is:
+\section{Introduction}
+As of September 2011, \pkg{lifecontingencies} seems the first \proglang{R} package that deals with life insurance evaluation.\\
+ \proglang{R} has provided many package that actuaries can use within their professional activity.\\
+ However most packages are of mainly interest of non-life actuarial side, where statistics take a wider share of 
+ the day-to-day work.
+The package \pkg{actuar}, \cite{Dutang2008}, provides functions to fit loss distributions and to perform credibility 
+analysis. It represents the computational side of the classical book \cite{klugman2009loss}. The package \pkg{ChainLadder}, \cite{chainLadder}, provides functions to estimate non-life loss reserve.
+GLM analysis widely used in predictive modelling can be performed by the \pkg{base} package bundled within \proglang{R} even if interesting 
+applications can be build by \pkg{gamlss}, \cite{gamlssPkg},  or by the package \pkg{cplm}, \cite{cplmPkg}.\\
+On the other hand, life actuaries works more with demographic and financial data. \proglang{R} has a dedicated view to packages dedicated to financial analysis. However 
+few packages exist to perform demographic analysis (see for examples \pkg{demography}, \cite{demography}, and \pkg{LifeTables}, \cite{LifeTableR}) as of September 2011 no package exists to perform 
+life contingencies calculation.\\
+Numerous commercial packages are available to conduct actuarial analysis both in life and non - life site. Currently Tower Watson firm produces the most 
+used actuarial packages.
+This package aims to represent the R computational support of the concepts developed in the classical life contingencies book \cite{bowers1997actuarial}.
+   
+The structure of the vignette document is:
 
 \begin{enumerate}
-	\item Section \ref{sec:package} provides an overview of R usage within actuarial 
-	fields and describes the package structure.
+	\item Section \ref{sec:statistics} describes the underlying statistical and financial concepts 
+	regarding the life contingencies.
 	\item Section \ref{sec:examples} gives a wide choice of lifecontingencies packages example.
 	\item Finally section \label{sec:discussion} will provide a discussion of results and further potential
 	developments.
 \end{enumerate}
 
-The accuracy of calculation have been verified by checkings with numerical examples reported in 
-\cite{bowers1997actuarial}. The package numerical results are identical to those reported in the 
-\cite{bowers1997actuarial} for most function, with the exception of fractional payments annuities where 
-the accuracy leads only to the 5th decimal. The reason of such inaccuracy is due to the fact that 
-the package calculates the APV by directly sum of fractional survival probabilities, while the formulas 
-reported in \cite{bowers1997actuarial} uses an analytical formula.\\
-This package and functions herein are provided as is, without any guarantee regarding the 
-accuracy of calculations. The author disclaims any liability arising by  
-eventual losses due to direct or indirect use of this package.\\
 
 
-\section{Lifecontingencies package description} \label{sec:package}
+\section{The statistics of life contingencies actuarial evaluation}\label{sec:statistics}
 
-\subsection{Current R actuarial packages}
-R \cite{rSoftware} represents a powerful enviromnent for statistical analysis and simulation. Thus many packages 
-dedicated to P\&C actuarial software have been available from some years. Among those we shall cite:
+Life insurance analysis involves the calculation of expected values of future cash flows, whose probabilities depend by 
+events related to insureds life contingencies. Therefore life insurance actuarial mathematics uses concepts derived from demography (as life table probability calculations) 
+and theory of interest (like present value).\\
+
+A life table (also called a mortality table or actuarial table) consists is a table 
+which shows, for each age $x$, the number of subjects $l_x$ of that analyzed coort that are expected to be in life at the 
+beginning of that age. Therefore it represents a sequence of $l_0, l_1, \ldots, \l_{\omega}$ being $\omega$
+the fartest age that a person can obtain.\\
+Many quantities can be derived from the $l_x$ sequence. A non exaustive list follows:
 \begin{itemize}
-	\item The package \textbf{actuar} \cite{Dutang2008} provides functions to fit relevant loss distribution and perform credibility 
-	analysis. It represents the computational side of the classical book \cite{lossDistributions}.
-	\item The package \textbf{ChainLadder} \cite{chainLadder} provides functions to estimate non-life loss reserve.
+	\item $_t{p_x} = \frac{{{l_{x + t}}}}{{{l_x}}}$, the probability that someone living at age $x$ will reach age $x+t$.
+	\item $_t{q_x}$, the complementary probability of $_t{p_x}$.
+	\item $_t{d_x}$, the number of deaths between age $x$ and $x+t$.
+	\item $_t{L_x} = \sum\limits_{t = 0}^n {{l_{x + t}}}$, the expected number of years lived by the coohort between ages $x$ and  $x+t$.  
+	\item $_t{m_x} = \frac{{_t{d_x}}}{{_t{L_x}}}$, the central mortality rate between ages $x$ and  $x+t$.
+	\item $e_x$, the expected remaining lifetime for somone living at age $x$.
 \end{itemize}
-The choice of statistical functions to perform rate - making is more wide as R provides a wide range of statistical function to 
-perform classification and predictive modelling task (e.g. GLMs, data - mining techniques) performed by pricing actuaries.\\
+An exaustive coverage of life table demographics can be found in \cite{keyfitz2005applied}.
+Life table are usually produced by institutions that have access to large amount of reliable historical data, like 
+official statistics bureau or social security. Actuaries often start from those table and modify underlying survival probabilities to make the 
+table better fit to the insureds pool experience.\\
 
-Life actuaries works more with demographic and financial data. While R has a dedicated view to packages dedicated to financial analysis and 
-few packages exists to perform demographic analysis (see for examples \cite{demography}) as of August 2011 no package exists to perform 
-life contingencies calculation.\\
-This package aims to represent the R computational support of the concepts developed in the classical life contingencies book \cite{bowers1997actuarial}.
+Financial mathematic deals with monetary amount that could be available in different times and 
+whose possession is not certain. Probably the most important concept in classical financial mathematics 
+is the present value (see formula \ref{eq:CF}), that represent the currently valued figure for a series of cash flows $CF_t$ available in 
+different periods of time using interest rates $i_t$ as the measure of price of money per unit of time. All
+financial matematic functions can be seen as an adpted version of formula \ref{eq:CF}.\\
 
-\subsection{The structure of the package}
+\begin{equation}
+	PV = \sum\limits_{t \in T}^{} {C{F_t}} {\left( {1 + {i_t}} \right)^{ - t}}
+	\label{eq:CF}
+\end{equation}
 
-The package contains R function, classes and methods to perform classical financial mathematics calculations, working with 
-lifetable objects and classical life contingencies calculations.\\
+Actuaries uses the probabilities inherent the life table to evalutate the expected value of 
+insured cash flows, obtaining quantities called Actuarial Present Values (APV). E.g. in term life insurance, $\termins{x}{n}$, 
+the insured amount of is payable only if the insured death dies within age $x$ and $x+t$. Another example is the annuity, 
+$\ddot{a}_x$, that consists in a series of cash flows of equal amounts payable at the 
+beginning of each periods until the insured dies. The \pkg{lifecontingencies} package 
+contains functions that allows the user to evaluate standard life insurance contract APV. Function for $A_{x}$ (life insurance),
+$\pureendc{x}{n}$ (the pure endowment), $\ddot{a}_x$ (the annuity due), $\lcterm{(DA)}{x}{n}$ (the decreasing term life insurance) and 
+$(IA)_{x}$ (increasing term life insurance) are available as long as variants (fractional periods and differring terms).
+It is worth to remeber that life contingencies is a stochastic value: the life insurance is the random variable 
+${v^{{{\tilde T}_x}}}$ being $\tilde T$ the curtate remaining life time and $v$ the uni periodal discount factor. \pkg{lifecontingencies} contains formulas 
+to drawn random samples from life contingencies distributions.
+
+\section{The structure of the package}
+
+Package \pkg{lifecontingencies} contains classes and methods to handle lifetable in a way convenient for actuaries.\\
+Moreover it bundles financial mathematics functions to help the analyst to perform present value analysis. Finally most used 
+actuarial functions to evaluate lifecontingencies insurance, as reported in the classical book \cite{bowers1997actuarial}, have been 
+made available.
+
+The package is load within the R command line as follows:
+
+<<load>>=
+	library(lifecontingencies)
+@
+
+Two main S4 classes \cite{chambers2008software} have been defined within the \pkg{lifecontingencies} package: 
+the \code{lifetable} class and the \code{actuarialtable} class. The lifetable class is defined 
+as follows
+
+<<show classes>>=
+	#definition of lifetable
+	showClass("lifetable")
+@
+
+Class \code{actuarialtable} inherits from \code{lifetable} class and has another additional slots,
+the interest rate.
+
+<<show actuarial>>=
+	showClass("actuarialtable")
+@
+
+
 Functions are available to evaluate actuarial present values for life contingencies functions as $\ddot{a}_{x:\lcroof{n}}^{(m)}$,
 $\lcterm{A}{x}{n}$, $\lcend{A}{x}{n}$, $\lcterm{(DA)}{x}{n}$ and $\lcterm{(IA)}{x}{n}$.\\
 Some functions allows to return the simulated value of most life contingencies functions.\\ 
 Demos and vignettes (like this document) are also available.\\
 
-The package is load within the R working environment as follows:
 
-<<>>=
-	library(lifecontingencies)
-@
 
-<<echo=FALSE>>=
-	source("utilityFun.R")
-@
 
 
 \clearpage
 \newpage
 
 
-\section{Examples} \label{sec:examples}
+\section{Code and examples} \label{sec:examples}
 
 \subsection{Classical financial mathematics example}
 
@@ -456,7 +572,24 @@ allowing the package to interact with specialized packages.
 %\subsection{Analysis of software capabilities}
 %\subsection{Prospective developments}
 
-\bibliographystyle{apalike}
+\section*{Disclaimer}\label{sec:disclaimer}
+
+The accuracy of calculation have been verified by checkings with numerical examples reported in 
+\cite{bowers1997actuarial}. The package numerical results are identical to those reported in the 
+\cite{bowers1997actuarial} for most function, with the exception of fractional payments annuities where 
+the accuracy leads only to the 5th decimal. The reason of such inaccuracy is due to the fact that 
+the package calculates the APV by directly sum of fractional survival probabilities, while the formulas 
+reported in \cite{bowers1997actuarial} uses an analytical formula.\\
+This package and functions herein are provided as is, without any guarantee regarding the 
+accuracy of calculations. The author disclaims any liability arising by  
+eventual losses due to direct or indirect use of this package.\\
+
+
+\section*{Acknowledgments}\label{sec:acknowledgments}
+
+I wish to thank Christophe Dutang and Tim Riffle for their valuable suggestions.
+
+%\bibliographystyle{jss}
 \bibliography{packagebiblio}
 
 \end{document}

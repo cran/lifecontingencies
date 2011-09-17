@@ -2,8 +2,6 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{lifetable-class}
-
-
 \title{Class \code{"lifetable"}}
 \description{
 	Life table objects allow to define and use life table to evaluate survival probability, mortality rate easily.

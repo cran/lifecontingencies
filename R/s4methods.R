@@ -36,11 +36,16 @@ setMethod("getOmega","lifetable",
 	#ex
 	lenlx=length(object@lx)
 	Tx=numeric(lenlx)
-#	for(i in 1:lenlx) Tx[i]=sum(object@lx[i:lenlx])
+	Lx=numeric(lenlx)
+	ex=numeric(lenlx)
 	for(i in 1:lenlx) Tx[i]=sum(object@lx[i:lenlx])
+	for(i in object@x) Lx[i]=Lxt(object=object, x=i)
+	for(i in object@x) ex[i]=exn(object=object, x=i,type="complete")
+	
 	
 	out<-data.frame(x=object@x, lx=object@lx,px=lxplus/object@lx, 
-			ex=Tx/object@lx)
+			ex=ex)
+	
 	rownames(out)=NULL
 	return(out)
 }
@@ -56,6 +61,25 @@ setMethod("show","lifetable", #metodo show
 			cat("\n")
 		}
 		)
+
+#head and tail methods
+setMethod("head",
+		signature(x = "lifetable"),
+		function (x, ...) 
+		{
+			temp<-data.frame(x=x@x, lx=x@lx)
+			head(temp)
+		}
+)
+
+setMethod("tail",
+		signature(x = "lifetable"),
+		function (x, ...) 
+		{
+			temp<-data.frame(x=x@x, lx=x@lx)
+			tail(temp)
+		}
+)
 #internal function to create the actuarial table object
 .createActuarialTableCols<-function(object)
 {
@@ -111,6 +135,16 @@ setAs("lifetable","data.frame",
 			return(out)
 		}
 )
+
+#get a data.frame containing x and lx and returns a new lifetable object
+setAs(from="data.frame",to="lifetable",
+		def=function(from){
+			if(any(is.na(match(c("x","lx"), names(from))))) stop("Error! Both x and lx columns required!")
+			out<-new("lifetable",x=from$x, lx=from$lx, name="COERCED")
+			return(out)
+		}
+)
+
 #saves actuarialtable as data frame (have same slots as life - table)
 setAs("actuarialtable","data.frame",
 		function(from){
