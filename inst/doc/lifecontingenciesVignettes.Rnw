@@ -15,7 +15,7 @@
 
 
 \title{An introduction to lifecontingencies package}
-\author{Giorgio A. Spedicato}
+\author{Giorgio A. Spedicato, Ph.D}
 
 \maketitle
 
@@ -88,8 +88,31 @@ The package is load within the R working environment as follows:
 
 \subsection{Classical financial mathematics example}
 
-Two examples will show classical financial mathematics applications of package lifecontingencies. The 
-amortization of a loan and a savings account projection.\\
+Two examples will show classical financial mathematics applications of package lifecontingencies: present value analysis, the 
+amortization of a loan and a savings account projection.\\ Functions to switch between nominal and effective interest rates have been
+also developed.\\
+ 
+
+The present value of a cash flow series,$\bar{c_T}$ is $PV\left( {{{\bar c}_T}} \right) = \sum\limits_{t \in T}^{} {{c_t}{v_{{t_i}}}^t} $ and 
+if we consider probabilities the latter formula became an actuarial present value, $PV\left( {{{\bar c}_T}} \right) = \sum\limits_{t \in T}^{} {{p_{{t_i}}}{c_t}{v_{{t_i}}}^t}$.
+
+
+\subsubsection{Present value analysis}
+
+<<present value>>=
+	#say we are at time t0, and following capitals would have been received (+) / paid (-)
+	#at time (vector) t.
+	capitals=c(-1000,200,500,700)
+	times=c(-2,-1,4,7)
+	#the preset value of the investment is 
+	presentValue(cashFlows=capitals, timeIds=times, interestRates=0.03)
+	#@3% interest rate
+	#while if interest rates were time - varying 0.04 0.02 0.03 0.057
+	presentValue(cashFlows=capitals, timeIds=times, interestRates=c( 0.04, 0.02, 0.03, 0.057))
+	#and if the last cash flow is uncertain, as we assume a receiving probability of 50% 
+	presentValue(cashFlows=capitals, timeIds=times, interestRates=c( 0.04, 0.02, 0.03, 0.057), probabilities=c(1,1,1,0.5))
+@
+
 
 \subsubsection{Loan amortization}
 
@@ -159,7 +182,7 @@ life contingencies. Actuarialtable class inherits from lifetable class.\\
 Both have been designed using the S4 class framework.
 To build a lifetable class object three items are needed:
 \begin{enumerate}
-	\item The years sequence, that is an integer sequence $0,1,\ldots, \omega-1$. It shall starts from zero and going 
+	\item The years sequence, that is an integer sequence $0,1,\ldots, \omega$. It shall starts from zero and going 
 	to the $\omega$ age (the age $x$ that $p_x=0$).
 	\item The $l_x$ vector, that is the number of subjects living at the beginning of age $x$.
 	\item The name of the life table.
@@ -416,7 +439,19 @@ shows the stochastic distribution of $\ddot{a}_{65}$.
 \clearpage
 \newpage
 
-%\section{Discussion} \label{sec:discussion}
+\section{Discussion} \label{sec:discussion}
+
+Lifecontingencies package allows practictioner actuaries to evaluate actuarial present values functions by means of 
+the R system framework. The lifecontingencies packages offers the basic tools to manipulate life tables, time value of cash 
+flows. These tools are used to evaluate standard life contingencies present values by code already binded to the package as long as 
+to build own function to perform day to day actuarial analysis.\\
+
+Future work spans in multiple directions. Carefull check of the APV functions will be performed, expecially in the computation of 
+stochastic values. C++ fragments will be tested and addedd to the package whether performance shows to improve.\\
+Finally coerce functions will be written. We wish to provide input and output convenience functions for lifecontingencies objects toward package 
+specialized in demographic analysis. Moreover the use of stochastic interest rate within the actuarial analysis will be facilitated 
+allowing the package to interact with specialized packages.
+%TODO: specificare meglio
 
 %\subsection{Analysis of software capabilities}
 %\subsection{Prospective developments}

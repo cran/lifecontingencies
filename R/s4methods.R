@@ -36,7 +36,9 @@ setMethod("getOmega","lifetable",
 	#ex
 	lenlx=length(object@lx)
 	Tx=numeric(lenlx)
+#	for(i in 1:lenlx) Tx[i]=sum(object@lx[i:lenlx])
 	for(i in 1:lenlx) Tx[i]=sum(object@lx[i:lenlx])
+	
 	out<-data.frame(x=object@x, lx=object@lx,px=lxplus/object@lx, 
 			ex=Tx/object@lx)
 	rownames(out)=NULL

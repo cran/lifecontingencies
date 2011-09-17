@@ -1,4 +1,9 @@
 CHANGELOG
+-Version 0.0.4
+	Improved documentation
+	Added demographic functions
+	Added US Social Security life tables.
+	
 -Version 0.0.3
 	Improved documentation
 	Add some multiple life functions

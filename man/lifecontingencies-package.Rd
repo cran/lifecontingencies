@@ -14,8 +14,8 @@ Calculates life contingencies and financial mathematics functions.
 \tabular{ll}{
 Package: \tab lifecontingencies\cr
 Type: \tab Package\cr
-Version: \tab 0.0.2\cr
-Date: \tab 2011-08-15\cr
+Version: \tab 0.0.3\cr
+Date: \tab 2011-09-17\cr
 License: \tab GPL-2.0\cr
 LazyLoad: \tab yes\cr
 }
@@ -31,9 +31,7 @@ Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition), 2008, AC
 }
 
 \note{
-	Moreover as an R packages user I'm aware that the 
-	current documentation is somewhat inadequate. Nevertheless the current version has been submitted in a hurry in order to provide CRAN the first
-	package to evaluate life contingencies.\\
+Documentations and function checks are still in progress.
 }
 
 \seealso{

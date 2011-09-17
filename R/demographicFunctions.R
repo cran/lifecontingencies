@@ -1,5 +1,5 @@
 
-
+#number of deaths between age x and x+t
 dxt<-function(object, x, t) {
 	#checks
 	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
@@ -13,7 +13,7 @@ dxt<-function(object, x, t) {
 	return(out)
 }
 
-
+#survival probability between age x and x+t
 pxt<-function(object, x, t, fractional="linear")
 {
 	out<-NULL
@@ -49,6 +49,64 @@ pxt<-function(object, x, t, fractional="linear")
 	return(out)
 }
 
+.forceOfMortality<-function(object,x)
+{
+	out<-NULL
+	#checks
+	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
+	if(missing(x)) stop("Missing x")
+	#force of mortality
+	out<-log(pxt(object=object, x=x, t=1))
+	return(out)
+}
+
+#the number of person-years lived between exact ages x and x+1
+Lxt<-function(object, x,t=1,fxt=0.5)
+{
+
+	out<-NULL
+	#checks
+
+	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
+	if(missing(x)) stop("Missing x")
+	if(any(x<0,t<0)) stop("Check x or t domain")
+
+	ages=seq(from=x, to=x+t-1, by=1)
+	lifes=numeric(length(ages))
+	for(i in 1:length(ages)) lifes[i]=object@lx[which(object@x==ages[i])]
+	deaths=sapply(ages, dxt,object=object,t=1)
+	toSum=lifes-fxt*deaths
+	out=sum(toSum)
+	return(out)
+}
+# the number of person-years lived after exact age x
+Tx<-function(object,x)
+{
+	out<-NULL
+ 	#checks
+	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
+	if(missing(x)) stop("Missing x")
+	n=getOmega(object)-x
+	lives=seq(from=x,to=x+n,by=1)
+	toSum<-sapply(lives, Lxt,object=object, t=1)
+	return(sum(toSum))
+}
+
+#central mortality rate
+mxt<-function(object,x,t)
+{
+	out<-NULL
+	#checks
+	if(missing(t)) t=1 #default 1
+	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
+	if(missing(x)) stop("Missing x")
+	if(any(x<0,t<0)) stop("Check x or t domain")
+	
+	deaths=dxt(object,x,t)
+	lived=Lxt(object,x,t)
+	out=deaths/lived
+	return(out)
+}
 
 
 qxt<-function(object, x, t, fractional="linear")
@@ -65,7 +123,7 @@ qxt<-function(object, x, t, fractional="linear")
 }
 
 
-exn<-function(object,x,n) {
+exn<-function(object,x,n,type="curtate") {
 	out<-NULL
 	#checks
 	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
@@ -73,8 +131,13 @@ exn<-function(object,x,n) {
 	if(missing(n)) n=getOmega(object)-x +1 #to avoid errors
 	if(n==0) return(0)
 	probs=numeric(n)
+	if(type=="curtate"){
 	for(i in 1:n) probs[i]=pxt(object,x,i)
 	out=sum(probs)
+	} else {
+		lx=object@lx[which(object@x==x)]
+		out=Lxt(object=object, x=x,t=n)/lx
+	}
 	return(out)
 }
 

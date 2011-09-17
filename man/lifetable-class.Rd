@@ -15,9 +15,9 @@ Two vectors are needed. The age vector and the population at risk vector.
 }
 \section{Slots}{
   \describe{
-    \item{\code{x}:}{Object of class \code{"numeric"}, representing the sequence 0,1,\eqn{\ldots, \omega-1}}
-    \item{\code{lx}:}{Object of class \code{"numeric"}, representing a non increasing sequence of people living at beginning of year x. The last 
-element of vector x is supposed to be > 0, as 0 is reached at age \eqn{\omega}	}
+    \item{\code{x}:}{Object of class \code{"numeric"}, representing the sequence 0,1,\eqn{\ldots, \omega}}
+    \item{\code{lx}:}{Object of class \code{"numeric"}, representing  the number of lives at the beginning of age \eqn{x}. It is a non 
+    increasing sequence. The last element of vector x is supposed to be > 0.}
     \item{\code{name}:}{Object of class \code{"character"}, reporting the name of the table }
   }
 }

@@ -5,10 +5,10 @@
 Function/method to calculate the expected life.
 }
 \description{
-This method calculates the expected life span between x and x+n.
+This method calculates the expected life span between ages x and x+n.
 }
 \usage{
-exn(object, x, n)
+exn(object, x, n,type="curtate")
 }
 
 \arguments{
@@ -20,6 +20,9 @@ Age from which the life span should be calculated.
 }
   \item{n}{
 Time until which the expected life should be calculated. Assumed omega - x whether missing.
+}
+\item{type}{
+Either complete or curtate
 }
 }
 \value{
@@ -43,19 +46,12 @@ Giorgio A. Spedicato.
 }
 
 \examples{
-\dontrun{
+
 
 	#loads and show
-	data(demoita)
-	head(demoita)
-	#creates ips55 life and actuarial table
-	lxIPS55M<-with(demoita, IPS55M)
-	pos2Remove<-which(lxIPS55M %in% c(0,NA)) #remove missing and zeros
-	lxIPS55M<-lxIPS55M[-pos2Remove]
-	xIPS55M<-seq(0,length(lxIPS55M)-1,1)
-	#create the table
-	IPS55Mlt=new("lifetable",x=xIPS55M,lx=lxIPS55M,name="IPS55M")
-	#shows number of death between 90 and 92
-	dxt(object=IPS55Mlt, x=90, t=2)
-}
+	data(soa08Act)
+	exn(object=soa08Act, x=0)
+	exn(object=soa08Act, x=0,type="complete")
+	
+
 }
