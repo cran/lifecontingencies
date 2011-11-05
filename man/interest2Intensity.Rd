@@ -8,11 +8,11 @@ Function to obtain the force of interest from APR
 This function calculates the force of interest from an annual effective interest rate.
 }
 \usage{
-interest2Intensity(interest)
+interest2Intensity(i)
 }
 
 \arguments{
-  \item{interest}{
+  \item{i}{
 	A numeric value representing the APR
 }
 }
@@ -30,25 +30,19 @@ A numeric value representing the calculated force of interest.
 Giorgio A. Spedicato
 }
 
-
-
 \seealso{
 \code{\link{intensity2Interest}}
 }
 
 
 \section{Warning }{
-	This package is provided as is, without any guarantee regarding the accuracy of calculations. The author disclaims any liability arising by  
+	This function is provided as is, without any guarantee regarding the accuracy of calculations. The author disclaims any liability arising by  
 	any eventual losses arising from direct or indirect use of this package.
 }
 
 
 \examples{
-
-
-#an intestest of 0.02 corresponds to a force of interest of of 
-interest2Intensity(interest=0.02)
-
-
+#an interest rate equal to 0.02 corresponds to a force of interest of of 
+interest2Intensity(i=0.02)
 }
 

@@ -5,6 +5,10 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{lifecon}
+\usepackage{draftwatermark}
+\SetWatermarkText{Draft}
+\SetWatermarkScale{1.5}
+
 %\usepackage{myVignette}
 
 %\VignetteIndexEntry{An introduction to lifecontingencies package}
@@ -104,7 +108,7 @@ The structure of the vignette document is:
 	\item Section \ref{sec:statistics} describes the underlying statistical and financial concepts 
 	regarding the life contingencies.
 	\item Section \ref{sec:examples} gives a wide choice of lifecontingencies packages example.
-	\item Finally section \label{sec:discussion} will provide a discussion of results and further potential
+	\item Finally section \ref{sec:discussion} will provide a discussion of results and further potential
 	developments.
 \end{enumerate}
 
@@ -137,11 +141,19 @@ table better fit to the insureds pool experience.\\
 Financial mathematic deals with monetary amount that could be available in different times and 
 whose possession is not certain. Probably the most important concept in classical financial mathematics 
 is the present value (see formula \ref{eq:CF}), that represent the currently valued figure for a series of cash flows $CF_t$ available in 
-different periods of time using interest rates $i_t$ as the measure of price of money per unit of time. All
-financial matematic functions can be seen as an adpted version of formula \ref{eq:CF}.\\
+different periods of time using interest rates $i_t$ as the measure of price of money per unit of time.
+Formula \ref{eq:interest} shows the relationship between interest and discount rates, both effective 
+and nominal.\\
 
 \begin{equation}
-	PV = \sum\limits_{t \in T}^{} {C{F_t}} {\left( {1 + {i_t}} \right)^{ - t}}
+\left(1+i \right)^t=\left(1-d \right)^{-t} = \left(1+\frac{i^m}{m} \right)^{t*m} = \left(1-\frac{d^m}{m} \right)^{-t*m}\label{eq:interest}
+\end{equation}
+
+All financial matemathic functions (as annuities, $\bar{a}_{\lcroof{n}}$, or accumulated values, $s_{\lcroof{n}}$) can be seen as 
+an adapted version of formula \ref{eq:CF}.\\
+
+\begin{equation}
+	PV = \sum\limits_{t \in T}^{} {CF_t} {\left( 1 + i_t \right)^{ - t}}
 	\label{eq:CF}
 \end{equation}
 
@@ -204,13 +216,23 @@ Demos and vignettes (like this document) are also available.\\
 
 \subsection{Classical financial mathematics example}
 
-Two examples will show classical financial mathematics applications of package lifecontingencies: present value analysis, the 
-amortization of a loan and a savings account projection.\\ Functions to switch between nominal and effective interest rates have been
-also developed.\\
- 
+The lifecontingencies package provides function to perform classical financial analysis.\\
+Functions \code{real2Nominal} and \code{nominal2Real} allows to switch easily from nominal to effective
+APR easily. Functions \code{annuity} and \code{accumulatedValue} calculates the values of ${a_{\left. {\overline {\, 
+ n \,}}\! \right| }}$ and ${s_{\left. {\overline {\, 
+ n \,}}\! \right| }}$.
 
-The present value of a cash flow series,$\bar{c_T}$ is $PV\left( {{{\bar c}_T}} \right) = \sum\limits_{t \in T}^{} {{c_t}{v_{{t_i}}}^t} $ and 
-if we consider probabilities the latter formula became an actuarial present value, $PV\left( {{{\bar c}_T}} \right) = \sum\limits_{t \in T}^{} {{p_{{t_i}}}{c_t}{v_{{t_i}}}^t}$.
+
+\subsubsection{Interest rate functions}
+
+<<interest rates functions>>=
+	#an APR of 3% is equal to a 
+	real2Nominal(0.03,12)
+	#of nominal interest rate while
+	#6% annual  nominal interest rate is the same of 
+	nominal2Real(0.06,12)
+	#APR
+@
 
 
 \subsubsection{Present value analysis}
@@ -236,16 +258,16 @@ if we consider probabilities the latter formula became an actuarial present valu
 capital=100000
 interest=0.05 #assume 5% of interest
 payments_per_year=2 #montly paymentsa
-effectiveRate=(1+interest)^(1/payments_per_year)-1
+montlyRate=(1+interest)^(1/payments_per_year)-1
 years=10 #ten years length of the loan
-installment=capital/annuity(i=effectiveRate, periods=years*payments_per_year)
+installment=capital/annuity(i=interest, n=years,m=payments_per_year)
 installment	
 #compute the balance fue
 balance_due=numeric(years*payments_per_year)
-balance_due[1]=capital*(1+effectiveRate)-installment
+balance_due[1]=capital*(1+montlyRate)-installment
 for(i in 2:length(balance_due)) 
 {
-	balance_due[i]=balance_due[i-1]*(1+effectiveRate)-installment
+	balance_due[i]=balance_due[i-1]*(1+montlyRate)-installment
 	cat("Payment ",i, " balance due:",round(balance_due[i]),"\n")
 }
 
@@ -265,7 +287,7 @@ for(i in 2:length(balance_due))
 		service_charge=1
 		service_fee=(0.01*min(100,amount)+0.005*max(0,min(50,amount-100)))
 		invested_amount=amount-service_charge-service_fee
-		out=invested_amount*accumulatedValue(interestRates=rate, periods=periods)
+		out=invested_amount*accumulatedValue(i=rate, periods=periods)
 		return(out)
 	}
 	
@@ -322,12 +344,50 @@ slot.\\
 	fakeAct=new("actuarialtable",x=fakeLt@x, lx=fakeLt@lx, interest=irate, name="fake actuarialtable")
 @
 
-Currently just one method, \textbf{getOmega} has been implemented for lifetable and actuarialtable S4 classes,
+Currently just one method, \code{getOmega} has been implemented for lifetable and actuarialtable S4 classes,
 that provides the $\omega$ age.
 
 <<method>>=
 	getOmega(fakeAct)
 @
+
+Nevertheless the easiest way to create a \code{lifetable} object is to start from a 
+\code{data.frame}.
+<<create from data frame>>=
+	data(demoUsa) #load USA Social Security LT
+	usaMale07=demoUsa[,c("age", "USSS2007M")]
+	usaMale00=demoUsa[,c("age", "USSS2000M")]
+	#coercing from data.frame to lifecontingencies requires x and lx names
+	names(usaMale07)=c("x","lx")
+	names(usaMale00)=c("x","lx")
+	#apply coerce methods and changes names
+	usaMale07Lt<-as(usaMale07,"lifetable")
+	usaMale07Lt@name="USA MALES 2007"
+	usaMale00Lt<-as(usaMale00,"lifetable")
+	usaMale00Lt@name="USA MALES 2000"
+@
+
+
+An other way to obtain lifetable object is to generate them from one year survival or death probabilities. These probabilities 
+could for example be obtained from mortality projection methods (e.g. Lee - Carter).
+
+<<create from survival rates>>=
+	#use 2002 Italian males life tables
+	data(demoIta)
+	itaM2002<-demoIta[,c("X","SIM92")]
+	names(itaM2002)=c("x","lx")
+	itaM2002Lt<-as(itaM2002,"lifetable")
+	itaM2002Lt@name="IT 2002 Males"
+	#reconvert in data frame
+	itaM2002<-as(itaM2002Lt,"data.frame")
+	#add qx
+	itaM2002$qx<-1-itaM2002$px
+	#reduce to 20% one year death probability for ages between 20 and 60
+	for(i in 20:60) itaM2002$qx[itaM2002$x==i]=0.2*itaM2002$qx[itaM2002$x==i]
+	#otbain the reduced mortality table
+	itaM2002reduced<-probs2lifetable(probs=itaM2002$qx, radix=100000,type="qx", name="IT 2002 Males reduced")
+@
+
 
 \subsection{Survival distribution and life tables}
 
@@ -364,12 +424,12 @@ If we want a more real example, lets use the IPS55 Italian population life table
 <<ips55 expected life time>>=
 #create the tables
 
-	lxIPS55M<-with(demoita, IPS55M)
+	lxIPS55M<-with(demoIta, IPS55M)
 	pos2Remove<-which(lxIPS55M %in% c(0,NA))
 	lxIPS55M<-lxIPS55M[-pos2Remove]
 	xIPS55M<-seq(0,length(lxIPS55M)-1,1)
 
-	lxIPS55F<-with(demoita, IPS55F)
+	lxIPS55F<-with(demoIta, IPS55F)
 	pos2Remove<-which(lxIPS55F %in% c(0,NA))
 	lxIPS55F<-lxIPS55F[-pos2Remove]
 	xIPS55F<-seq(0,length(lxIPS55F)-1,1)
@@ -387,7 +447,6 @@ If we want a more real example, lets use the IPS55 Italian population life table
 	exyt(ips55M, ips55F, x=65,y=63, status="joint")
 	
 @
-
 
 
 

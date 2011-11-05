@@ -45,7 +45,8 @@ setMethod("getOmega","lifetable",
 	
 	out<-data.frame(x=object@x, lx=object@lx,px=lxplus/object@lx, 
 			ex=ex)
-	
+	#remove last row
+	out<-out[1:(nrow(out)-1),]
 	rownames(out)=NULL
 	return(out)
 }
@@ -140,6 +141,7 @@ setAs("lifetable","data.frame",
 setAs(from="data.frame",to="lifetable",
 		def=function(from){
 			if(any(is.na(match(c("x","lx"), names(from))))) stop("Error! Both x and lx columns required!")
+			from<-from[complete.cases(from),]
 			out<-new("lifetable",x=from$x, lx=from$lx, name="COERCED")
 			return(out)
 		}

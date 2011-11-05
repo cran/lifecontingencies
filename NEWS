@@ -1,4 +1,9 @@
 CHANGELOG
+-Version 0.0.6
+	Improved documentation
+	Improved financial functions
+	Added function to obtain lifetables from raw survival or deaths probabilites
+
 -Version 0.0.5
 	Added methods for lifecontingencies objects
 	improved vignettes (added JSS template).

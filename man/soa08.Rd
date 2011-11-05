@@ -5,7 +5,10 @@
 Society of Actuaries life table actuarial object.
 }
 \description{
-This table has been used by the classical book Actuarial Mathematics and by the Society of Actuaries for US professional examinations.
+This table has been used by the classical book 
+Actuarial Mathematics to exemplify life contingencies calculations.
+Society of Actuaries has been using this table when administering  
+US actuarial professional MLC preliminary exam.
 }
 \usage{data(soa08)}
 \format{
@@ -16,7 +19,11 @@ Formal class 'lifetable' [package ".GlobalEnv"] with 3 slots
   ..@ name: chr "SOA2008"
 }
 \details{
-Early ages are miss.
+Early ages are missed in the original life table and have been filled with
+straight interpolation.
+}
+\note{
+This table is based on US 1990 general population mortality.
 }
 \source{
 \url{http://www.soa.org/files/pdf/edu-2008-spring-mlc-tables.pdf}

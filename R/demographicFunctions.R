@@ -196,3 +196,20 @@ exyt<-function(objectx, objecty,x,y,t,status="joint")
 	out=sum(probs)
 	return(out)
 }
+
+probs2lifetable<-function(probs, radix=10000, type="px", name="ungiven")
+{
+	if(any(probs>1) | any(probs<0)) stop("Error: probabilities must lie between 0 an 1")
+	if(!(type %in% c("px","qx"))) stop("Error: type must be either px or qx")
+	if(type=="px" & probs[length(probs)]!=0) stop("Error: last survival probability must be 0")
+	if(type=="qx" & probs[length(probs)]!=1) stop("Error: last death probability must be 1")
+	lx=numeric(length(probs))
+	lx[1]=radix
+	for(i in 2:length(probs))
+	{
+		if(type=="px") lx[i]=lx[i-1]*probs[i-1] else lx[i]=lx[i-1]*(1-probs[i-1])
+	}
+	out=new("lifetable",x=seq(0,length(probs)-1), lx=lx, name=name)
+	return(out)
+}
+

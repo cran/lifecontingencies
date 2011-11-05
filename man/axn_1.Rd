@@ -19,7 +19,7 @@
 	Age of the insured.
 }
   \item{n}{
-	Duration of insurance, if missing the insurance is considered whole life \eqn{n=\omega-x-m-1}
+	Coverage period, if missing the insurance is considered whole life \eqn{n=\omega-x-m}
 }
   \item{i}{
 	Interest rate (overrides the interest rate of the actuarial table object).
@@ -28,10 +28,11 @@
 	Deferring period, even fractional, if missing assumed to be 0.
 }
   \item{k}{
-	Number of periods per year, default=1.
+	Number of periods per year at the end of which the capital is payable in case of 
+	insured event, default=1 (capital payable at the end of death year).
 }
   \item{type}{
-	A string, either "EV" (default value) or "ST".
+	A character value, either "EV" (default value) or "ST".
 }
 }
 \details{
@@ -52,10 +53,7 @@
 	The accuracy of stochastic simulation is questionable. It will be checked with details in 
 	successive releases of the package.
 }
-
-
-
-\section{Warning }{
+\section{Warning}{
 	The function is provided as is, without any guarantee regarding the accuracy of calculation. We disclaim any liability for eventual 
 	losses arising from direct or indirect use of this software.
 }
@@ -74,7 +72,7 @@
 		#check an actuarial relevant relationship
 		k=12
 		i=0.06
-		j=k*((1+i)^(1/k)-1)
+		j=real2Nominal(i,k)
 		Axn(soa08Act, 30,k=12)
 		i/j*Axn(soa08Act, 30,k=1)
 	

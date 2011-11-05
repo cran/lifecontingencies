@@ -2,25 +2,27 @@
 \alias{real2Nominal}
 
 \title{
-Function to switch from effective APR to nominal k-periods APR
+Function to switch from  APR to nominal m-periods interest rate
 }
 \description{
-This functions switchs from nominal to effective APR.
+This functions switches from nominal to effective APR.
 }
 \usage{
-real2Nominal(interestRate, periods = 1)
+real2Nominal(i, m = 1)
 }
 
 \arguments{
-  \item{interestRate}{
+  \item{i}{
 Annual effective interest rate.
 }
-  \item{periods}{
-Numbers of subperiods.
-}
+  \item{m}{Numbers of compounding period.}
 }
 \details{
-	Fractional payments have not been implemented yet.
+The functtion follows the equation 
+\eqn{\left( {1 + i} \right)^t = (1 - d)^{ - t} = 
+\left( {1 + \frac{{{i^{\left( m \right)}}}}{m}} \right)^{m*t} = 
+\left( 1 - \frac{{{d^{\left( m \right)}}}}{m} \right)^{ - m*t}}
+
 }
 \value{
 A numeric value
@@ -43,7 +45,7 @@ A numeric value
 \code{\link{nominal2Real}}
 }
 \examples{
-#an effective percentage rate of 12% corresponds to an nominal APR of
-real2Nominal(interestRate=0.12, periods = 12)
+#an APR of 12\% corresponds to an nominal interest rate compounded monthly of
+real2Nominal(i=0.12, m = 12)
 
 }

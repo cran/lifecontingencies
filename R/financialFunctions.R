@@ -24,62 +24,64 @@ presentValue=function(cashFlows, timeIds,interestRates, probabilities)
 }
 
 #annuity function
-annuity=function(interestRates, periods, type="immediate")
+annuity=function(i, n,m=1, type="immediate")
 {
 	#checks
-	if(missing(interestRates)) stop("Error! Missing interest rates") 
-	if(missing(periods)) stop("Error! Missing periods") 
+	if(missing(i)) stop("Error! Missing interest rates") 
+	if(missing(n)) stop("Error! Missing periods") 
+	if(m<1) stop("Error! m must be greater or equal than 1") 
+	if(is.infinite(n)) return(1/i) #perpetuity
 	
-	if(is.infinite(periods)) return(1/interestRates) #perpetuity
-	
-	if(type=="immediate") timeIds=seq(from=1, to=periods, by=1)
-	else timeIds=seq(from=0, to=periods-1, by=1) #due
-	iRate=rep(interestRates,length.out=periods)
-	out=presentValue(cashFlows=rep(1,length.out=periods),interestRates = iRate, timeIds=timeIds)
+	if(type=="immediate") timeIds=seq(from=1/m, to=n, by=1/m)
+	else timeIds=seq(from=0, to=n-1/m, by=1/m) #due
+	iRate=rep(i,length.out=n*m)
+	out=presentValue(cashFlows=rep(1,length.out=n*m),interestRates = iRate, timeIds=timeIds)
 	return(out)
 }
 
 #decreasing annuity
-decreasingAnnuity=function(interestRate, periods)
+decreasingAnnuity=function(i, n)
 {
 	out=NULL
-	if(missing(periods)) stop("Error! Need periods")
-	if(missing(interestRate)) stop("Error! Need interest rate")
-	out=(periods-annuity(interestRates=interestRate, periods=periods, type="immediate"))/periods
+	if(missing(n)) stop("Error! Need number of periods")
+	if(missing(i)) stop("Error! Need interest rate")
+	out=(n-annuity(i=i, n=n, type="immediate"))/n
 	return(out)
 
 }
 #increasing annuity
-increasingAnnuity=function(interestRate, periods,type="immediate")
+increasingAnnuity=function(i, n,type="immediate")
 {
 	out=NULL
-	if(missing(periods)) stop("Error! Need periods")
-	if(missing(interestRate)) stop("Error! Need interest rate")
-	out=(annuity(interestRates=interestRate, periods=periods, type="due")-periods*(1+interestRate)^periods)/interestRate
-	if(type=="due") out=out*(1+interestRate)
+	if(missing(n)) stop("Error! Need periods")
+	if(missing(i)) stop("Error! Need interest rate")
+	out=(annuity(i=i, n=n, type="due")-n*(1+i)^n)/i
+	if(type=="due") out=out*(1+i)
 	return(out)
 }
-accumulatedValue=function(interestRates, periods, type="immediate")
+accumulatedValue=function(i, periods, type="immediate")
 {
-	if(is.infinite(periods)) return(1/interestRates)
-	if(missing(interestRates)) stop("Error! Missing interest rates")
+	if(is.infinite(periods)) return(1/i)
+	if(missing(i)) stop("Error! Missing interest rates")
 	if(type=="immediate") timeIds=seq(from=1, to=periods, by=1)
 	else timeIds=seq(from=0, to=periods-1, by=1) #due
 	timeIds=-timeIds
-	iRate=rep(interestRates,length.out=periods)
-	out=presentValue(cashFlows=rep(1,length.out=periods),interestRates = iRate, timeIds=timeIds)
+	iRate=rep(i,length.out=periods)
+	out=presentValue(cashFlows=rep(1,length.out=periods),i = iRate, timeIds=timeIds)
 	return(out)
 }
 #obtain the nominal interest rate
-nominal2Real=function(interestRate, periods=1)
+nominal2Real=function(i, m=1, type="interest")
 {
-	out=(1+interestRate/periods)^periods-1
+	out=NULL
+	if(type=="interest") out=(1+i/m)^m-1 else 
+		out=1-(1-i/m)^m
 	return(out)
 }
 #obtain the real interest rate
-real2Nominal=function(interestRate, periods=1)
+real2Nominal=function(i, m=1)
 {
-	out=((1+interestRate)^(1/periods)-1)*periods
+	out=((1+i)^(1/m)-1)*m
 	return(out)
 }
 #obtain the interest from intensity
@@ -89,8 +91,8 @@ intensity2Interest=function(intensity)
 	return(out)
 }
 #obtain the intensity rate from the interest rate
-interest2Intensity=function(interest)
+interest2Intensity=function(i)
 {
-	out=log(1+interest)
+	out=log(1+i)
 	return(out)
 }

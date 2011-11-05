@@ -1,5 +1,5 @@
 #using italian IPS55 life table (MALES), 2% interest rate
-data(demoita)
+data(demoIta)
 lxIPS55M<-with(demoita, IPS55M)
 pos2Remove<-which(lxIPS55M %in% c(0,NA))
 lxIPS55M<-lxIPS55M[-pos2Remove]

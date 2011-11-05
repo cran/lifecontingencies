@@ -8,11 +8,11 @@
 	Financial mathematic function to evaluate a series of payments of 1
 }
 \usage{
-	accumulatedValue(interestRates, periods, type = "immediate")
+	accumulatedValue(i, periods, type = "immediate")
 }
 
 \arguments{
-  \item{interestRates}{
+  \item{i}{
 	Effective interest rate expressed in decimal form. E.g. 0.03 means 3\%.
 }
   \item{periods}{
@@ -55,7 +55,7 @@
 
 ieff=(1+0.02)^(1/12)-1
 
-100*accumulatedValue(interestRates=ieff, periods=12*10, type="immediate")
+100*accumulatedValue(i=ieff, periods=12*10, type="immediate")
 
 }
 

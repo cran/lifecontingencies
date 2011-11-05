@@ -2,10 +2,10 @@
 \alias{Tx}
 
 \title{
-The number of person-years lived after exact age x
+Number of person-years lived after exact age x
 }
 \description{
-This function returns the number of person-years lived after exac age x
+This function returns the number of years lived after exact age x.
 }
 \usage{
 Tx(object, x)

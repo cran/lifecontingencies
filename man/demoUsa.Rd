@@ -4,7 +4,7 @@
 \title{United States Social Security life tables
 }
 \description{
-This dataset contains period life tables for years 1990, 2000 and 2007. Both males and females 
+This data set contains period life tables for years 1990, 2000 and 2007. Both males and females 
 life tables are reported.
 }
 \usage{data(demoUsa)}

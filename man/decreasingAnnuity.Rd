@@ -8,14 +8,14 @@
 	This function evalutates decreasing annuities.
 }
 \usage{
-decreasingAnnuity(interestRate, periods)
+decreasingAnnuity(i, n)
 }
 
 \arguments{
-  \item{interestRate}{
+  \item{i}{
 	A numeric value representing the interest rate.
 }
-  \item{periods}{
+  \item{n}{
 	The number of periods.
 }
 }
@@ -47,7 +47,7 @@ Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition),
 \examples{
 	#the present value of 10, 9, 8,....,0 payable at the end of the period
 	#for 10 periods is
-	decreasingAnnuity(interestRate=0.03, periods=10)
+	decreasingAnnuity(i=0.03, n=10)
 	#assuming a 3% interest rate
 }
 

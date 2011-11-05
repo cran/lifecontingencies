@@ -8,16 +8,20 @@ Annuity function
 Function to calculate present value of annuities-certain.
 }
 \usage{
-annuity(interestRates, periods, type = "immediate")
+annuity(i, n,m=1,type = "immediate")
 }
 
 \arguments{
-  \item{interestRates}{
+  \item{i}{
 	Effective interest rate expressed in decimal form. E.g. 0.03 means 3\%. It can be a vector of interest rates of the same length
-	of periods. If interestRate = \code{infinity} then it returns the value of a perpetuity.
+	of periods. If i = \code{infinity} then it returns the value of a perpetuity.
 }
-  \item{periods}{
+  \item{n}{
 	Number of payments.
+}
+  \item{m}{
+	Frequency of payments. A payment of \eqn{m^-1} is supposed to be performed at the end of each due 
+	date.
 }
   \item{type}{
 	A string, either "immediate" or "due".
@@ -38,7 +42,9 @@ annuity(interestRates, periods, type = "immediate")
 	Giorgio A. Spedicato
 }
 \note{
-	Fractional payments have not been implemented yet.
+	The value returned by annuity function derives from direct calculation of the discounted cash flow and 
+	not from formulas, like \eqn{{a^{\left( m \right)}}_{\left. {\overline {\, 
+ n \,}}\! \right| } = \frac{{1 - {v^n}}}{{{i^{\left( m \right)}}}}}.
 }
 
 
@@ -48,6 +54,6 @@ annuity(interestRates, periods, type = "immediate")
 }
 \examples{
 	# The present value of 5 payments of 1000 at one year interval beginnin now when the interest rate is 2.5% is
-	1000*annuity(interestRates=0.05, periods=5, type = "due")
+	1000*annuity(i=0.05, n=5, type = "due")
 }
 

@@ -8,14 +8,14 @@
 	This function evalutates non - stochastic increasing annuities.
 }
 \usage{
-	increasingAnnuity(interestRate, periods, type = "immediate")
+	increasingAnnuity(i, n, type = "immediate")
 }
 
 \arguments{
-  \item{interestRate}{
+  \item{i}{
 	A numeric value representing the interest rate.
 }
-  \item{periods}{
+  \item{n}{
 	The number of periods.
 }
   \item{type}{
@@ -50,7 +50,7 @@ Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition),
 \examples{
 	#the present value of 1,2,...,n-1,n payable at the end of the period
 	#for 10 periods is
-	increasingAnnuity(interestRate=0.03, periods=10)
+	increasingAnnuity(i=0.03, n=10)
 	#assuming a 3% interest rate
 }
 

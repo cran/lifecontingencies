@@ -4,7 +4,7 @@ intEff=(1+0.05)^(1/12)-1
 Capital=100000
 #Montly installment
 
-R=Capital/annuity(interestRates=intEff, periods=10*12, type = "immediate")
+R=Capital/annuity(i=intEff, n=10*12, type = "immediate")
 R
 balance=numeric(10*12+1)
 capitals=numeric(10*12+1)

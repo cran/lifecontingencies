@@ -5,16 +5,16 @@
 
 library(lifecontingencies)
 data(soa08Act)
-data(demoita)
+data(demoIta)
 
 #create IPS55
 
-lxIPS55M<-with(demoita, IPS55M)
+lxIPS55M<-with(demoIta, IPS55M)
 pos2Remove<-which(lxIPS55M %in% c(0,NA))
 lxIPS55M<-lxIPS55M[-pos2Remove]
 xIPS55M<-seq(0,length(lxIPS55M)-1,1)
 
-lxIPS55F<-with(demoita, IPS55F)
+lxIPS55F<-with(demoIta, IPS55F)
 pos2Remove<-which(lxIPS55F %in% c(0,NA))
 lxIPS55F<-lxIPS55F[-pos2Remove]
 xIPS55F<-seq(0,length(lxIPS55F)-1,1)
@@ -22,14 +22,10 @@ xIPS55F<-seq(0,length(lxIPS55F)-1,1)
 ips55M=new("lifetable",x=xIPS55M, lx=lxIPS55M, name="IPS 55 Males")
 ips55F=new("lifetable",x=xIPS55F, lx=lxIPS55F, name="IPS 55 Females")
 
-
 #effetto tassi di interesse life insurance
 irates=seq(from=0.01, to=0.06, by=0.0025)
 insurance=numeric(length(irates))
 for(i in 1:length(irates)) insurance[i]=Axn(soa08Act,40,10,irates[i])
-
-
-
 
 #reserve annuity
 

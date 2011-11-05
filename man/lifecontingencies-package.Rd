@@ -14,8 +14,8 @@ Calculates life contingencies and financial mathematics functions.
 \tabular{ll}{
 Package: \tab lifecontingencies\cr
 Type: \tab Package\cr
-Version: \tab 0.0.5\cr
-Date: \tab 2011-09-30\cr
+Version: \tab 0.0.6\cr
+Date: \tab 2011-11-05\cr
 License: \tab GPL-2.0\cr
 LazyLoad: \tab yes\cr
 }
@@ -31,7 +31,7 @@ Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition), 2008, AC
 }
 
 \note{
-Documentations and function checks are still in progress.
+Documentations and functions checks are still in progress.
 }
 
 \seealso{
@@ -48,11 +48,12 @@ Documentations and function checks are still in progress.
 
 ##calculates monthly installment of a loan of $100,000, interest rate 5.00%
 
-intEff=(1+0.05)^(1/12)-1
+i=0.05
+monthlyInt=(1+i)^(1/12)-1
 Capital=100000
 #Montly installment
 
-R=Capital/annuity(interestRates=intEff, periods=10*12, type = "immediate")
+R=Capital/annuity(i=i, n=10,m=12, type = "immediate")
 R
 balance=numeric(10*12+1)
 capitals=numeric(10*12+1)
@@ -62,13 +63,16 @@ interests[1]=0
 capitals[1]=0
 
 for(i in (2:121))	{
-			balance[i]=balance[i-1]*(1+intEff)-R
-			interests[i]=balance[i-1]*intEff
+			balance[i]=balance[i-1]*(1+monthlyInt)-R
+			interests[i]=balance[i-1]*monthlyInt
 			capitals[i]=R-interests[i]
 			}
-loanSummary=data.frame(rate=c(0, rep(R,10*12)), balance, interests, capitals)
+loanSummary=data.frame(rate=c(0, rep(R,10*12)), 
+	balance, interests, capitals)
 
-		#assumes SOA example life table to be load
+
+
+#using SOA MLC life table
 
 		data(soaLt)
 		soa08Act=with(soaLt, new("actuarialtable",interest=0.06,
