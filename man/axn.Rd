@@ -20,24 +20,24 @@ Annuity immediate and due function.
 	Age of the annuity.
 }
   \item{n}{
-	Number of terms of the annuity, if missing annuity is intended to last until death.
+	Number of terms of the annuity, if missing annuity is intended to be paid until death.
 }
   \item{i}{
-	Interest rate (overrides the interest rate of the actuarial table object).
+	Interest rate (overrides the interest rate of the \code{actuarialtable} object).
 }
   \item{m}{
-	Postponement period, even fractional, if missing assumed to be 1.
+	Deferring period. Assumed to be 1 whether missing.
 }
   \item{k}{
-	Number of fractional payments per period, if missing assumed to be 1.
+	Number of fractional payments per period. Assumed to be 1 whether missing.
 }
   \item{type}{
-	A string, eithed "EV" (default value) or "ST" (stocastic realization).
+	A string, eithed "EV" (default value) or "ST" (stochastic realization).
 }
 }
 \details{
 	When "ST" has been selected a stochastic value representing a number drawn from the domain of \deqn{
-	a_{x}^{n}} is drawn. "EV" calculates the standard stochastic value.
+	a_{x}^{n}} is drawn. "EV" calculates the classical APV.
 }
 \value{
 	A numeric value.
@@ -49,25 +49,22 @@ Annuity immediate and due function.
 	Giorgio A. Spedicato
 }
 \note{
-	When x = omega zero is returned.
+	When either \eqn{x=\omega} or \eqn{n=0}   zero is returned.
 }
 
-\section{Warning }{
+\section{Warning}{
 	The function is provided as is, without any warranty regarding the accuracy of calculations. The author disclaims any liability for eventual 
 	losses arising from direct or indirect use of this software.
 }
-
 \seealso{
 	\code{\link{annuity}}, \code{\link{Exn}}
 }
 \examples{
-
-		#assumes SOA example life table to be load
+		#assume SOA example life table to be load
 		data(soaLt)
 		soa08Act=with(soaLt, new("actuarialtable",interest=0.06,
 		x=x,lx=Ix,name="SOA2008"))
 		#evaluate and life-long annuity for an aged 65
 		axn(soa08Act, x=65) 
-
 }
 

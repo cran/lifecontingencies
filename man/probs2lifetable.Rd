@@ -1,7 +1,7 @@
 \name{probs2lifetable}
 \alias{probs2lifetable}
 \title{
-Function to create lifetable object given one given probabilities
+Life table from probabilities
 }
 \description{
 This function returns a newly created lifetable object given either 
@@ -13,8 +13,9 @@ probs2lifetable(probs, radix = 10000, type = "px", name = "ungiven")
 
 \arguments{
   \item{probs}{
-	A real valued vector representing either survival or death (one year) probabilities.
-	The last value must be either 1 or 0, depending if it represent death or survival probabilities respectively.
+	A real valued vector representing either one year survival or death probabilities.
+	The last value in the vector must be either 1 or 0, depending if it represents 
+	death or survival probabilities respectively.
 }
   \item{radix}{
 The radix of the life table.
@@ -23,14 +24,14 @@ The radix of the life table.
 Character value either "px" or "qx" indicating how probabilities must be interpreted.
 }
   \item{name}{
-The character value to be put in the corresponding slot of returned object
+The character value to be put in the corresponding slot of returned object.
 }
 }
 \details{
-The omega value is the length of the probs vector. 
+The \eqn{\omega} value is the length of the probs vector. 
 }
 \value{
-A lifetable object.
+A \code{\linkS4class{lifetable}} object.
 }
 \references{
 	Actuarial Mathematics (Second Edition), 1997, by Bowers, N.L., Gerber, H.U., Hickman, J.C., 
@@ -40,8 +41,7 @@ A lifetable object.
 Giorgio A. Spedicato
 }
 \note{
-This function is very 
-useful when used in conjunction with a mortality projection package.
+This function allows to use mortality projection given by other softwares with the lifecontingencies package.
 }
 
 \section{Warning }{	The function is provided as is, without any guarantee regarding the accuracy of calculation. We disclaim any liability for eventual 

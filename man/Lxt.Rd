@@ -5,7 +5,7 @@
 Number of person - years lived.
 }
 \description{
-	This function return the Lxt value.
+	This function calculates the Lxt demographic function.
 }
 \usage{
 Lxt(object, x, t = 1, fxt = 0.5)
@@ -16,13 +16,12 @@ Lxt(object, x, t = 1, fxt = 0.5)
 A lifetable object.
 }
   \item{x}{
-	Age when the period begins.
+	Age.
 }
   \item{t}{
-	Length of the period
+	Length of the period.
 }
-  \item{fxt}{
-separation factor, default value is 0.5 (half year).
+  \item{fxt}{separation factor, default value is 0.5 (half year).
 }
 }
 \details{
@@ -50,7 +49,6 @@ This function is used in life tables analysis
 \code{\link{Tx}}, \code{\linkS4class{lifetable}}
 }
 \examples{
-
 		#assumes SOA example life table to be load
 		data(soaLt)
 		soa08Act=with(soaLt, new("actuarialtable",interest=0.06,

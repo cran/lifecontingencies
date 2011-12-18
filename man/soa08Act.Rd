@@ -5,7 +5,7 @@
 Society of Actuaries tables to perform life contingencies calculations.
 }
 \description{
-An object of actuarialtable built from SOA life table assuming an interest rate of 6%.
+An object of actuarialtable built from SOA life table. Interest rate is 6%.
 }
 \usage{data(soa08Act)}
 \format{

@@ -37,7 +37,7 @@ Class \code{"\linkS4class{lifetable}"}, directly.
 Giorgio A. Spedicato
 }
 \note{
-At the moment the interest is not stochastic.
+The interest slot will handle time-varying interest rates in the future.
 }
 
 \section{Warning }{

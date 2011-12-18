@@ -2,10 +2,10 @@
 \alias{increasingAnnuity}
 
 \title{
-	Function to evaluate an increasing annuity.
+	Increasing annuity.
 }
 \description{
-	This function evalutates non - stochastic increasing annuities.
+	This function evaluates non - stochastic increasing annuities.
 }
 \usage{
 	increasingAnnuity(i, n, type = "immediate")
@@ -19,11 +19,11 @@
 	The number of periods.
 }
   \item{type}{
-	Either "immediate" or "due"
+	Type of annuity. Either "immediate" or "due".
 }
 }
 \details{
-	An increasing annuity has the following flows of payments: 1,2,...,n-1,n
+	An increasing annuity shows the following flow of payments: \eqn{1,2,\ldots,n-1,n}
 }
 \value{
 	The value of the annuity.
@@ -36,7 +36,7 @@ Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition),
 	Giorgio A. Spedicato
 }
 \note{
-	Fractional annuities have not been implemented yet.
+	This function calls internally \code{presentValue} function.
 }
 
 \section{Warning }{
@@ -48,7 +48,8 @@ Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition),
 \code{\link{decreasingAnnuity}},\code{\link{IAxn}}
 }
 \examples{
-	#the present value of 1,2,...,n-1,n payable at the end of the period
+	#the present value of 1,2,...,n-1, n sequence of payments, 
+	#payable at the end of the period
 	#for 10 periods is
 	increasingAnnuity(i=0.03, n=10)
 	#assuming a 3% interest rate

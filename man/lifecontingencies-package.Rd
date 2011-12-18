@@ -3,19 +3,19 @@
 \alias{lifecontingencies}
 \docType{package}
 \title{
-Calculates life contingencies and financial mathematics functions.
+Package to perform actuarial mathematics on life contingencies and classical financial mathematics calculations.
 }
 \description{
-	The lifecontingencies package has been developed to aid actuaries to perform standard life contingencies analysis as long as 
-	standard financial mathematics calculation.
-	Currently most important life contingencies actuarial function have been implemented. Multiple life contingencies misses.
+	The lifecontingencies package has been developed to aid actuaries to perform life contingencies analysis 
+	and financial mathematics calculation. Most important life contingencies 
+	actuarial function have been implemented.
 }
 \details{
 \tabular{ll}{
 Package: \tab lifecontingencies\cr
 Type: \tab Package\cr
-Version: \tab 0.0.6\cr
-Date: \tab 2011-11-05\cr
+Version: \tab 0.0.7\cr
+Date: \tab 2011-12-31\cr
 License: \tab GPL-2.0\cr
 LazyLoad: \tab yes\cr
 }
@@ -31,7 +31,7 @@ Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition), 2008, AC
 }
 
 \note{
-Documentations and functions checks are still in progress.
+Work in progress.
 }
 
 \seealso{
@@ -46,14 +46,18 @@ Documentations and functions checks are still in progress.
 
 \examples{
 
-##calculates monthly installment of a loan of $100,000, interest rate 5.00%
+
+##financial mathematics example
+
+#calculates monthly installment of a loan of 100,000, 
+#interest rate 0.05
 
 i=0.05
 monthlyInt=(1+i)^(1/12)-1
 Capital=100000
 #Montly installment
 
-R=Capital/annuity(i=i, n=10,m=12, type = "immediate")
+R=1/12*Capital/annuity(i=i, n=10,m=12, type = "immediate")
 R
 balance=numeric(10*12+1)
 capitals=numeric(10*12+1)
@@ -70,9 +74,13 @@ for(i in (2:121))	{
 loanSummary=data.frame(rate=c(0, rep(R,10*12)), 
 	balance, interests, capitals)
 
+head(loanSummary)
 
+tail(loanSummary)
 
-#using SOA MLC life table
+##actuarial mathematics example
+
+#APV of an annuity
 
 		data(soaLt)
 		soa08Act=with(soaLt, new("actuarialtable",interest=0.06,

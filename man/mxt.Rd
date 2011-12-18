@@ -5,7 +5,7 @@
 Central mortality rate.
 }
 \description{
-Function to return the central mortality rate.
+This function returns the central mortality rate demographic function.
 }
 \usage{
 mxt(object, x, t)
@@ -30,13 +30,14 @@ Age when the calculation ends, default=1.
 A numeric value representing the central mortality rate between age x and x+t.
 }
 \references{
-Livi Bacci, Introduzione alla demografia, Loersher.
+	Actuarial Mathematics (Second Edition), 1997, by Bowers, 
+	N.L., Gerber, H.U., Hickman, J.C., Jones, D.A. and Nesbitt, C.J.
 }
 \author{
 Giorgio A. Spedicato
 }
 \note{
-This function is used in life table calculations.
+This function is used in demographic analysis.
 }
 \seealso{
 \code{\linkS4class{lifetable}}, \code{\link{Lxt}}

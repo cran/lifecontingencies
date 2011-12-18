@@ -4,10 +4,10 @@
 \alias{qxt}
 
 \title{
-Function to evaluate survival, death probabilities and deaths.
+Functions to evaluate survival, death probabilities and deaths.
 }
 \description{
-These functions evalutate survival and raw death probabilities between age x and x+t
+These functions evaluate raw survival and death probabilities between age x and x+t
 }
 \usage{
 
@@ -24,10 +24,10 @@ qxt(object, x, t, fractional = "linear")
 	A \code{lifetable} object.
 }
   \item{x}{
-	Age of life X.
+	Age of life \code{x}.
 }
   \item{t}{
-	Period until which the age shall be evaluated. Default value is 1
+	Period until which the age shall be evaluated. Default value is 1.
 }
 
   \item{fractional}{
@@ -42,7 +42,7 @@ qxt(object, x, t, fractional = "linear")
 		-hyperbolic: Balducci assumptions. See reference book for details.
 }
 \value{
-A numeric value
+A numeric value representing requested probability.
 }
 \references{
 	Actuarial Mathematics (Second Edition), 1997, by Bowers, N.L., Gerber, H.U., Hickman, J.C., 

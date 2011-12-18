@@ -4,8 +4,9 @@
 \alias{lifetable-class}
 \title{Class \code{"lifetable"}}
 \description{
-	Life table objects allow to define and use life table to evaluate survival probability, mortality rate easily.
-	Such values represent building blocks to estimate life contingencies actuarial value.
+	\code{lifetable} objects allow to define and use life tables with the aim to evaluate 
+	survival probabilities and mortality rates easily.
+	Such values represent the building blocks used to estimate life insurances actuarial mathematics.
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("lifetable", ...)}.

@@ -2,11 +2,12 @@
 \alias{IAxn}
 
 \title{
-Function to evaluate increasing life insurance
+Increasing life insurance
 }
 \description{
-This function evaluate the actuarial value of capital increasing
-life insurance. The amount payable at the end of year of death are: \eqn{1, 2, \ldots, n-1, n}. N can be set as \eqn{\omega-x-1}.
+This function evaluates the APV of an increasing life insurance. 
+The amount payable at the end of year of death are: \eqn{1, 2, \ldots, n-1, n}. 
+N can be set as \eqn{\omega-x-1}.
 }
 \usage{
 IAxn(actuarialtable, x, n,i, m = 0, type = "EV")
@@ -19,20 +20,20 @@ The actuarial table used to perform life - contingencies calculations.
 The age of the insured.
 }
   \item{n}{
-The term of life insurance. If missing it is assumed to be whole - life.
+The term of life insurance. If missing n is set as \eqn{n=\omega - x - m -1}.
 }
 \item{i}{
-	Interest rate (overrides the interest rate of the actuarial table object).
+	Interest rate (overrides the interest rate of the actuarialtable object).
 }
   \item{m}{
-The deferring period. If missing m=0
+The deferring period. If missing, m is set as 0.
 }
   \item{type}{
-If "EV" (default) the actuarial value is returned. Otherwise a number drawn from the distribution of IAXn. 
+If "EV" (default) the actuarial value is returned.
 }
 }
 \details{
-"ST" has not been implemented yet.
+The stochastic value feature has not been implemented yet.
 }
 \value{ A numeric value.
 }

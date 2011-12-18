@@ -195,7 +195,7 @@ IAxn<-function(actuarialtable, x, n,i, m=0, type="EV")
 	if(missing(actuarialtable)) stop("Error! Need an actuarial actuarialtable")
 	if(missing(m)) m=0
 	if(missing(x)) stop("Error! Need age!")
-	m=0 #m is set equal to zero at the moment
+
 	if(missing(n)) n=getOmega(actuarialtable)-x-m #n=getOmega(actuarialtable)-x-m-1
 	if(!missing(i)) interest=i else interest=actuarialtable@interest #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
 	y=x+n
@@ -232,7 +232,7 @@ DAxn<-function(actuarialtable, x, n,i, m=0, type="EV")
 	if(missing(actuarialtable)) stop("Error! Need an actuarial actuarialtable")
 	if(missing(x)) stop("Error! Need age!")
 	if(missing(m)) m=0
-	m=0 #m is set equal to zero at the moment
+	
 	if(missing(n)) n=getOmega(actuarialtable)-x-m #n=getOmega(actuarialtable)-x-m-1
 	if(!missing(i)) interest=i else interest=actuarialtable@interest #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
 	y=x+n
@@ -257,6 +257,32 @@ DAxn<-function(actuarialtable, x, n,i, m=0, type="EV")
 #			return(out)
 #		}
 #	}
+}
+
+#n-year increasing
+#recursive function
+Iaxn<-function(actuarialtable, x, n,i, m=0, type="EV")
+{
+  out<-NULL
+	if(missing(actuarialtable)) stop("Error! Need an actuarial actuarialtable")
+	if(missing(m)) m=0
+	if(missing(x)) stop("Error! Need age!")
+	#m is set equal to zero at the moment
+	if(missing(n)) n=getOmega(actuarialtable)-x-m #n=getOmega(actuarialtable)-x-m-1
+	if(!missing(i)) interest=i else interest=actuarialtable@interest 
+	#i an interest rate is provided the provided interest rate overrides the 
+	#actuarialtable interest rate
+		payments=numeric(n)
+		probs=numeric(n)
+		times=numeric(n)
+		discounts=numeric(n)
+		
+		payments=seq(from=1, to=n, by=1)
+		times=m+seq(from=0, to=(n-1),by=1) 
+		for(i in 1:length(times)) probs[i]=pxt(actuarialtable, x,times[i])
+		discounts=(1+interest)^-(times)
+		out<-sum(payments*discounts*probs)
+	return(out)
 }
 
 

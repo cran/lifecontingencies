@@ -5,8 +5,8 @@
 Present value of a series of cash flows.
 }
 \description{
-This function evaluates the present values of a series of cashFlows, due at specific times, using a specific discount curve and a 
-vector of probabilities.
+This function evaluates the present values of a series of cash flows, given occurrence time.
+Probabilities of occurrence can also be taken into account.
 }
 \usage{
 presentValue(cashFlows, timeIds, interestRates, probabilities)
@@ -31,7 +31,8 @@ Vector of cashFlow, must be coherent with \code{timeIds}
 	Interest rate shall be a fixed number or a vector of the same size of \code{timeIds}.
 }
 \value{
-	A numeric value representing the present value of cashFlows vector, or the actuarial value if probabilities are provided.
+	A numeric value representing the present value of cashFlows vector, or the 
+	actuarial present value if probabilities are provided.
 }
 \references{
 Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition), 2008, ACTEX Publications.
@@ -40,7 +41,8 @@ Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition), 2008, AC
 Giorgio A. Spedicato
 }
 \note{
-This simple function is the kernel working core of the package and of the whole classical financial and mathematics.
+This simple function is the kernel working core of the package. 
+Actuarial and financial mathematics ground on it.
 }
 
 

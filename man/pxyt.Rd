@@ -7,7 +7,7 @@
 Functions to evaluate joint survival probabilities.
 }
 \description{
-These functions evaluates survival and death probabilities for two heads.
+These functions evaluate survival and death probabilities for two heads.
 }
 \usage{
 

@@ -1,4 +1,9 @@
 CHANGELOG
+-Version 0.0.7
+	Added rLife function to simulate random times until deaths
+	Improved financial mathematics functions
+	Improved documentation and vignettes
+
 -Version 0.0.6
 	Improved documentation
 	Improved financial functions

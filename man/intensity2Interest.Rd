@@ -2,10 +2,10 @@
 \alias{intensity2Interest}
 
 \title{
-Function to conver the force of interest into yearly interest rate.
+Intensity to interest rate conversion.
 }
 \description{
-This function applies a financial mathematics identity.
+This function converts a given force of interest to corresponding intensity rate.
 }
 \usage{
 intensity2Interest(intensity)
@@ -27,9 +27,7 @@ Giorgio A. Spedicato
 \code{\link{annuity}}, \code{\link{interest2Intensity}}
 }
 \examples{
-
-#a force of intestest of 0.02 corresponds to an APR of 
+#a force of interest of 0.02 corresponds to an APR of 
 intensity2Interest(intensity=0.02)
-
 }
 

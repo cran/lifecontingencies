@@ -2,31 +2,35 @@
 \alias{accumulatedValue}
 
 \title{
-	Function to evalutate the deterministic accumulated value.
+	Function to evaluate the accumulated value.
 }
 \description{
-	Financial mathematic function to evaluate a series of payments of 1
+	This functions return the value at time n of a series of equally spaced payments of 1.
 }
 \usage{
-	accumulatedValue(i, periods, type = "immediate")
+	accumulatedValue(i, n, m,type = "immediate")
 }
 
 \arguments{
   \item{i}{
 	Effective interest rate expressed in decimal form. E.g. 0.03 means 3\%.
 }
-  \item{periods}{
+  \item{n}{
 	Number of terms of payment.
+}
+  \item{m}{
+	Frequency of payment.
 }
   \item{type}{
 	A string, either "immediate" or "due".
 }
 }
 \details{
-	At the moment no fractional payments have been influenced.
+	The accumulated value is the future value of the terms of an annuity. Its mathematical expression is \eqn{s_{\left. {\overline {\, n \,}}\! \right| } = 
+	\left( {1 + i} \right)^n a_{\left. {\overline {\, n \,}}\! \right| }}
 }
 \value{
-	A numeric value representing the calculated cumulated value.
+	A numeric value representing the calculated accumulated value.
 }
 \references{
 	Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition), 
@@ -36,7 +40,10 @@
 	Giorgio A. Spedicato
 }
 \note{
-	Currently fractional payments have not been implemented yet.
+	Accumulated value are derived from annuities by the following basic 
+	equation \eqn{{s_{\left. {\overline {\, 
+ n \,}}\! \right| }} = {\left( {1 + i} \right)^n} = a_{\left. {\overline {\, 
+ n \,}}\! \right| }}.
 }
 
 
@@ -49,14 +56,13 @@
 \code{\link{annuity}}
 }
 \examples{
-##$100 dollars saved per month after 10 years are...
-##assume 2.00 percent effective yearly rate
-##
-
-ieff=(1+0.02)^(1/12)-1
-
-100*accumulatedValue(i=ieff, periods=12*10, type="immediate")
-
+#A man wants to save 100,000 to pay for his sons
+#education in 10 years time. An education fund requires the investors to
+#deposit equal installments annually at the end of each year. If interest of
+#0.075 is paid, how much does the man need to save each year in order to
+#meet his target?
+R=100000/accumulatedValue(i=0.075,n=10)
+R
 }
 
 

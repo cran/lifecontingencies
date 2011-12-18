@@ -6,12 +6,10 @@
 Functions to evaluate life insurance and annuities on two heads.
 }
 \description{
-These functions evalutates life insurances and annuities on two heads.
+These functions evaluates life insurances and annuities on two heads.
 }
 \usage{
-
 axyn(tablex, tabley, x, y, n, i, m, k = 1, status = "joint", type = "EV")
-
 Axyn(tablex, x, tabley, y, n, i, m, k = 1, status = "joint", type = "EV")
 }
 
@@ -50,10 +48,10 @@ Either "joint" or "last" survival status.
 
 }
 \details{
-Actuarial mathematics book formulas has been implemented with little testing available.
+Actuarial mathematics book formulas has been implemented.
 }
 \value{
-A numeric value representing APV of the chosen insurance.
+A numeric value returning APV of chosen insurance form.
 }
 \references{
 	Actuarial Mathematics (Second Edition), 1997, by Bowers, N.L., Gerber, H.U., Hickman, J.C., 
@@ -63,7 +61,7 @@ A numeric value representing APV of the chosen insurance.
 Giorgio A. Spedicato
 }
 \note{
-Further checkings is needed. E.g. Axyn does not return the correct value.
+These functions have not been tested carefully.
 }
 
 \section{Warning }{
@@ -77,10 +75,9 @@ Further checkings is needed. E.g. Axyn does not return the correct value.
 \examples{
 	data(soa08Act)
 	#last survival status annuity
-	axyn(tablex=soa08Act, tabley=soa08Act, x=65, y=70, n=5,  status = "last", 
-    type = "EV")
+	axyn(tablex=soa08Act, tabley=soa08Act, x=65, y=70, 
+		n=5,  status = "last",type = "EV")
     #first survival status annuity
-	
-	Axyn(tablex=soa08Act, tabley=soa08Act, x=65, y=70,   status = "last", 
-    type = "EV")
+	Axyn(tablex=soa08Act, tabley=soa08Act, x=65, y=70,
+	status = "last",type = "EV")
 }

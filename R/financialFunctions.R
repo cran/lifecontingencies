@@ -1,3 +1,4 @@
+#TO DO: check here http://www.mysmu.edu/faculty/yktse/FMA/S_FMA_1.pdf
 #function to evaluate the present value of a series of cash flows
 
 presentValue=function(cashFlows, timeIds,interestRates, probabilities)
@@ -27,27 +28,35 @@ presentValue=function(cashFlows, timeIds,interestRates, probabilities)
 annuity=function(i, n,m=1, type="immediate")
 {
 	#checks
-	if(missing(i)) stop("Error! Missing interest rates") 
+	if(missing(i)) stop("Error! Missing effective interest rates") 
 	if(missing(n)) stop("Error! Missing periods") 
 	if(m<1) stop("Error! m must be greater or equal than 1") 
 	if(is.infinite(n)) return(1/i) #perpetuity
-	
+	ieff=i #i è il tasso effettivo
 	if(type=="immediate") timeIds=seq(from=1/m, to=n, by=1/m)
 	else timeIds=seq(from=0, to=n-1/m, by=1/m) #due
-	iRate=rep(i,length.out=n*m)
-	out=presentValue(cashFlows=rep(1,length.out=n*m),interestRates = iRate, timeIds=timeIds)
+	iRate=rep(ieff,length.out=n*m)
+	out=presentValue(cashFlows=rep(1/m,length.out=n*m),interestRates = iRate, timeIds=timeIds)
 	return(out)
 }
 
 #decreasing annuity
-decreasingAnnuity=function(i, n)
+decreasingAnnuity=function(i, n,type="immediate")
 {
 	out=NULL
 	if(missing(n)) stop("Error! Need number of periods")
 	if(missing(i)) stop("Error! Need interest rate")
 	out=(n-annuity(i=i, n=n, type="immediate"))/n
+	paymentsSeq=numeric(n)
+	timeIds=numeric(n)
+	paymentsSeq=seq(from=n, to=1,by=-1)
+	timeIds=seq(from=1, to=n, by=1)
+	if(type=="due") 
+	{
+		timeIds=seq(from=0, to=n-1,by=1)
+	}
+	out=presentValue(cashFlows=paymentsSeq, timeIds=timeIds, interestRates=i)
 	return(out)
-
 }
 #increasing annuity
 increasingAnnuity=function(i, n,type="immediate")
@@ -55,19 +64,29 @@ increasingAnnuity=function(i, n,type="immediate")
 	out=NULL
 	if(missing(n)) stop("Error! Need periods")
 	if(missing(i)) stop("Error! Need interest rate")
-	out=(annuity(i=i, n=n, type="due")-n*(1+i)^n)/i
-	if(type=="due") out=out*(1+i)
+	paymentsSeq=numeric(n)
+	paymentsSeq=seq(from=1, to=n,by=1)
+	timeIds=seq(from=1, to=n, by=1)
+	if(type=="due") 
+		{
+			timeIds=seq(from=0, to=n-1,by=1)
+		}
+	out=presentValue(cashFlows=paymentsSeq, timeIds=timeIds, interestRates=i)
+#	out=(annuity(i=i, n=n, type="due")-n*(1+i)^-n)/i
+#	if(type=="due") out=out*(1+i)
 	return(out)
 }
-accumulatedValue=function(i, periods, type="immediate")
+
+accumulatedValue=function(i, n, m=1, type="immediate")
 {
-	if(is.infinite(periods)) return(1/i)
+	if(is.infinite(n)) return(1/i)
 	if(missing(i)) stop("Error! Missing interest rates")
-	if(type=="immediate") timeIds=seq(from=1, to=periods, by=1)
-	else timeIds=seq(from=0, to=periods-1, by=1) #due
-	timeIds=-timeIds
-	iRate=rep(i,length.out=periods)
-	out=presentValue(cashFlows=rep(1,length.out=periods),i = iRate, timeIds=timeIds)
+#	if(type=="immediate") timeIds=seq(from=1, to=n, by=1)
+#	else timeIds=seq(from=0, to=n-1, by=1) #due
+#	timeIds=-timeIds
+#	iRate=rep(i,length.out=n)
+#	out=presentValue(cashFlows=rep(1,length.out=n),i = iRate, timeIds=timeIds)
+	out=(1+i)^n*annuity(i=i,n=n,m=m,type=type)
 	return(out)
 }
 #obtain the nominal interest rate
@@ -79,9 +98,10 @@ nominal2Real=function(i, m=1, type="interest")
 	return(out)
 }
 #obtain the real interest rate
-real2Nominal=function(i, m=1)
+real2Nominal=function(i, m=1, type="interest")
 {
-	out=((1+i)^(1/m)-1)*m
+	if(type=="interest") out=((1+i)^(1/m)-1)*m else
+		out=m*(1-(1-i)^(1/m))
 	return(out)
 }
 #obtain the interest from intensity

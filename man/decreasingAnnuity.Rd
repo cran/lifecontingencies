@@ -2,13 +2,13 @@
 \alias{decreasingAnnuity}
 
 \title{
-	Function to evaluate a decreasing annuity.
+	Function to evaluate decreasing annuities.
 }
 \description{
-	This function evalutates decreasing annuities.
+	This function return present values for decreasing annuities - certain.
 }
 \usage{
-decreasingAnnuity(i, n)
+decreasingAnnuity(i, n,type="immediate")
 }
 
 \arguments{
@@ -18,9 +18,13 @@ decreasingAnnuity(i, n)
   \item{n}{
 	The number of periods.
 }
+  \item{type}{
+	A character value, specifying the annuity type. Either "immediate" or "due". Default 
+	value is "immediate".
+}
 }
 \details{
-	A decreasing annuity has the following flows of payments: n, n-1, n-2,...
+	A decreasing annuity has the following flows of payments: n, n-1, n-2, \ldots, 1, 0.
 }
 \value{
 	A numeric value reporting the present value of the decreasing cash flows.
@@ -33,7 +37,7 @@ Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition),
 	Giorgio A. Spedicato
 }
 \note{
-	Fractional payments have not implemented yet.
+	This function calls \code{presentValue} function internally.
 }
 
 \section{Warning }{
@@ -46,7 +50,7 @@ Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition),
 }
 \examples{
 	#the present value of 10, 9, 8,....,0 payable at the end of the period
-	#for 10 periods is
+	#for 10 years is
 	decreasingAnnuity(i=0.03, n=10)
 	#assuming a 3% interest rate
 }
