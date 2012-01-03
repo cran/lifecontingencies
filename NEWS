@@ -1,4 +1,8 @@
 CHANGELOG
+-Version 0.1
+	Deep revision of vignettes
+	Add increasing annuity function, Iaxn
+	Minor fixes
 -Version 0.0.7
 	Added rLife function to simulate random times until deaths
 	Improved financial mathematics functions

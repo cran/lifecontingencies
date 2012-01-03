@@ -6,16 +6,14 @@
 Package to perform actuarial mathematics on life contingencies and classical financial mathematics calculations.
 }
 \description{
-	The lifecontingencies package has been developed to aid actuaries to perform life contingencies analysis 
-	and financial mathematics calculation. Most important life contingencies 
-	actuarial function have been implemented.
+	The lifecontingencies package has been developed to aid actuaries to perform life contingencies analysis and financial mathematics calculation. Most important life contingencies actuarial function have been implemented.
 }
 \details{
 \tabular{ll}{
 Package: \tab lifecontingencies\cr
 Type: \tab Package\cr
-Version: \tab 0.0.7\cr
-Date: \tab 2011-12-31\cr
+Version: \tab 0.1\cr
+Date: \tab 2012-01-03\cr
 License: \tab GPL-2.0\cr
 LazyLoad: \tab yes\cr
 }

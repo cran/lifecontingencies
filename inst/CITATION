@@ -2,12 +2,12 @@ citHeader("To cite package lifecontingencies in publications use:")
 
 citEntry(entry="Manual",
          title = "Lifecontingencies: an R package to perform 
-         life contingencies analysis",
+         life contingencies actuarial mathematics",
          author = person(first="Giorgio Alfredo", last="Spedicato"),
-         month="12",
-         year="2011",
-         note="R package version 0.0.7",
+         month="01",
+         year="2012",
+         note="R package version 0.0.8",
          textVersion = "Giorgio Alfredo Spedicato. 
-		 Lifecontingencies. An R package to perform life contingencies calculations"
+		 Lifecontingencies. An R package to perform life contingencies actuarial mathematics"
          )
     
