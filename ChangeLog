@@ -1,4 +1,9 @@
 ChangeLog
+-Version 0.9.6
+	Add summary method for lifetable and actuarialtable objects
+	Improvements and fix in simulation of life contingent insurances
+	Add rLifeContingenciesXyz function
+	Improvements in the vignette
 -Version 0.9.5
 	ALM section to main vignette was added.
 	rLife has been improved.

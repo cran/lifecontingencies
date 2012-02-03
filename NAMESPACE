@@ -3,13 +3,14 @@ importFrom(graphics, plot)
 
 importFrom(utils, head)
 importFrom(utils, tail)
-
+#useDynLib(lifecontingencies)
 exportPattern("^[[:alpha:]]+")
 
 exportMethods(
     "coerce",
     "plot",
     "show",
+    "summary",
     "getOmega"
 )
 exportClasses(

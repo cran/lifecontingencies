@@ -2,7 +2,7 @@
 \alias{rLifeContingencies}
 
 \title{
-Function to generate samples from the life contingencies stochastic variable.
+Function to generate samples from the life contingencies stochastic variables.
 }
 \description{
 This function returns a n-size sample from the underlying present value of benefits 

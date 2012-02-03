@@ -44,16 +44,21 @@ axn<-function(actuarialtable, x, n,i, m,k=1, type="EV")
 		times=m+seq(from=0, to=(n-1/k),by=1/k)
 		
 		for(i in 1:length(times)) probs[i]=pxt(actuarialtable, x,times[i])
-		#discounts=(1+actuarialtable@interest)^-times
+		discounts=(1+actuarialtable@interest)^-times #prima era asteriskato
 		#out<-sum(payments*discounts*probs)
 	if(type=="EV") {
 		out<-presentValue(cashFlows=payments, timeIds=times, interestRates=interest, probabilities=probs)
+		#out=.C("add3", x=as.double(payments), y=as.double(discounts),z=as.double(probs),n=as.integer(length(probs)),out=numeric(1))$out
 	} else if(type=="ST"){
 		out=rLifeContingencies(n=1,lifecontingency="axn", 
 				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=k)
 	}
 	return(out)
 }
+
+
+
+
 
 #shall write the Rd file
 axyn<-function(tablex, tabley, x,y, n,i, m,k=1, status="joint", type="EV")
@@ -122,21 +127,20 @@ axyzn<-function(tablesList, x, n,i, m,k=1, status="joint", type="EV")
 	payments=rep(1/k,n*k)
 	probs=numeric(n*k)		
 	times=m+seq(from=0, to=(n-1/k),by=1/k)
-	
-	
-	
 	for(j in 1:length(times)) probs[j]=pxyzt(tablesList=tablesList,x=x,
 				t=times[j],status=status)
-	#discounts=(1+actuarialtable@interest)^-times
+	discounts=(1+interest)^-times #prima asteriskato
 	#out<-sum(payments*discounts*probs)
 	if(type=="EV") {
 		out<-presentValue(cashFlows=payments, timeIds=times, interestRates=interest, probabilities=probs)
+		#out=.C("add3", x=as.double(payments), y=as.double(discounts),z=as.double(probs),n=as.integer(length(probs)),out=numeric(1))$out
 	} else	if(type=="ST"){
-		out=0
-		for(j in 1:length(times)) out=out+1/k*rbinom(n=1, size=1, prob=probs[j])*(1+interest)^-times[j]
+		out=rLifeContingenciesXyz(n=1,lifecontingency="axyz", tablesList=tablesList, x=x,t=n,i=i, m=m,k=k,status=status)
 	}
 	return(out)
 }
+
+#tablesList=list(soa08Act,soa08Act);x=c(67,65);n=20;k=11
 
 # objectX=soa08Act
 # objectY=soa08Act
@@ -176,19 +180,19 @@ Axn<-function(actuarialtable, x, n,i, m, k=1, type="EV")
 		#for(i in 1:length(times)) probs[i]=(pxt(object=actuarialtable, x=startAge,t=times[i])*qxt(object=actuarialtable, x=startAge+times[i],t=1/k))
 		for(i in 1:length(times)) probs[i]=.qxnt(object=actuarialtable, x=startAge,n=times[i],t=1/k)
 	
-	discounts=(1+interest)^-(times+1/k)
+	discounts=(1+interest)^-(times+1/k) #prima asteriskato
 	
 	if(type=="EV") {
 		#out<-sum(payments*discounts*probs)
 		out<-presentValue(cashFlows=payments, timeIds=(times+1/k), interestRates=interest, probabilities=probs)
+		#out=.C("add3", x=as.double(payments), y=as.double(discounts),z=as.double(probs),n=as.integer(length(payments)),out=numeric(1))$out
 	} else if(type=="ST"){
-		out=rLifeContingencies(n=1,lifecontingency="Axn", 
-				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=k)
+		out=rLifeContingencies(n=1,lifecontingency="Axn", object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=k)
 	}
 	return(out)
 }
 
-#Axn(soa08Act,65,k=12)
+#Axn(soa08Act,65,k=12, n=12) # 0.2483798
 
 Axyn<-function(tablex, x,tabley, y, n,i, m, k=1, status="joint", type="EV")
 {
@@ -273,18 +277,17 @@ Axyzn<-function(tablesList, x, n,i, m, k=1, status="joint", type="EV")
 	discounts=(1+interest)^-(times+1/k)
 	
 	if(type=="EV") {
-		out<-sum(payments*discounts*probs)
+		out=sum(payments*discounts*probs)
+		#out=.C("add3", x=as.double(payments), y=as.double(discounts),z=as.double(probs),n=as.integer(length(payments)),out=numeric(1))$out
 	} else if(type=="ST"){
 		out=0
-		for(j in 1:length(times)) 
-		{
-			out=((1+interest)^-(times[j]+1/k))*rbinom(n=1, size=1, prob=probs[j])
-			if(out>0) break
-		}
+		out=rLifeContingenciesXyz(n=1,lifecontingency="Axyz", 
+				tablesList=tablesList, x=x,t=n,i=i, m=m,k=k,status=status)
 	}
 	return(out)
 }
 
+#Axyzn(tablesList, x, n, status="joint", type="ST")
 
 
 # tablex=soa08Act
@@ -340,9 +343,7 @@ IAxn<-function(actuarialtable, x, n,i, m=0, k=1, type="EV")
 #		discounts=(1+interest)^-(times+1)
 		out<-sum(payments*discounts*probs)
 	} else if(type=="ST") {
-		out=rLifeContingencies(n=1,lifecontingency="IAxn", 
-				object=actuarialtable, x=x,t=n,
-				i=actuarialtable@interest, m=m,k=k) #!fix: prima = 1
+		out=rLifeContingencies(n=1,lifecontingency="IAxn", object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=k) #!fix: prima = 1
 	}
 	return(out)
 }

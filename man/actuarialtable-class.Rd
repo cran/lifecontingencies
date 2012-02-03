@@ -2,6 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{actuarialtable-class}
+\alias{summary,actuarialtable-method}
 
 
 \title{Class \code{"actuarialtable"}}
@@ -27,6 +28,7 @@ Class \code{"\linkS4class{lifetable}"}, directly.
   \describe{
     \item{coerce}{\code{signature(from = "actuarialtable", to = "data.frame")}: ... }
     \item{show}{\code{signature(object = "actuarialtable")}: ... }
+    \item{summary}{\code{signature(object = "actuarialtable")}: it returns summary information about the object }
 	 }
 }
 \references{

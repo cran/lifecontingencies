@@ -22,8 +22,11 @@ presentValue=function(cashFlows, timeIds,interestRates, probabilities)
 	interestRates=rep(interestRates,length.out=length(timeIds))
 	v=(1+interestRates)^-timeIds
 	out=sum((cashFlows*v)*probabilities)
+	#out=.C("add3", x=as.double(cashFlows), y=as.double(v),z=as.double(probabilities),n=as.integer(length(probabilities)),out=numeric(1))$out
 	return(out)
 }
+
+
 
 #duration
 #m=tasso di interesse nominale capitalizzato m volte
@@ -39,13 +42,13 @@ duration=function(cashFlows, timeIds,i, k=1,macaulay=TRUE)
 	
 	interestRates=rep(i/k,length.out=length(timeIds))
 	#calcola il valora attuale
-	t=timeIds*k
-	v=(1+interestRates)^-(t)
+	ts=timeIds*k
+	v=(1+interestRates)^-(ts)
 	pv=sum((cashFlows*v))
-	
+	#pv=.C("add2", x=as.double(cashFlows), y=as.double(v),n=as.integer(length(cashFlows)),out=numeric(1))$out
 	#calcola il tempo medio ponderato
-	
-	weightedTime=sum((cashFlows*v*t))
+	weightedTime=sum((cashFlows*v*ts))
+	#weightedTime=.C("add3", x=as.double(cashFlows), y=as.double(v),z=as.double(ts),n=as.integer(length(cashFlows)),out=numeric(1))$out
 	out=weightedTime/pv	
 	if(macaulay==FALSE) out=out else out=out/(1+i/k) 
 	return(out)
@@ -69,10 +72,11 @@ convexity=function(cashFlows, timeIds,i,k=1)
 	#calcola il valora attuale
 	v=(1+interestRates)^-(timeIds*k)
 	pv=sum((cashFlows*v))
-	
+	#pv=.C("add2", x=as.double(cashFlows), y=as.double(v),n=as.integer(length(cashFlows)),out=numeric(1))$out
 	#calcola il tempo medio ponderato
 	
 	weightedTime=sum((cashFlows*v*timeIds*(timeIds+1/k)))
+	#weightedTime=.C("add3", x=as.double(cashFlows), y=as.double(v),z=as.double(timeIds*(timeIds+1/k)),n=as.integer(length(cashFlows)),out=numeric(1))$out
 	
 	out=(weightedTime/pv)*(1+i/k)^-2
 	
@@ -166,6 +170,11 @@ nominal2Real=function(i, k=1, type="interest")
 		out=1-(1-i/k)^k
 	return(out)
 }
+#or
+convertible2Effective=function(i, k=1, type="interest")
+{
+	return(nominal2Real(i=i,k=k,type=type))
+}
 #obtain the real interest rate
 real2Nominal=function(i, k=1, type="interest")
 {
@@ -173,6 +182,12 @@ real2Nominal=function(i, k=1, type="interest")
 		out=k*(1-(1-i)^(1/k))
 	return(out)
 }
+#or
+effective2Convertible=function(i, k=1, type="interest")
+{
+	return(real2Nominal(i=i,k=k,type=type))
+}
+
 #obtain the interest from intensity
 intensity2Interest=function(intensity)
 {

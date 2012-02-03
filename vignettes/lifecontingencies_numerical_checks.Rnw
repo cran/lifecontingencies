@@ -1,0 +1,60 @@
+% 
+\documentclass[a4paper]{article}
+\usepackage{Sweave}
+\usepackage{lifecon}
+
+%\usepackage{myVignette}
+%\VignetteIndexEntry{Lifecontingencies package numerical accuracy tests}
+%\VignetteKeywords{vig3}
+%\VignettePackage{lifecontingencies}
+
+\title{Lifecontingencies package numerical accuracy tests}
+\author{Giorgio Spedicato}
+
+\begin{document}
+\maketitle
+
+
+
+\section{Introduction}
+
+This vignette shows numerical tests that compares lifecontingencies computations 
+with figure shown in published textbooks.
+Yet very incomplete.\\
+
+<<load, keep.source=TRUE>>=
+#load lifecontingencies package
+library(lifecontingencies)
+@
+
+
+
+\section{Actuarial mathematics}
+\cite[p 111]{bowers1997actuarial},  whole life insurance., at 4\%.
+  
+<<act1, keep.source=TRUE>>=
+data(soa08Act)
+#should be 0.01577285
+Axn(soa08Act, x=30, n=10, i=0.04)
+@
+
+\cite[p 112]{bowers1997actuarial}, $A_{30}$, at 6\%.
+
+<<act1, keep.source=TRUE>>=
+#should be 102.4835
+1000*Axn(soa08Act, x=30,i=0.06)
+@
+
+\cite[p 437]{mlc}, $\anndue{50}{20}$
+
+<<act3, keep.source=TRUE>>=
+#should be 0.01155
+Axn(soa08Act, 50,20)/axn(soa08Act, 50,20)
+@
+
+\bibliographystyle{plain} 
+\bibliography{vignetteBiblio}
+
+
+
+\end{document}

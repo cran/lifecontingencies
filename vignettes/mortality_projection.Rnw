@@ -217,6 +217,7 @@ cohorts.
 	}
 @
 
+
 \bibliography{vignetteBiblio}
 
 \end{document}

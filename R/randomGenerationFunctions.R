@@ -44,16 +44,16 @@ rLife=function(n,object, x=0,k=1, type="Tx")
 	#determine the perimeter of x
 #	index=which(object@x>=x)
 #	x2Sample<-object@x[index]
-	
 	index=which(sequence>=x)
 	x2Sample<-sequence[index]
-	
-	
 	deathsOfSample<-dx[index]
 	probsOfDeath<-deathsOfSample/sum(deathsOfSample)	
 	out=sample(x=x2Sample,size=n,replace=TRUE, prob=probsOfDeath)+const2Add-x
 	return(out)
 }
+
+#ciao<-rLife(100000,soa08Act,x=25,type="Kx")
+#t.test(x=ciao, mu=exn(soa08Act,25))
 
 
 rLifexyz=function(n,tablesList,x,k=1, type="Tx")
@@ -109,8 +109,21 @@ rLifexyz=function(n,tablesList,x,k=1, type="Tx")
 }
 
 
-#term life insurance function
+#
+# x=40
+# t=40
+# n=50000
+# object=soa08Act
+# lifecontingency="Exn"
+# i=0.06
+#
+# outs<-rLifeContingencies(n=n,lifecontingency=lifecontingency, object=object, x=x,t=t,i=i, 
+#		m=m,k=k, parallel=TRUE)
+#APV=Exn(object, x=x, n=t)
+#t.test(x=outs, mu=APV)
 
+#term life insurance function
+#seems to work
 .fAxn<-function(T,y,n, i, m, k)
 {
 	out=numeric(1)
@@ -121,20 +134,31 @@ rLifexyz=function(n,tablesList,x,k=1, type="Tx")
 
 # x=40
 # t=100
-# n=100000
+# n=50000
 # object=soa08Act
 # lifecontingency="Axn"
 # i=0.06
-# m=0
+# m=30
 # k=12
 ##
 # outs<-rLifeContingencies(n=n,lifecontingency=lifecontingency, object=object, x=x,t=t,i=i, 
 #		m=m,k=k, parallel=TRUE)
-#APV=Axn(object, x=x, k=k)
+#APV=Axn(object, x=x, k=k,m=m,i=i)
 # mean(outs)
 ## APV
 # t.test(x=outs, mu=APV)
 
+
+#multiple heads term life insurance function
+#seems to work
+.fAxyzn<-function(T,y,n, i, m, k, status)
+{
+	out=numeric(1)
+	temp=T-y
+	T=ifelse(status=="joint",min(temp),max(temp)) #redefines T
+	out=ifelse(((T>=m) && (T<=m+n-1/k)),(1+i)^-(T+1/k),0)
+	return(out)
+}
 
 
 #increasing life insurance function
@@ -163,20 +187,65 @@ rLifexyz=function(n,tablesList,x,k=1, type="Tx")
 # Age of death
 # n number of payments
 
+#
+#lifecontingency="axn"
+#object=soa08Act
+#x=65
+#m=0
+#n=10
+#k=12
+#
+#APV=axn(soa08Act, x=x,m=m,n=n,k=k)
+#ciao=rLifeContingencies(n=25000,lifecontingency = lifecontingency,object=object,m=m,t=n,x=x,k=k,parallel=TRUE)
+#
+#t.test(mu=APV, x=ciao)
+#mean(ciao)
+#APV
+#
+
 .faxn<-function(T,y,n, i, m, k=1)
 {
 	out=numeric(1)
-	K=T-y #time to death
-	numOfPayments=max(min(n,K+1-m),0)
-	#se 0 allora fa almeno un pagamento
-#	if(numOfPayments==0) return(1)
-#	if(numOfPayments<0) return(0)
-#	timeIds=seq(from=0, to=numOfPayments-1/k, by=1/k)+m
-#	iRate=rep(i,length.out=numOfPayments*k)
-#	result=presentValue(cashFlows=rep(1/k,length.out=numOfPayments*k),interestRates = iRate, 
-#			timeIds=timeIds)
-	out=annuity(i=i,n=numOfPayments,k=k,m=m,type="due")
-	#out=ifelse(K>=m,result,0) #if dies before start coverage
+	K=T-y #number of years to live
+		if(K<m) { #if policyholder dies before inception of the annuity
+			out=0 #no payment is due
+		} else {
+		  times=seq(from=m, to=min(m+n-1/k,K),by=1/k) #else it pays from m to the min of m + n - 1/k
+ 		  out=presentValue(cashFlows=rep(1/k, length(times)), timeIds=times, interestRates=i)
+		}
+	return(out)
+}
+
+#for multiple life contingencies
+#
+#status="last"
+#x=c(20,20)
+#tablesList=list(soa08Act,soa08Act)
+#k=1
+#n=10
+#m=0
+#
+#APV=axyzn(tablesList,x=x,n=n,m=m,k=k,status=status, type="EV")
+#APV
+#ciao=rLifeContingenciesXyz(n=25000,lifecontingency = "axyz",tablesList=tablesList, x=x,t=n,m=m,k=k,status=status,parallel=TRUE)
+#mean(ciao)
+#t.test(mu=APV, x=ciao)
+
+
+#it does not work
+
+
+.faxyzn<-function(T,y,n, i, m, k=1,status)
+{
+	out=numeric(1)
+	temp=T-y
+	K=ifelse(status=="joint",min(temp),max(temp))
+	if(K<m) { #if policyholder dies before inception of the annuity
+				out=0 #no payment is due
+			} else {
+				times=seq(from=m, to=min(m+n-1/k,K),by=1/k) #else it pays from m to the min of m + n - 1/k
+				out=presentValue(cashFlows=rep(1/k, length(times)), timeIds=times, interestRates=i)
+			}	
 	return(out)
 }
 
@@ -211,79 +280,162 @@ rLifexyz=function(n,tablesList,x,k=1, type="Tx")
 #k=1
 
 
-rLifeContingencies<-function(n,lifecontingency, object, x,t,i=object@interest, m=0,k=1, parallel=FALSE)
+rLifeContingencies<-function (n, lifecontingency, object, x, t, i = object@interest, 
+		m = 0, k = 1, parallel = FALSE) 
 {
-	deathsTimeX=numeric(n)
-	outs=numeric(n)
-	#fractional payment are handled using countinuous lifetime simulation
-	
-	if(k==1) deathsTimeX=x+rLife(n=n,object=object,x=x,
-				k=k,type="Kx") else deathsTimeX=x+rLife(n=n,object=object,
-				x=x,k=k,type="Tx") #this to handle fractional payments (assume continuous...)
-	
-	#in case multiple life contingencies
-	
-	if(parallel==TRUE) {
-	#set up parallel library
-	require(parallel)
-	type <- if (exists("mcfork", mode="function")) "FORK" else "PSOCK"
-	cores <- getOption("mc.cores", detectCores())
-	cl <- makeCluster(cores, type=type)
-	clusterExport(cl, varlist=c("presentValue","annuity")) #richiesto da axn
-	if(lifecontingency=="Axn") 
-		outs=parSapply(cl=cl, deathsTimeX, .fAxn,y=x,n=t, i=i,m=m,k=k)
-	else if(lifecontingency=="Exn")
-		outs=parSapply(cl=cl,deathsTimeX, .fExn,y=x,n=t, i=i)
-	else if(lifecontingency=="IAxn") 
-		outs=parSapply(cl=cl,deathsTimeX, .fIAxn,y=x,n=t, i=i,m=m,k=k)
-	else if(lifecontingency=="DAxn") 
-		outs=parSapply(cl=cl,deathsTimeX, .fDAxn,y=x,n=t, i=i,m=m,k=k)
-	else if(lifecontingency=="AExn") 
-		outs=parSapply(cl=cl, deathsTimeX, .fAExn,y=x,n=t, i=i,k=k)
-	else if(lifecontingency=="axn") 
-	{
-		if(missing(t)) t=getOmega(object)-x-m
-		outs=parSapply(cl=cl,deathsTimeX, .faxn,y=x,n=t, i=i,m=m,k=k)
+	deathsTimeX = numeric(n)
+	outs = numeric(n)
+	if (k == 1) 
+		deathsTimeX = x + rLife(n = n, object = object, x = x, 
+				k = k, type = "Kx")
+	else deathsTimeX = x + rLife(n = n, object = object, x = x, 
+				k = k, type = "Tx")
+	if (parallel == TRUE) {
+		require(parallel)
+		type <- if (exists("mcfork", mode = "function")) 
+					"FORK"
+				else "PSOCK"
+		cores <- getOption("mc.cores", detectCores())
+		cl <- makeCluster(cores, type = type)
+		clusterExport(cl, varlist = c("presentValue", "annuity"))
+		if (lifecontingency == "Axn") 
+			outs = parSapply(cl = cl, deathsTimeX, .fAxn, y = x, 
+					n = t, i = i, m = m, k = k)
+		else if (lifecontingency == "Exn") 
+			outs = parSapply(cl = cl, deathsTimeX, .fExn, y = x, 
+					n = t, i = i)
+		else if (lifecontingency == "IAxn") 
+			outs = parSapply(cl = cl, deathsTimeX, .fIAxn, y = x, 
+					n = t, i = i, m = m, k = k)
+		else if (lifecontingency == "DAxn") 
+			outs = parSapply(cl = cl, deathsTimeX, .fDAxn, y = x, 
+					n = t, i = i, m = m, k = k)
+		else if (lifecontingency == "AExn") 
+			outs = parSapply(cl = cl, deathsTimeX, .fAExn, y = x, 
+					n = t, i = i, k = k)
+		else if (lifecontingency == "axn") {
+			if (missing(t)) 
+				t = getOmega(object) - x - m
+			outs = parSapply(cl = cl, deathsTimeX, .faxn, y = x, 
+					n = t, i = i, m = m, k = k)
+		}
+		stopCluster(cl)
 	}
-	#stops the cluster
-	stopCluster(cl)
-	} else {
-	#serial version
-	if(lifecontingency=="Axn") 
-		outs=sapply( deathsTimeX, .fAxn,y=x,n=t, i=i,m=m,k=k)
-	else if(lifecontingency=="Exn")
-		outs=sapply(deathsTimeX, .fExn,y=x,n=t, i=i)
-	else if(lifecontingency=="IAxn") 
-		outs=sapply(deathsTimeX, .fIAxn,y=x,n=t, i=i,m=m,k=k)
-	else if(lifecontingency=="DAxn") 
-		outs=sapply(deathsTimeX, .fDAxn,y=x,n=t, i=i,m=m,k=k)
-	else if(lifecontingency=="AExn") 
-		outs=sapply( deathsTimeX, .fAExn,y=x,n=t, i=i,k=k)
-	else if(lifecontingency=="axn") 
-	{
-		if(missing(t)) t=getOmega(object)-x-m
-		outs=sapply(deathsTimeX, .faxn,y=x,n=t, i=i,m=m,k=k)
-	}
+	else {
+		if (lifecontingency == "Axn") 
+			outs = sapply(deathsTimeX, .fAxn, y = x, n = t, i = i, 
+					m = m, k = k)
+		else if (lifecontingency == "Exn") 
+			outs = sapply(deathsTimeX, .fExn, y = x, n = t, i = i)
+		else if (lifecontingency == "IAxn") 
+			outs = sapply(deathsTimeX, .fIAxn, y = x, n = t, 
+					i = i, m = m, k = k)
+		else if (lifecontingency == "DAxn") 
+			outs = sapply(deathsTimeX, .fDAxn, y = x, n = t, 
+					i = i, m = m, k = k)
+		else if (lifecontingency == "AExn") 
+			outs = sapply(deathsTimeX, .fAExn, y = x, n = t, 
+					i = i, k = k)
+		else if (lifecontingency == "axn") {
+			if (missing(t)) 
+				t = getOmega(object) - x - m
+			outs = sapply(deathsTimeX, .faxn, y = x, n = t, i = i, 
+					m = m, k = k)
+		}
 	}
 	return(outs)
 }
 
-# x=60
+
+
+# x=40
 # t=20
-# n=100000
+# n=500000
 # object=soa08Act
 # lifecontingency="axn"
 # i=0.06
-# m=0
-# k=2
+# m=10
+# k=12
 #
 # outs<-rLifeContingencies(n=n,lifecontingency=lifecontingency, object=object, x=x,t=t,i=i, 
 #		m=m,k=k, parallel=TRUE)
-#APV=axn(object, x=x,n=t, k=k)
+#APV=axn(object, x=x,n=t, k=k,m=m)
 # mean(outs)
 # APV
 # t.test(x=outs, mu=APV)
 
-#
 #system.time(rLifeContingencies(n,lifecontingency, object, x,t,i=i, m=m,k=k, parallel=TRUE))
 #system.time(rLifeContingencies(n,lifecontingency, object, x,t,i=i, m=m,k=k, parallel=FALSE))
+
+
+#n=10000
+#lifecontingency="Axyz"
+#tablesList=list(soa08Act,soa08Act)
+#x=c(60,60)
+#i=0.06
+#m=0
+#status="joint"
+#t=30
+#k=1
+#
+#APV=Axyzn(tablesList=tablesList,x=x,n=t,m=m,k=k,status=status,type="EV")
+#ciao<-rLifeContingenciesXyz(n=n,lifecontingency = lifecontingency,tablesList = tablesList,x=x,t=t,m=m,k=k,status=status, 
+#		parallel=TRUE)
+#APV
+#mean(ciao)
+
+rLifeContingenciesXyz<-function(n,lifecontingency, tablesList, x,t,i, 
+		m=0,k=1, status="joint", parallel=FALSE)
+{
+	numTables=length(tablesList)
+	#gets the missing i
+	if(missing(i)) {
+		temp=0
+		for(j in 1:numTables) temp=temp+tablesList[[j]]@interest
+		interest=temp/numTables
+	}
+	#gets the missing t
+	if(missing(t)) {
+		t=0
+		omega=numeric(numTables)
+		for(j in 1:numTables) omega[j]=getOmega(tablesList[[j]])
+		temp=omega-x-m
+		t=min(temp)
+	} 	
+	
+	temp=matrix(nrow=n, ncol=numTables)
+	outs=numeric(n)
+	#fractional payment are handled using countinuous lifetime simulation
+	if(k==1) temp=x+rLifexyz(n=n,tablesList=tablesList,x=x, k=k,type="Kx") else temp=x+rLifexyz(n=n,tablesList=tablesList,x=x,k=k,type="Tx") #this to handle fractional payments (assume continuous...)
+
+	deathsTimeX=temp	
+	if(parallel==TRUE) {
+		#set up parallel library
+		require(parallel)
+		type <- if (exists("mcfork", mode="function")) "FORK" else "PSOCK"
+		cores <- getOption("mc.cores", detectCores())
+		cl <- makeCluster(cores, type=type)
+		clusterExport(cl, varlist=c("presentValue","annuity")) #richiesto da axn
+		if(lifecontingency=="Axyz") 
+			outs=parSapply(cl=cl, deathsTimeX,.fAxyzn,y=x,n=t, i=interest,m=m,k=k,status=status)
+		else if(lifecontingency=="axyz") 
+		{			
+			outs=parSapply(cl=cl,deathsTimeX,.faxyzn,y=x,n=t,i=interest,m=m,k=k,status=status)
+		}
+		#stops the cluster
+		
+		stopCluster(cl)
+	} else {
+		#serial version
+		if(lifecontingency=="Axyz") 
+			outs=sapply( deathsTimeX, .fAxyzn,y=x,n=t, i=interest,m=m,k=k,status=status)
+		else if(lifecontingency=="axyz") 
+		{
+			outs=sapply(deathsTimeX, .faxyzn,y=x,n=t, i=interest,m=m,k=k,status=status)
+		}
+	}
+	return(outs)
+}
+
+
+

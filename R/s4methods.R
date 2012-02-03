@@ -37,12 +37,12 @@ setMethod("getOmega","lifetable",
 	lenlx=length(object@lx)
 	Tx=numeric(lenlx)
 	Lx=numeric(lenlx)
-	ex=numeric(lenlx)
+	exni=numeric(lenlx)
 	for(i in 1:lenlx) Tx[i]=sum(object@lx[i:lenlx])
 	#for(i in 1:lenlx) Lx[i]=Lxt(object=object, x=i) # 1:lenlx prima object@x
-	for(i in 1:lenlx) ex[i]=exn(object=object, x=i-1,type="curtate") #prima x=i e come sopra e c'era complete
+	for(i in 1:lenlx) exni[i]=exn(object=object, x=i-1,type="curtate") #prima x=i e come sopra e c'era complete
 	out<-data.frame(x=object@x, lx=object@lx,px=lxplus/object@lx, 
-			ex=ex)
+			ex=exni)
 	#remove last row
 	out<-out[1:(nrow(out)-1),]
 	rownames(out)=NULL
@@ -71,6 +71,28 @@ setMethod("head",
 		}
 )
 
+#summary
+
+setMethod("summary",
+		signature(object="lifetable"),
+		function (object, ...)
+		{
+			cat("This is lifetable: ",object@name, "\n","Omega age is: ",getOmega(object), "\n", "Expected curtated lifetime at birth is: ",exn(object))
+		}
+)
+
+setMethod("summary",
+		signature(object="actuarialtable"),
+		function (object, ...)
+		{
+			cat("This is lifetable: ",object@name, "\n","Omega age is: ",getOmega(object), "\n", 
+					"Expected curtated lifetime at birth is: ",exn(object),
+					"Interest rate used is:",object@interest)
+		}
+)
+
+
+#tail
 setMethod("tail",
 		signature(x = "lifetable"),
 		function (x, ...) 
