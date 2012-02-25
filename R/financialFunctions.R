@@ -24,6 +24,63 @@ presentValue=function(cashFlows, timeIds,interestRates, probabilities)
 	return(out)
 }
 
+#duration
+#m=tasso di interesse nominale capitalizzato m volte
+duration=function(cashFlows, timeIds,i, m=1,macaulay=TRUE)
+{
+	out=0
+	if(missing(timeIds)) #check coherence on time id vector
+	{	warning("Warning: missing time vector")
+		timeIds=1
+	}
+
+	if(!(length(cashFlows)==length(timeIds))) stop("Error! check dimensionality of cash flow and time ids vectors") #check dimensionality of cash flows
+	
+	interestRates=rep(i/m,length.out=length(timeIds))
+	#calcola il valora attuale
+	t=timeIds*m
+	v=(1+interestRates)^-(t)
+	pv=sum((cashFlows*v))
+	
+	#calcola il tempo medio ponderato
+	
+	weightedTime=sum((cashFlows*v*t))
+	out=weightedTime/pv	
+	if(macaulay==TRUE) out=out else out=out/(1+i/m) 
+	return(out)
+}
+
+
+#convexity
+
+
+convexity=function(cashFlows, timeIds,i,m=1)
+{
+	out=0
+	if(missing(timeIds)) #check coherence on time id vector
+	{	warning("Warning: missing time vector")
+		timeIds=1
+	}
+	
+	if(!(length(cashFlows)==length(timeIds))) stop("Error! check dimensionality of cash flow and time ids vectors") #check dimensionality of cash flows
+	
+	interestRates=rep(i/m,length.out=length(timeIds))
+	#calcola il valora attuale
+	v=(1+interestRates)^-(timeIds*m)
+	pv=sum((cashFlows*v))
+	
+	#calcola il tempo medio ponderato
+	
+	weightedTime=sum((cashFlows*v*timeIds*(timeIds+1/m)))
+	
+	out=(weightedTime/pv)*(1+i/m)^-2
+	
+	return(out)
+}
+
+
+
+
 #annuity function
 annuity=function(i, n,m=1, type="immediate")
 {

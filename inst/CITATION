@@ -4,9 +4,9 @@ citEntry(entry="Manual",
          title = "Lifecontingencies: an R package to perform 
          life contingencies actuarial mathematics",
          author = person(first="Giorgio Alfredo", last="Spedicato"),
-         month="01",
+         month="02",
          year="2012",
-         note="R package version 0.0.8",
+         note="R package version 0.1.1",
          textVersion = "Giorgio Alfredo Spedicato. 
 		 Lifecontingencies. An R package to perform life contingencies actuarial mathematics"
          )

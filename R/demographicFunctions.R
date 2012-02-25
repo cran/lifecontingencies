@@ -7,9 +7,17 @@ dxt<-function(object, x, t) {
 	if(missing(x)) stop("Error! Missing x")
 	if(missing(t)) t=1
 	omega=getOmega(object) #prima object+1
+	#check if fractional
+	if ((t%%1)==0) {
 	lx=object@lx[which(object@x==x)]
 	if((x+t)>omega) out=lx else #before >=
 		out=lx-object@lx[which(object@x==t+x)]
+	} else {
+		
+		fracPart=(t%%1)
+		intPart=t-fracPart
+		out=dxt(object=object, x=x, t=intPart)+fracPart*dxt(object=object, x=x+intPart, t=1)
+	}
 	return(out)
 }
 
@@ -215,8 +223,6 @@ probs2lifetable<-function(probs, radix=10000, type="px", name="ungiven")
 
 
 ##########random variables Tx and Kx generators 
-
-
 
 
 rLife=function(n,object, x=0,type="Tx")

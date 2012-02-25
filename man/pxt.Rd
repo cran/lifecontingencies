@@ -52,7 +52,7 @@ A numeric value representing requested probability.
 Giorgio A. Spedicato
 }
 \note{
-This function is the core of many other functions.
+Function \code{dxt} accepts also fractional value of t. Linear interpolation is used in such case. These functions are called by many other functions.
 }
 
 \section{Warning }{
