@@ -13,17 +13,9 @@ Exn<-function(actuarialtable, x, n, i,type="EV")
 	if(!missing(i)) interest=i else interest=actuarialtable@interest #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
 	discount=(1+interest)^(-n)
 	#defines the outputs
-	if(type=="EV") out=presentValue(cashFlows=1, timeIds=n, interestRates=interest, probabilities=prob)
-	else if(type=="ST") out=discount*rbinom(n=1,size=1,prob=prob)
-	else if(type=="VR") 
-		{	#using rule of moments
-			m1=presentValue(cashFlows=1, timeIds=n, interestRates=interest, probabilities=prob)
-			fint=interest2Intensity(interest)
-			fint2=fint*2
-			m2=presentValue(cashFlows=1, timeIds=n, interestRates=intensity2Interest(fint2), probabilities=prob)
-			out=m2-m1^2
-		}
-	
+	if(type=="EV") out=presentValue(cashFlows=1, timeIds=n, 
+				interestRates=interest, probabilities=prob) else if(type=="ST") out=rLifeContingencies(n=1,lifecontingency="Exn", 
+				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=1,k=1)
 	#out=discount^2*prob*(1-prob)
 	return(out)
 }
@@ -52,10 +44,9 @@ axn<-function(actuarialtable, x, n,i, m,k=1, type="EV")
 		#out<-sum(payments*discounts*probs)
 	if(type=="EV") {
 		out<-presentValue(cashFlows=payments, timeIds=times, interestRates=interest, probabilities=probs)
-	}
-	if(type=="ST"){
-		out=0
-		for(i in 1:length(times)) out=out+1/k*rbinom(n=1, size=1, prob=pxt(actuarialtable, x, times[i]))*(1+interest)^-times[i]
+	} else if(type=="ST"){
+		out=rLifeContingencies(n=1,lifecontingency="axn", 
+				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=k)
 	}
 	return(out)
 }
@@ -86,8 +77,7 @@ axyn<-function(tablex, tabley, x,y, n,i, m,k=1, status="joint", type="EV")
 		#out<-sum(payments*discounts*probs)
 	if(type=="EV") {
 		out<-presentValue(cashFlows=payments, timeIds=times, interestRates=interest, probabilities=probs)
-	}
-	if(type=="ST"){
+	} else	if(type=="ST"){
 		out=0
 		for(i in 1:length(times)) out=out+1/k*rbinom(n=1, size=1, prob=probs[i])*(1+interest)^-times[i]
 	}
@@ -128,14 +118,9 @@ Axn<-function(actuarialtable, x, n,i, m, k=1, type="EV")
 	
 	if(type=="EV") {
 		out<-sum(payments*discounts*probs)
-	}
-	if(type=="ST"){
-		out=0
-		for(i in 1:length(times)) 
-		{
-			out=((1+interest)^-(times[i]+1/k))*rbinom(n=1, size=1, prob=pxt(actuarialtable, x,times[i])*qxt(actuarialtable,x+times[i],1/k))
-			if(out>0) break
-		}
+	} else if(type=="ST"){
+		out=rLifeContingencies(n=1,lifecontingency="Axn", 
+				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=k)
 	}
 	return(out)
 }
@@ -172,8 +157,7 @@ Axyn<-function(tablex, x,tabley, y, n,i, m, k=1, status="joint", type="EV")
 	
 	if(type=="EV") {
 		out<-sum(payments*discounts*probs)
-	}
-	if(type=="ST"){
+	} else if(type=="ST"){
 		out=0
 		for(i in 1:length(times)) 
 		{
@@ -208,6 +192,9 @@ IAxn<-function(actuarialtable, x, n,i, m=0, type="EV")
 		discounts=(1+interest)^-(times+1)
 		out<-sum(payments*discounts*probs)
 		return(out)
+	} else if(type=="ST") {
+		out=rLifeContingencies(n=1,lifecontingency="IAxn", 
+				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=1) #k is not defined yet
 	}
 	#else {
 	#	if(n==0) {
@@ -244,6 +231,10 @@ DAxn<-function(actuarialtable, x, n,i, m=0, type="EV")
 		discounts=(1+interest)^-(times+1)
 		out<-sum(payments*discounts*probs)
 		return(out)
+	} else if(type=="ST")
+	{
+		out=rLifeContingencies(n=1,lifecontingency="DAxn", 
+				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=1)
 	}
 #	else {
 #	if(n==0) {

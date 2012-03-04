@@ -12,8 +12,8 @@ Package to perform actuarial mathematics on life contingencies and classical fin
 \tabular{ll}{
 Package: \tab lifecontingencies\cr
 Type: \tab Package\cr
-Version: \tab 0.1.1\cr
-Date: \tab 2012-02-25\cr
+Version: \tab 0.9\cr
+Date: \tab 2012-03-04\cr
 License: \tab GPL-2.0\cr
 LazyLoad: \tab yes\cr
 }
@@ -55,7 +55,7 @@ monthlyInt=(1+i)^(1/12)-1
 Capital=100000
 #Montly installment
 
-R=1/12*Capital/annuity(i=i, n=10,m=12, type = "immediate")
+R=1/12*Capital/annuity(i=i, n=10,k=12, type = "immediate")
 R
 balance=numeric(10*12+1)
 capitals=numeric(10*12+1)

@@ -222,34 +222,3 @@ probs2lifetable<-function(probs, radix=10000, type="px", name="ungiven")
 }
 
 
-##########random variables Tx and Kx generators 
-
-
-rLife=function(n,object, x=0,type="Tx")
-{
-	if(missing(n)) stop("Error! Needing the n number of variates to return")
-	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Objectx needs be lifetable or actuarialtable objects")
-	if(x>getOmega(object)) stop("Error! x > maximum attainable age")
-	out=numeric(n)
-	const2Add=0
-	if(type=="Tx") const2Add=0.5 # the continuous future lifetime is the curtate future lifetime + 0.5
-	#determine the deaths
-	omega=max(object@x)
-	dx<-sapply(0:omega,dxt,object=object,t=1)
-	#determine the perimeter of x
-	index=which(object@x>=x)
-	x2Sample<-object@x[index]
-	deathsOfSample<-dx[index]
-	probsOfDeath<-deathsOfSample/sum(deathsOfSample)	
-	out=sample(x=x2Sample,size=n,replace=TRUE, prob=probsOfDeath)+const2Add-x
-	return(out)
-}
-
-
-##get 20000 random future lifetimes for the Soa life table at birth
-#data(soa08Act)
-#lifes=rLife(n=20000,object=soa08Act, x=0, type="Tx")
-##check if the expected life at birth derived from the life table
-##is statistically equal to the expected value of the sample
-#
-#t.test(x=lifes, mu=exn(soa08Act, x=0, type="continuous"))

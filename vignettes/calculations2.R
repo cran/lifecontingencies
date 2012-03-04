@@ -7,12 +7,13 @@
 ########################computationally intense simulations and graphs###############
 
 #distribuzione annuity 
-nsim=1000
+nsim=100000
 simAnnuity<-numeric(nsim)
-for (i in 1:nsim) simAnnuity[i]=axn(soa08Act, x=65, type="ST")
+simAnnuity<-rLifeContingencies(n=nsim, lifecontingency="axn",object=soa08Act,
+		x=65,t=getOmega(soa08Act)-65, i=soa08Act@interest,m=0,k=1)
 
 #distribuzione morti
-nsim=300000
+
 deathsIPS55M<-rLife(n=nsim,ips55M, x=0, type="Kx")
 
 
@@ -20,16 +21,16 @@ setwd("./images")
 
 png("fig1.png")
 
-plot(x=irates, y=insurance, 
-		main="Effect of interest on APV of term life insurance"
-		,lty=3)
+	plot(x=irates, y=insurance, 
+			main="Effect of interest on APV of term life insurance"
+			,lty=3)
 
 dev.off()
 
 
 png("fig2.png")
 
-hist(simAnnuity, col="dark red", main="Annuity distribution simulation")
+	hist(simAnnuity, col="dark red", main="Annuity distribution simulation")
 
 dev.off()
 

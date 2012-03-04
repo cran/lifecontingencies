@@ -8,7 +8,7 @@
 	This functions return the value at time n of a series of equally spaced payments of 1.
 }
 \usage{
-	accumulatedValue(i, n, m,type = "immediate")
+	accumulatedValue(i, n, k,type = "immediate")
 }
 
 \arguments{
@@ -18,7 +18,7 @@
   \item{n}{
 	Number of terms of payment.
 }
-  \item{m}{
+  \item{k}{
 	Frequency of payment.
 }
   \item{type}{

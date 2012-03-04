@@ -82,18 +82,20 @@ convexity=function(cashFlows, timeIds,i,m=1)
 
 
 #annuity function
-annuity=function(i, n,m=1, type="immediate")
+annuity=function(i, n,k=1, type="immediate")
 {
 	#checks
 	if(missing(i)) stop("Error! Missing effective interest rates") 
 	if(missing(n)) stop("Error! Missing periods") 
-	if(m<1) stop("Error! m must be greater or equal than 1") 
+	if(k<1) stop("Error! Payment frequency must be greater or equal than 1") 
 	if(is.infinite(n)) return(1/i) #perpetuity
+	if(n==0) return(0)
 	ieff=i #i è il tasso effettivo
-	if(type=="immediate") timeIds=seq(from=1/m, to=n, by=1/m)
-	else timeIds=seq(from=0, to=n-1/m, by=1/m) #due
-	iRate=rep(ieff,length.out=n*m)
-	out=presentValue(cashFlows=rep(1/m,length.out=n*m),interestRates = iRate, timeIds=timeIds)
+	if(type=="immediate") timeIds=seq(from=1/k, to=n, by=1/k)
+	else timeIds=seq(from=0, to=n-1/k, by=1/k) #due
+	iRate=rep(ieff,length.out=n*k)
+	out=presentValue(cashFlows=rep(1/k,length.out=n*k),interestRates = iRate, 
+			timeIds=timeIds)
 	return(out)
 }
 
@@ -134,7 +136,7 @@ increasingAnnuity=function(i, n,type="immediate")
 	return(out)
 }
 
-accumulatedValue=function(i, n, m=1, type="immediate")
+accumulatedValue=function(i, n, k=1, type="immediate")
 {
 	if(is.infinite(n)) return(1/i)
 	if(missing(i)) stop("Error! Missing interest rates")
@@ -143,7 +145,7 @@ accumulatedValue=function(i, n, m=1, type="immediate")
 #	timeIds=-timeIds
 #	iRate=rep(i,length.out=n)
 #	out=presentValue(cashFlows=rep(1,length.out=n),i = iRate, timeIds=timeIds)
-	out=(1+i)^n*annuity(i=i,n=n,m=m,type=type)
+	out=(1+i)^n*annuity(i=i,n=n,k=k,type=type)
 	return(out)
 }
 #obtain the nominal interest rate

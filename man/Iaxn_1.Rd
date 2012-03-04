@@ -26,7 +26,7 @@ The interest rate that overrides the one in the \code{actuarialtable} object.
 The deferring period.
 }
   \item{type}{
-Only "EV" option is active now.
+Yet only "EV" is implemented.
 }
 }
 \details{

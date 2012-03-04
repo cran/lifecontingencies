@@ -29,7 +29,8 @@ The term of life insurance. If missing n is set as \eqn{n=\omega - x - m -1}.
 The deferring period. If missing, m is set as 0.
 }
   \item{type}{
-If "EV" (default) the actuarial value is returned.
+Default value is "EV", where APV is returned. "ST" returns a sample from the underlying 
+present value of benefits distribution.
 }
 }
 \details{

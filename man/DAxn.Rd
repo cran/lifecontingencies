@@ -25,7 +25,8 @@
 	Deferring period, even fractional, assumed 1 whether missing.
 }
   \item{type}{
-	A character value, either "EV" (default value) or "ST".
+Default value is "EV", where APV is returned. "ST" returns a sample from the underlying 
+present value of benefits distribution.
 }
 }
 \details{

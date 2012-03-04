@@ -8,7 +8,7 @@ Annuity function
 Function to calculate present value of annuities-certain.
 }
 \usage{
-annuity(i, n,m=1,type = "immediate")
+annuity(i, n,k=1,type = "immediate")
 }
 
 \arguments{
@@ -17,11 +17,11 @@ annuity(i, n,m=1,type = "immediate")
 	of periods. If i = \code{infinity} then \code{annuity} returns the value of a perpetuity.
 }
   \item{n}{
-	Number of payments.
+	Periods for payments.
 }
-  \item{m}{
-	Frequency of payments. A payment of \eqn{m^-1} is supposed to be performed at the end of each due 
-	date.
+  \item{k}{
+	Yearly payments frequency. A payment of \eqn{k^-1} is 
+	supposed to be performed at the end of each year.
 }
   \item{type}{
 	A string, either "immediate" or "due".
@@ -54,8 +54,8 @@ annuity(i, n,m=1,type = "immediate")
 \code{\link{accumulatedValue}}
 }
 \examples{
-	# The present value of 5 payments of 1000 at one year interval beginnin now when the interest rate is 2.5% is
-	1000*annuity(i=0.05, n=5, type = "due")
+# The present value of 5 payments of 1000 at one year interval beginnin now when the interest rate is 2.5% is
+1000*annuity(i=0.05, n=5, type = "due")
 #A man borrows a loan of 20,000 to purchase a car at
 # a nominal annual rate of interest of 0.06. He will pay back the loan through monthly
 #installments over 5 years, with the first installment to be made one month

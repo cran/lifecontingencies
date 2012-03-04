@@ -8,7 +8,7 @@ This function returns random samples from the time until death (future lifetime)
 the continuous or the curtate time until death can be returned.
 }
 \usage{
-rLife(n, object, x = 0, type = "Tx")
+rLife(n, object, x = 0, k=1, type = "Tx")
 }
 
 \arguments{
@@ -20,6 +20,9 @@ An object of class lifetable.
 }
   \item{x}{
 The attained age of subject x. Default value is 0.
+}
+  \item{k}{
+Number of periods within the year when it is possible death to happen. Default value is 1.
 }
   \item{type}{
 Either "Tx" for continuous time until death or "Kx" for curtate 
