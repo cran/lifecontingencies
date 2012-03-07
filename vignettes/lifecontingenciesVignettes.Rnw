@@ -289,7 +289,7 @@ The financial mathematics group comprises the followings:
 		\item \code{accumulatedValue} returns the future value of a series of cash flows, $s_{\lcroof{n}}$.
 		\item \code{decreasingAnnuity} returns the present value of an increasing annuity, $(DA)_{\lcroof{n}}$.
 		\item \code{accumulatedValue} returns the future value of a payments sequence, $s_{\lcroof{n}}$.
-		\item \code{nominal2Real} returns the effective annual interest (discount) rate $i$ given the nominal m-periodal interest $i^(m)$ or discount $d^m$ rate.
+		\item \code{nominal2Real} returns the effective annual interest (discount) rate $i$ given the nominal m-periodal interest $i^(k)$ or discount $d^(k)$ rate.
 		\item \code{real2Nominal} returns the m-periodal interest or discount rate given the m periods or the discount.
 		\item \code{intensity2Interest} returns the intensity of interest $\delta$ given the interest rate $i$.
 		\item \code{interest2Intensity} returns the interest rate $i$ given the intensity of interest $\delta$.
@@ -333,8 +333,8 @@ how to perform present value, annuities and future values analysis calculations 
 
 \subsubsection{Interest rate functions}\label{sec:finInt}
 
-Following examples show how to switch from effective percentage rates (APR) to nominal 
-percentage rates, that is $i^m \to i$ and vice versa.
+Following examples show how to switch from effective interest rates (APR) to nominal 
+interest rates, that is $i^k \to i$ and vice versa.
 
 <<interest rates functions>>=
 #an APR of 3% is equal to a 
@@ -350,13 +350,13 @@ real2Nominal(0.04,4)*100
 #nominal interest rate (in 100s) compounded quarterly
 @
 
-\code{real2Nominal} and \code{nominal2Real} work with discount rates also, that is they allows $d^m \to d$ and 
+\code{real2Nominal} and \code{nominal2Real} work with discount rates also, that is they allows $d^(m) \to d$ and 
 vice versa.
 
 
 <<discount rates functions>>=
 #an effective rate of discount of 4% is equal to a 
-real2Nominal(i=0.04,m=12,type="discount")
+real2Nominal(i=0.04,k=12,type="discount")
 #nominal rate of discount payable quarterly
 @
 
@@ -871,12 +871,12 @@ sample1<-rLife(n=10,object=soa08Act,x=0,type="Kx")
 while code below shows how the mean of the sampled distribution is statistically equivalent to the expected life time.
 
 <<rLife2,keep.source=TRUE>>=
-	#assume an insured aged 29
-	#his expected integer number of years until death is 
-	exn(soa08Act, x=29,type="curtate")
-	#check if we are sampling from a statistically equivalent distribution
-	t.test(x=rLife(2000,soa08Act, x=29,type="Kx"),mu=exn(soa08Act, x=29,type="curtate"))$p.value
-	#statistically not significant
+#assume an insured aged 29
+#his expected integer number of years until death is 
+exn(soa08Act, x=29,type="curtate")
+#check if we are sampling from a statistically equivalent distribution
+t.test(x=rLife(2000,soa08Act, x=29,type="Kx"),mu=exn(soa08Act, x=29,type="curtate"))$p.value
+#statistically not significant
 @
 
 Finally figure \ref{fig:deathsIPS55M} shows the deaths distribution implicit in the ips55M life table.
@@ -893,7 +893,7 @@ Finally figure \ref{fig:deathsIPS55M} shows the deaths distribution implicit in 
 
 
 The APV is a present value of a random variable that represents a composite function between the discount 
-amount and indicator variables regarding the life status of the insured. This is the present value benefit 
+amount and indicator variables regarding the life status of the insured. This is the present value of benefits 
 random variable, $\tilde Z$.\\
 Usually life contingencies evaluation functions return the APV, as the \code{type} parameter
 has "EV" (expected value) as default value. However most life contingencies insurance evaluation 
@@ -982,6 +982,6 @@ the accuracy leads only to the 5th decimal. The reason of such inaccuracy is due
 I wish to thank Christophe Dutang and Tim Riffle for their valuable suggestions.
 
 %\bibliographystyle{jss}
-\bibliography{packagebiblio}
+\bibliography{vignetteBiblio}
 
 \end{document}

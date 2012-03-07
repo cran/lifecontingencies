@@ -1,4 +1,5 @@
 #TO DO: check here http://www.mysmu.edu/faculty/yktse/FMA/S_FMA_1.pdf
+#TO DO: add k to increasing and decreasing annuities function
 #function to evaluate the present value of a series of cash flows
 
 presentValue=function(cashFlows, timeIds,interestRates, probabilities)
@@ -26,7 +27,7 @@ presentValue=function(cashFlows, timeIds,interestRates, probabilities)
 
 #duration
 #m=tasso di interesse nominale capitalizzato m volte
-duration=function(cashFlows, timeIds,i, m=1,macaulay=TRUE)
+duration=function(cashFlows, timeIds,i, k=1,macaulay=TRUE)
 {
 	out=0
 	if(missing(timeIds)) #check coherence on time id vector
@@ -36,9 +37,9 @@ duration=function(cashFlows, timeIds,i, m=1,macaulay=TRUE)
 
 	if(!(length(cashFlows)==length(timeIds))) stop("Error! check dimensionality of cash flow and time ids vectors") #check dimensionality of cash flows
 	
-	interestRates=rep(i/m,length.out=length(timeIds))
+	interestRates=rep(i/k,length.out=length(timeIds))
 	#calcola il valora attuale
-	t=timeIds*m
+	t=timeIds*k
 	v=(1+interestRates)^-(t)
 	pv=sum((cashFlows*v))
 	
@@ -46,7 +47,7 @@ duration=function(cashFlows, timeIds,i, m=1,macaulay=TRUE)
 	
 	weightedTime=sum((cashFlows*v*t))
 	out=weightedTime/pv	
-	if(macaulay==TRUE) out=out else out=out/(1+i/m) 
+	if(macaulay==TRUE) out=out else out=out/(1+i/k) 
 	return(out)
 }
 
@@ -54,7 +55,7 @@ duration=function(cashFlows, timeIds,i, m=1,macaulay=TRUE)
 #convexity
 
 
-convexity=function(cashFlows, timeIds,i,m=1)
+convexity=function(cashFlows, timeIds,i,k=1)
 {
 	out=0
 	if(missing(timeIds)) #check coherence on time id vector
@@ -64,16 +65,16 @@ convexity=function(cashFlows, timeIds,i,m=1)
 	
 	if(!(length(cashFlows)==length(timeIds))) stop("Error! check dimensionality of cash flow and time ids vectors") #check dimensionality of cash flows
 	
-	interestRates=rep(i/m,length.out=length(timeIds))
+	interestRates=rep(i/k,length.out=length(timeIds))
 	#calcola il valora attuale
-	v=(1+interestRates)^-(timeIds*m)
+	v=(1+interestRates)^-(timeIds*k)
 	pv=sum((cashFlows*v))
 	
 	#calcola il tempo medio ponderato
 	
-	weightedTime=sum((cashFlows*v*timeIds*(timeIds+1/m)))
+	weightedTime=sum((cashFlows*v*timeIds*(timeIds+1/k)))
 	
-	out=(weightedTime/pv)*(1+i/m)^-2
+	out=(weightedTime/pv)*(1+i/k)^-2
 	
 	return(out)
 }
@@ -149,18 +150,18 @@ accumulatedValue=function(i, n, k=1, type="immediate")
 	return(out)
 }
 #obtain the nominal interest rate
-nominal2Real=function(i, m=1, type="interest")
+nominal2Real=function(i, k=1, type="interest")
 {
 	out=NULL
-	if(type=="interest") out=(1+i/m)^m-1 else 
-		out=1-(1-i/m)^m
+	if(type=="interest") out=(1+i/k)^k-1 else 
+		out=1-(1-i/k)^k
 	return(out)
 }
 #obtain the real interest rate
-real2Nominal=function(i, m=1, type="interest")
+real2Nominal=function(i, k=1, type="interest")
 {
-	if(type=="interest") out=((1+i)^(1/m)-1)*m else
-		out=m*(1-(1-i)^(1/m))
+	if(type=="interest") out=((1+i)^(1/k)-1)*k else
+		out=k*(1-(1-i)^(1/k))
 	return(out)
 }
 #obtain the interest from intensity

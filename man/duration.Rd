@@ -7,9 +7,9 @@ Functions to evaluate duration and convexity}
 These functions evaluate the duration or the convexity of a series of cash flows}
 \usage{
 
-duration(cashFlows, timeIds, i, m = 1, macaulay = TRUE)
+duration(cashFlows, timeIds, i, k = 1, macaulay = TRUE)
 
-convexity(cashFlows, timeIds, i, m = 1)
+convexity(cashFlows, timeIds, i, k = 1)
 }
 \arguments{
 
@@ -21,8 +21,8 @@ A vector representing the cash flows amounts.
   \item{i}{
 APR interest, i.e. nominal interest rate compounded m-thly.
 }
-  \item{m}{
-compounding frequency for the nominal interest rate \eqn{i}.
+  \item{k}{
+Compounding frequency for the nominal interest rate \eqn{i}.
 }
   \item{macaulay}{
 Is the macaulay duration (default value) or the effective duration to be evaluated?
@@ -32,8 +32,8 @@ Is the macaulay duration (default value) or the effective duration to be evaluat
 \details{
 
 The Macaulay duration is defined 
-as \eqn{\sum\limits_t^{T} \frac{t*CF_{t}\left( 1 + \frac{i}{m} \right)^{ - t*m}}{P}}, while 
-\eqn{\sum\limits_{t}^{T} t*\left( t + \frac{1}{m} \right) * CF_t \left(1 + \frac{y}{m} \right)^{ - m*t - 2}}
+as \eqn{\sum\limits_t^{T} \frac{t*CF_{t}\left( 1 + \frac{i}{k} \right)^{ - t*k}}{P}}, while 
+\eqn{\sum\limits_{t}^{T} t*\left( t + \frac{1}{k} \right) * CF_t \left(1 + \frac{y}{k} \right)^{ - k*t - 2}}
 
 }
 \value{

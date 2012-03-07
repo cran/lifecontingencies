@@ -8,19 +8,19 @@ Function to switch from APR to nominal m-periods interest rate
 This functions switches from nominal to effective APR.
 }
 \usage{
-real2Nominal(i, m = 1,type="interest")
+real2Nominal(i, k = 1,type="interest")
 }
 
 \arguments{
   \item{i}{Annual effective interest rate.}
-  \item{m}{Compounding periods.}
+  \item{k}{Compounding periods.}
   \item{type}{Either "interest" rate of "discount" rate}
 }
 \details{
 The function follows the equation 
 \eqn{\left( {1 + i} \right)^t = (1 - d)^{ - t} = 
-\left( {1 + \frac{{{i^{\left( m \right)}}}}{m}} \right)^{m*t} = 
-\left( 1 - \frac{{{d^{\left( m \right)}}}}{m} \right)^{ - m*t}}
+\left( {1 + \frac{{{i^{\left( k \right)}}}}{k}} \right)^{k*t} = 
+\left( 1 - \frac{{{d^{\left( k \right)}}}}{k} \right)^{ - k*t}}
 }
 \value{
 A numeric value
@@ -35,7 +35,7 @@ A numeric value
 }
 \note{
 The accumulation function is assumed to follow compound interest law, i.e.,
-	\eqn{A\left( t \right) = \left( 1 + \frac{i^m}{m} \right)^{mt}}
+	\eqn{A\left( t \right) = \left( 1 + \frac{i^k}{k} \right)^{k*t}}
 	}
 \section{Warning }{
 	The function is provided as is, without any warranty regarding the accuracy of calculations. The author disclaims any liability for eventual 
@@ -43,6 +43,6 @@ The accumulation function is assumed to follow compound interest law, i.e.,
 }
 
 \seealso{\code{\link{nominal2Real}}}
-\examples{#an APR of 0.12 corresponds to a nominal rate montly compounded of
+\examples{#an APR of 0.12 corresponds to a nominal rate monthly compounded of
  
-real2Nominal(i=0.12, m = 12)}
+real2Nominal(i=0.12, k = 12)}
