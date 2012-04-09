@@ -7,10 +7,10 @@
 ########################computationally intense simulations and graphs###############
 
 #distribuzione annuity 
-nsim=100000
+nsim=500000
 simAnnuity<-numeric(nsim)
 simAnnuity<-rLifeContingencies(n=nsim, lifecontingency="axn",object=soa08Act,
-		x=65,t=getOmega(soa08Act)-65, i=soa08Act@interest,m=0,k=1)
+		x=65,t=getOmega(soa08Act)-65, i=soa08Act@interest,m=0,k=1, parallel=TRUE)
 
 #distribuzione morti
 
@@ -30,21 +30,22 @@ dev.off()
 
 png("fig2.png")
 
-	hist(simAnnuity, col="dark red", main="Annuity distribution simulation")
+	hist(simAnnuity, col="steelblue", main="Annuity distribution simulation")
 
 dev.off()
 
 
 png("fig3.png")
 
-	plot(x=years, y=annuityRes, col="dark red", main="Benefit reserve", ylab="amount",xlab="years")
+	plot(x=years, y=annuityRes, col="steelblue", main="Benefit reserve", ylab="amount",xlab="years")
 
 dev.off()
 
 
 png("fig4.png")
 
-	hist(deathsIPS55M, freq=FALSE, main="IPS55M table Kx distribution",xlab="Age until death")
+	hist(deathsIPS55M, freq=FALSE, main="IPS55M table Kx distribution",
+			xlab="Age until death",col="steelblue")
 
 dev.off()
 

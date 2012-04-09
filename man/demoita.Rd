@@ -23,6 +23,14 @@ used to create life table objects and actuarial tables object.
     \item{\code{RG48F}}{a numeric vector, RG48 projected females life table}
     \item{\code{IPS55M}}{a numeric vector, IPS55 projected males life table}
     \item{\code{IPS55F}}{a numeric vector, IPS55 projected females life table}
+    \item{\code{SIM31}}{a numeric vector, 1931 criss sectional general population males life table}
+    \item{\code{SIM51}}{a numeric vector, 1951 criss sectional general population males life table}
+    \item{\code{SIM61}}{a numeric vector, 1961 criss sectional general population males life table}
+    \item{\code{SIF61}}{a numeric vector, 1931 criss sectional general population females life table}
+    \item{\code{SIM71}}{a numeric vector, 1971 criss sectional general population males life table}
+    \item{\code{SIM81}}{a numeric vector, 1981 criss sectional general population males life table}
+    \item{\code{SIF81}}{a numeric vector, 1981 criss sectional general population females life table}
+
   }
 }
 \details{

@@ -1,0 +1,133 @@
+\begin{thebibliography}{18}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem[{Anderson(1999)}]{anderson1999commutation}
+Anderson J (1999).
+\newblock \emph{Commutation functions}.
+\newblock Education and Examination Committee of the Society of Actuaries.
+
+\bibitem[{Bowers \emph{et~al.}(1997)Bowers, Gerber, Hickman, Jones, and
+  Nesbitt}]{bowers1997actuarial}
+Bowers N, Gerber H, Hickman J, Jones D, Nesbitt C (1997).
+\newblock \enquote{Actuarial Mathematics. Schaumburg.}
+\newblock \emph{IL: Society of Actuaries}.
+
+\bibitem[{Broverman(2008)}]{broverman2008mathematics}
+Broverman S (2008).
+\newblock \emph{Mathematics of investment and credit}.
+\newblock ACTEX academic series. ACTEX Publications.
+\newblock ISBN 9781566986571.
+
+\bibitem[{Chambers(2008)}]{chambers2008software}
+Chambers J (2008).
+\newblock \emph{Software for data analysis: programming with R}.
+\newblock Statistics and computing. Springer.
+\newblock ISBN 9780387759357.
+
+\bibitem[{Dutang \emph{et~al.}(2008)Dutang, Goulet, and Pigeon}]{Dutang2008}
+Dutang C, Goulet V, Pigeon M (2008).
+\newblock \enquote{actuar: An R Package for Actuarial Science.}
+\newblock \emph{Journal of Statistical Software}, \textbf{25}(7), 38.
+\newblock \urlprefix\url{http://www.jstatsoft.org/v25/i07}.
+
+\bibitem[{Ferstl and Hayden(2010)}]{termstrcR}
+Ferstl R, Hayden J (2010).
+\newblock \enquote{Zero-Coupon Yield Curve Estimation with the Package
+  {termstrc}.}
+\newblock \emph{Journal of Statistical Software}, \textbf{36}(1), 1--34.
+\newblock \urlprefix\url{http://www.jstatsoft.org/v36/i01/}.
+
+\bibitem[{Gesmann and Zhang(2011)}]{chainLadder}
+Gesmann M, Zhang Y (2011).
+\newblock \emph{ChainLadder: Mack, Bootstrap, Munich and
+  Multivariate-chain-ladder Methods}.
+\newblock R package version 0.1.4-3.4.
+
+\bibitem[{Guirreri(2010)}]{YieldCurveR}
+Guirreri S (2010).
+\newblock \emph{Simulating the Term Structure of Interest Rates with arbitrary
+  marginals}.
+\newblock Ph.D. thesis, University of Palermo - Department of Statistics and
+  Mathematics ''S. Vianelli'', Palermo.
+\newblock \urlprefix\url{http://www.guirreri.host22.com}.
+
+\bibitem[{Keyfitz and Caswell(2005)}]{keyfitz2005applied}
+Keyfitz N, Caswell H (2005).
+\newblock \emph{Applied mathematical demography}.
+\newblock Statistics for biology and health. Springer.
+\newblock ISBN 9780387225371.
+
+\bibitem[{Klugman \emph{et~al.}(2009)Klugman, Panjer, Willmot, and
+  Venter}]{klugman2009loss}
+Klugman S, Panjer H, Willmot G, Venter G (2009).
+\newblock \emph{Loss models: from data to decisions}.
+\newblock Third edition. Wiley New York.
+
+\bibitem[{Mazzoleni(2000)}]{mazzoleni2000appunti}
+Mazzoleni P (2000).
+\newblock \emph{Appunti di matematica attuariale}.
+\newblock EDUCatt Universit{\`a} Cattolica.
+\newblock ISBN 9788883110825.
+\newblock \urlprefix\url{http://books.google.it/books?id=eGzSAAAACAAJ}.
+
+\bibitem[{McCallum and Weston(2011)}]{mccallum2011parallel}
+McCallum Q, Weston S (2011).
+\newblock \emph{Parallel R}.
+\newblock O'Reilly Media.
+\newblock ISBN 9781449309923.
+
+\bibitem[{Post \emph{et~al.}(2007)Post, Gründl, Schmidl, and
+  Dorfman}]{ifrsInsurance}
+Post T, Gründl H, Schmidl L, Dorfman MS (2007).
+\newblock \enquote{Implications of IFRS for the European Insurance
+  Industry—Insights From Capital Market Theory.}
+\newblock \emph{Risk Management and Insurance Review}, \textbf{10}(2),
+  247--265.
+\newblock ISSN 1540-6296.
+\newblock \doi{10.1111/j.1540-6296.2007.00117.x}.
+\newblock \urlprefix\url{http://dx.doi.org/10.1111/j.1540-6296.2007.00117.x}.
+
+\bibitem[{Riffe(2011)}]{LifeTableR}
+Riffe T (2011).
+\newblock \emph{LifeTable: LifeTable, a package with a small set of useful
+  lifetable functions.}
+\newblock R package version 1.0.1,
+  \urlprefix\url{http://sites.google.com/site/timriffepersonal/r-code/lifeable}.
+
+\bibitem[{Rigby and Stasinopoulos(2005)}]{gamlssPkg}
+Rigby RA, Stasinopoulos DM (2005).
+\newblock \enquote{Generalized additive models for location, scale and
+  shape,(with discussion).}
+\newblock \emph{Applied Statistics}, \textbf{54}, 507--554.
+
+\bibitem[{{Rob J Hyndman} \emph{et~al.}(2011){Rob J Hyndman}, {Heather Booth},
+  {Leonie Tickle}, and {John Maindonald}}]{demographyR}
+{Rob J Hyndman}, {Heather Booth}, {Leonie Tickle}, {John Maindonald} (2011).
+\newblock \emph{demography: Forecasting mortality, fertility, migration and
+  population data}.
+\newblock R package version 1.09-1,
+  \urlprefix\url{http://CRAN.R-project.org/package=demography}.
+
+\bibitem[{Ruckman and Francis(2006)}]{mathFinAct}
+Ruckman C, Francis J (2006).
+\newblock \emph{FINANCIAL MATHEMATICS: A Practical Guide for Actuaries and
+  other Business Professionals}.
+\newblock Warren Centre for Actuarial Studies and Research, second edition
+  edition.
+
+\bibitem[{Zhang(2011)}]{cplmPkg}
+Zhang W (2011).
+\newblock \emph{cplm: Monte Carlo EM algorithms and Bayesian methods for
+  fitting Tweedie compound Poisson linear models}.
+\newblock R package version 0.2-1,
+  \urlprefix\url{http://CRAN.R-project.org/package=cplm}.
+
+\end{thebibliography}

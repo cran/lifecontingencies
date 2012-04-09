@@ -8,22 +8,25 @@ Annuity function
 Function to calculate present value of annuities-certain.
 }
 \usage{
-annuity(i, n,k=1,type = "immediate")
+annuity(i, n,m=0, k=1,type = "immediate")
 }
 
 \arguments{
-  \item{i}{
+\item{i}{
 	Effective interest rate expressed in decimal form. E.g. 0.03 means 3\%. It can be a vector of interest rates of the same length
 	of periods. If i = \code{infinity} then \code{annuity} returns the value of a perpetuity.
 }
-  \item{n}{
+\item{n}{
 	Periods for payments.
 }
-  \item{k}{
+\item{m}{
+	Deferring period, whose default value is zero.
+}
+\item{k}{
 	Yearly payments frequency. A payment of \eqn{k^-1} is 
 	supposed to be performed at the end of each year.
 }
-  \item{type}{
+\item{type}{
 	A string, either "immediate" or "due".
 }
 }

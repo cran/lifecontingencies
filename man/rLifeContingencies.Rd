@@ -9,7 +9,7 @@ This function returns a n-size sample from the underlying present value of benef
 stochastic variable defined by a specific life contingencies insurance form.
 }
 \usage{
-rLifeContingencies(n, lifecontingency, object, x, t, i = object@interest, m=0, k = 1)
+rLifeContingencies(n, lifecontingency, object, x, t, i = object@interest, m=0, k = 1 , parallel=FALSE)
 }
 
 \arguments{
@@ -37,6 +37,9 @@ Deferring period, default value is zero.
   \item{k}{
 Fractional payment, default value is 1.
 }
+  \item{parallel}{
+Uses the parallel computation facility.
+}
 }
 \details{
 This function is a wrapper for internal function that returns the present value of insured 
@@ -53,14 +56,14 @@ A numeric vector.
 Giorgio Alfredo Spedicato.
 }
 \note{
-This function is a wrapper for many internal functions. Moreover it is called by all
-lifecontingencies function when \code{type} "ST" is called.
+This function is a wrapper for many internal functions. It is called by all actuarial mathematics functions when value "ST" is provided to 
+\code{type} parameter.
 }
 
 \section{Warning }{
+	
 	The function is provided as is, without any warranty regarding the accuracy of calculations. The author disclaims any liability for eventual 
-	losses arising from direct or indirect use of this software.
-	Moreover the calculations for axn are yet wrong.
+	losses arising from direct or indirect use of this software. Currently k>1 computation are not supported yet.
 	}
 
 \seealso{

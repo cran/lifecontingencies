@@ -32,6 +32,10 @@ axn<-function(actuarialtable, x, n,i, m,k=1, type="EV")
 	}
 	if(missing(m)) m=0
 	if(missing(n)) n=getOmega(actuarialtable)-x-m #n=getOmega(actuarialtable)-x-m-1
+	if(n==0) {
+		out=0
+		return(out)
+	}
 	if(!missing(i)) interest=i else interest=actuarialtable@interest #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
 	if(any(x<0,m<0,n<0)) stop("Error! Negative parameters")
 	#computation of quantities, assuming fractional payments
@@ -276,5 +280,38 @@ Iaxn<-function(actuarialtable, x, n,i, m=0, type="EV")
 	return(out)
 }
 
+
+
+#pure endowment function
+AExn<-function(actuarialtable, x, n,i, k=1, type="EV")
+{
+	out<-NULL
+	if(missing(actuarialtable)) stop("Error! Need an actuarial actuarialtable")
+	if(missing(x)) stop("Error! Need age!")
+	if(k<1) stop("Error! Periods in a year shall be no less than 1")
+	if(missing(n)) n=getOmega(actuarialtable)-x-1
+	if(!missing(i)) interest=i else interest=actuarialtable@interest #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
+	if(n==0) return(0)
+	if(any(x<0,n<0)) stop("Error! Negative parameters")
+	
+	if(type=="EV") {
+		out<-Axn(actuarialtable=actuarialtable, x=x, n=n, i=i,m=0, k=k,type="EV")+Exn(actuarialtable=actuarialtable, x=x, n=n, i=i,
+				type="EV")
+	} else if(type=="ST"){
+		out=rLifeContingencies(n=1,lifecontingency="AExn", 
+				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, k=k)
+	}
+	return(out)
+}
+
+
+#x=35
+#t=30
+#n=200000
+#object=soa08Act
+#lifecontingency="EAxn"
+#i=0.06
+#out<-rLifeContingencies(n=20000,lifecontingency="Axn", object=soa08Act, x=35,
+#		t=30,i=0.06,k=1, parallel=TRUE)
 
 

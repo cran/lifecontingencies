@@ -17,7 +17,7 @@ Annuity immediate and due function.
 	An actuarial table object.
 }
   \item{x}{
-	Age of the annuity.
+	Age of the annuitant.
 }
   \item{n}{
 	Number of terms of the annuity, if missing annuity is intended to be paid until death.
@@ -49,7 +49,7 @@ Annuity immediate and due function.
 	Giorgio A. Spedicato
 }
 \note{
-	When either \eqn{x=\omega} or \eqn{n=0}   zero is returned.
+	When either \eqn{x=\omega} or \eqn{n=0} zero is returned.
 }
 
 \section{Warning}{

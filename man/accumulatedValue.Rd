@@ -5,23 +5,26 @@
 	Function to evaluate the accumulated value.
 }
 \description{
-	This functions return the value at time n of a series of equally spaced payments of 1.
+	This functions returns the value at time n of a series of equally spaced payments of 1.
 }
 \usage{
-	accumulatedValue(i, n, k,type = "immediate")
+	accumulatedValue(i, n,m=0, k,type = "immediate")
 }
 
 \arguments{
-  \item{i}{
+\item{i}{
 	Effective interest rate expressed in decimal form. E.g. 0.03 means 3\%.
 }
-  \item{n}{
+\item{n}{
 	Number of terms of payment.
 }
-  \item{k}{
+\item{m}{
+	Deferring period, whose default value is zero.
+}
+\item{k}{
 	Frequency of payment.
 }
-  \item{type}{
+\item{type}{
 	A string, either "immediate" or "due".
 }
 }
@@ -62,7 +65,7 @@
 #0.075 is paid, how much does the man need to save each year in order to
 #meet his target?
 R=100000/accumulatedValue(i=0.075,n=10)
-R
+
 }
 
 
