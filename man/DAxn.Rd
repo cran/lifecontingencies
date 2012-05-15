@@ -6,7 +6,7 @@
 	Both actuarial value and stochastic random sample can be returned.
 }
 \usage{
-	DAxn(actuarialtable, x, n, i,m = 0, type = "EV")
+	DAxn(actuarialtable, x, n, i,m = 0,k=1, type = "EV")
 }
 \arguments{
   \item{actuarialtable}{
@@ -23,6 +23,9 @@
 }
   \item{m}{
 	Deferring period, even fractional, assumed 1 whether missing.
+}
+  \item{k}{
+  Number of fractional payments per period. Assumed to be 1 whether missing.
 }
   \item{type}{
 Default value is "EV", where APV is returned. "ST" returns a sample from the underlying 

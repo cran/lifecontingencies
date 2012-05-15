@@ -1,4 +1,6 @@
 ChangeLog
+-Version 0.9.3
+	Revision to lifecontingencies vignettes to cope with 
 -Version 0.9.2
 	rLifeContingencies has been parallelized
 	updated demoIta dataset

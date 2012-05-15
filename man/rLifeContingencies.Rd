@@ -57,11 +57,11 @@ Giorgio Alfredo Spedicato.
 }
 \note{
 This function is a wrapper for many internal functions. It is called by all actuarial mathematics functions when value "ST" is provided to 
-\code{type} parameter.
+\code{type} parameter. Two heads life contingencies do not have this function implemented yet.
 }
 
 \section{Warning }{
-	
+	Before using this function, the unbiaseness of the sample drawn from the distribution shall be verified. The function is still in testing ad for some classes of life contingencies biased.
 	The function is provided as is, without any warranty regarding the accuracy of calculations. The author disclaims any liability for eventual 
 	losses arising from direct or indirect use of this software. Currently k>1 computation are not supported yet.
 	}

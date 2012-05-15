@@ -88,7 +88,18 @@ axyn<-function(tablex, tabley, x,y, n,i, m,k=1, status="joint", type="EV")
 	return(out)
 }
 
+# objectX=soa08Act
+# objectY=soa08Act
+# tx=65
+# ty=63
+# n=10
 
+# aX=axn(soa08Act, x=tx, n=n)
+# aY=axn(soa08Act, x=ty, n=n)
+# axynJ=axyn(tablex=objectX,tabley=objectY, x=tx, y=ty,n=n, status="joint")
+# axynL=axyn(objectX,objectY, x=tx,  y=ty,n=n, status="last", type="EV")
+# axynL
+# (aX+aY-axynJ)-axynL #minimum departure
 
 #function to obtain the Life Insurance
 #actuarialtable: an actuarial actuarialtable object
@@ -106,19 +117,13 @@ Axn<-function(actuarialtable, x, n,i, m, k=1, type="EV")
 	if(!missing(i)) interest=i else interest=actuarialtable@interest #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
 	if(n==0) return(0)
 	if(any(x<0,m<0,n<0)) stop("Error! Negative parameters")
-	
-	#perform calculations
-		#payments=rep(1,n)
-		#probs=numeric(n)
-		#times=m+seq(from=0, to=(n-1),by=1) 
-		payments=rep(1,n*k)
+		#we have n*k possible payment times
+		payments=rep(1,n*k) #the payment is fixed
 		probs=numeric(n*k)		
 		times=m+seq(from=0, to=(n-1/k),by=1/k)
 		startAge=x
 		for(i in 1:length(times)) probs[i]=(pxt(object=actuarialtable, x=startAge,t=times[i])*qxt(object=actuarialtable, x=startAge+times[i],t=1/k))
-		#for(i in 1:length(times)) probs[i]=(pxt(actuarialtable, x,times[i])*qxt(actuarialtable, x+times[i],1))
 		discounts=(1+interest)^-(times+1/k)
-	#gets outpus
 	
 	if(type=="EV") {
 		out<-sum(payments*discounts*probs)
@@ -140,7 +145,7 @@ Axyn<-function(tablex, x,tabley, y, n,i, m, k=1, status="joint", type="EV")
 	if(missing(n)) n=max(getOmega(tablex)-x,getOmega(tabley)-y)-m-1
 
 	if(tablex@interest!=tabley@interest) {
-		warning("Warning! Intesters differ between tablex and tabley. Using average")
+		warning("Warning! Intesters differ between tablex and tabley. The average will be used")
 		}
 	if(!missing(i)) interest=i else interest=0.5*(tablex@interest+tabley@interest) #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
 	
@@ -152,13 +157,15 @@ Axyn<-function(tablex, x,tabley, y, n,i, m, k=1, status="joint", type="EV")
 		payments=rep(1,n*k)
 		probs=numeric(n*k)		
 		times=m+seq(from=0, to=(n-1/k),by=1/k)
-		for(i in 1:length(times)) probs[i]=(pxyt(objectx=tablex,objecty=tabley, x=x,y=y, status=status, t=times[i])*qxyt(objectx=tablex,objecty=tabley, 
-								x=x+times[i],y=y+times[i],
+		startAgex=x
+		startAgey=y
+		for(i in 1:length(times)) probs[i]=(pxyt(objectx=tablex,objecty=tabley, x=startAgex,y=startAgey, 
+		status=status, t=times[i])*qxyt(objectx=tablex,objecty=tabley, 
+								x=startAgex+times[i],y=startAgey+times[i],
 								t=1/k,status=status))
-		#for(i in 1:length(times)) probs[i]=(pxt(actuarialtable, x,times[i])*qxt(actuarialtable, x+times[i],1))
+
 		discounts=(1+interest)^-(times+1/k)
-	#gets outpus
-	
+
 	if(type=="EV") {
 		out<-sum(payments*discounts*probs)
 	} else if(type=="ST"){
@@ -172,12 +179,34 @@ Axyn<-function(tablex, x,tabley, y, n,i, m, k=1, status="joint", type="EV")
 	return(out)
 }
 
+# tablex=soa08Act
+# tabley=soa08Act
+# x=65
+# y=63
+# n=10
+# i=0.06
+# m=0
 
+# Ax=Axn(soa08Act, x=x,n=n)
+# Ay=Axn(soa08Act, x=y,n=n)
+# AxynJ=Axyn(tablex=soa08Act, x=x,tabley=soa08Act, y=y, n=n,i=i, m=m, k=1, status="joint", type="EV")
+# AxynL=Axyn(tablex=soa08Act, x=x,tabley=soa08Act, y=y, n=n,i=i, m=m, k=1, status="last", type="EV")
+# AxynJ
+# AxynL
+
+# Ax+Ay-AxynJ
 
 
 #n-year term whole life
 #recursive function
-IAxn<-function(actuarialtable, x, n,i, m=0, type="EV")
+# actuarialtable=soa08Act
+# x=50
+# n=10
+# i=0.06
+# m=0
+# k=2
+
+IAxn<-function(actuarialtable, x, n,i, m=0, k=1, type="EV")
 {
 	out<-NULL
 	if(missing(actuarialtable)) stop("Error! Need an actuarial actuarialtable")
@@ -186,73 +215,96 @@ IAxn<-function(actuarialtable, x, n,i, m=0, type="EV")
 
 	if(missing(n)) n=getOmega(actuarialtable)-x-m #n=getOmega(actuarialtable)-x-m-1
 	if(!missing(i)) interest=i else interest=actuarialtable@interest #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
-	y=x+n
+	if(any(x<0,m<0,n<0)) stop("Error! Negative parameters")
+	#we have n*k possible payment times
+	payments=seq(from=1/k, to=n, by=1/k)
+	probs=numeric(n*k)		
+	times=m+seq(from=0, to=(n-1/k),by=1/k)
+	startAge=x #we start from x
+	for(i in 1:length(times)) probs[i]=(pxt(object=actuarialtable, x=startAge,t=times[i])*qxt(object=actuarialtable, x=startAge+times[i],t=1/k))
+	discounts=(1+interest)^-(times+1/k)
 	
 	if(type=="EV") {
-		payments=seq(from=1, to=n, by=1)
-		probs=numeric(n)
-		times=m+seq(from=0, to=(n-1),by=1) 
-		for(i in 1:length(times)) probs[i]=(pxt(actuarialtable, x,times[i])*qxt(actuarialtable, x+times[i],1))
-		discounts=(1+interest)^-(times+1)
+#		payments=seq(from=1, to=n, by=1)
+#		probs=numeric(n)
+#		times=m+seq(from=0, to=(n-1),by=1) 
+#		for(i in 1:length(times)) probs[i]=(pxt(actuarialtable, x,times[i])*qxt(actuarialtable, 
+#								x+times[i],1))
+#		discounts=(1+interest)^-(times+1)
 		out<-sum(payments*discounts*probs)
-		return(out)
 	} else if(type=="ST") {
 		out=rLifeContingencies(n=1,lifecontingency="IAxn", 
-				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=1) #k is not defined yet
+				object=actuarialtable, x=x,t=n,
+				i=actuarialtable@interest, m=m,k=k) #!fix: prima = 1
 	}
-	#else {
-	#	if(n==0) {
-	#		out=0
-	#		return(out)
-	#		}	else {
-	#			#recursive code
-	#			xplus=x+1
-	#			nplus=n-1
-	#			out=(qxt(actuarialtable, x,1)*(1+actuarialtable@interest)^-1)+Exn(actuarialtable, x,1)*(Axn(actuarialtable, xplus,nplus)+IAxn(actuarialtable, xplus,nplus))
-	#			return(out)
-	#		}
-	#	}
+	return(out)
 }
 
-#IAxn(soa08Act, 50,90,type="EV")
-#IAxn(soa08Act, 50,90,type="RC")
+# n=500000
+# lifecontingency="IAxn"
+# object=soa08Act
+# x=40
+# t=20
+# i=soa08Act@interest
+# m=5
+# k=12
 
-DAxn<-function(actuarialtable, x, n,i, m=0, type="EV")
+
+# outs<-rLifeContingencies(n,lifecontingency, object, x,t,i=i, 
+		# m=m,k=k, parallel=TRUE)
+# APV=IAxn(object, x=x,n=t, k=k)
+# mean(outs)
+# APV
+# t.test(x=outs, mu=APV)
+
+
+# IAxn(soa08Act, x=50,n=10,k=2,type="EV")
+# IAxn(soa08Act, x=50,n=10,k=2,type="ST")
+
+DAxn<-function(actuarialtable, x, n,i, m=0, k=1, type="EV")
 {
 	out<-NULL
 	if(missing(actuarialtable)) stop("Error! Need an actuarial actuarialtable")
 	if(missing(x)) stop("Error! Need age!")
 	if(missing(m)) m=0
-	
 	if(missing(n)) n=getOmega(actuarialtable)-x-m #n=getOmega(actuarialtable)-x-m-1
 	if(!missing(i)) interest=i else interest=actuarialtable@interest #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
-	y=x+n
+
+	payments=seq(from=n, to=1/k, by=-1/k)
+	probs=numeric(n*k)		
+	times=m+seq(from=0, to=(n-1/k),by=1/k)
+	startAge=x #we start from x
+	for(i in 1:length(times)) probs[i]=(pxt(object=actuarialtable, x=startAge,t=times[i])*qxt(object=actuarialtable, x=startAge+times[i],t=1/k))
+	discounts=(1+interest)^-(times+1/k)
+
 	if(type=="EV") {
-		payments=seq(from=n, to=1, by=-1)
-		probs=numeric(n)
-		times=m+seq(from=0, to=(n-1),by=1) 
-		for(i in 1:length(times)) probs[i]=(pxt(actuarialtable, x,times[i])*qxt(actuarialtable, x+times[i],1))
-		discounts=(1+interest)^-(times+1)
 		out<-sum(payments*discounts*probs)
-		return(out)
 	} else if(type=="ST")
 	{
 		out=rLifeContingencies(n=1,lifecontingency="DAxn", 
-				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=1)
+				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=k)
 	}
-#	else {
-#	if(n==0) {
-#		out=0
-#		return(out)
-#		}	else {
-#			#recursive code
-#			xplus=x+1
-#			nplus=n-1
-#			out=n*Axn(actuarialtable, x,1)+Exn(actuarialtable, x,1)*DAxn(actuarialtable, xplus,nplus)
-#			return(out)
-#		}
-#	}
+	return(out)
 }
+
+# n=100000
+# lifecontingency="DAxn"
+# actuarialtable=soa08Act
+# object=actuarialtable
+# x=40
+# t=20
+# i=soa08Act@interest
+# m=0
+# k=1
+
+# outs<-rLifeContingencies(n,lifecontingency, object, x,t,i=i, 
+		# m=m,k=k, parallel=TRUE)
+# APV=IAxn(object, x=x,n=t, k=k)
+# mean(outs)
+# APV
+# t.test(x=outs, mu=APV)
+
+
 
 #n-year increasing
 #recursive function

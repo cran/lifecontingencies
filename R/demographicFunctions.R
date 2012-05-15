@@ -135,7 +135,7 @@ exn<-function(object,x,n,type="curtate") {
 	out<-NULL
 	#checks
 	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
-	if(missing(x)) stop("Error! Missing x")
+	if(missing(x)) x=0
 	if(missing(n)) n=getOmega(object)-x +1 #to avoid errors
 	if(n==0) return(0)
 	probs=numeric(n)
