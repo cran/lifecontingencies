@@ -116,7 +116,7 @@ mxt<-function(object,x,t)
 	return(out)
 }
 
-
+#death probability
 qxt<-function(object, x, t, fractional="linear")
 {
 	out<-NULL
@@ -221,4 +221,82 @@ probs2lifetable<-function(probs, radix=10000, type="px", name="ungiven")
 	return(out)
 }
 
+#multiple life new function
+pxyzt<-function(tablesList,x,t, status="joint",...)
+{
+	out=1
+	#initial checkings
+	numTables=length(tablesList)
+	if(length(x)!=numTables) stop("Error! Initial ages vector length does not match with number of lives")
+	for(i in 1:numTables) {
+		if(!(class(tablesList[[i]]) %in% c("lifetable", "actuarialtable"))) stop("Error! A list of lifetable objects is required")
+	}
+	#the survival probability is the cumproduct of the single survival probabilities
+	if(status=="joint")
+	{
+		for(i in 1:numTables) out=out*pxt(object=tablesList[[i]],x=x[i],t=t,...)
+	} else { #last survivor status
+		#calculate first qx the return the difference
+		temp=1
+		for(i in 1:numTables) temp=temp*qxt(object=tablesList[[i]],x=x[i],t=t,...)
+		out=1-temp
+	}
+	return(out)
+}
+#the death probability
+qxyzt<-function(tablesList,x,t, status="joint",...)
+{
+	out=numeric(1)
+	out=1-pxyzt(tablesList=tablesList,x=x,t=t, status=status,...)
+	return(out)
+}
 
+#probability to die between time n and n+t
+.qxnt<-function(object, x,n,t=1,...)
+{
+	out=numeric(1)
+	out=pxt(object=object,x=x,t=n,...)*qxt(object=object,x=x+n,t=t)
+	return(out)
+}
+
+
+.qxyznt<-function(tablesList,x,n,t=1, status="joint")
+{
+	out=numeric(1)
+	if(status=="joint")
+	{
+		y=x+n
+		out=pxyzt(tablesList=tablesList,x=x,t=n, status=status)*qxyzt(tablesList=tablesList,x=y,t=t, status=status)
+	} else { #last
+		y=n+t
+		out=pxyzt(tablesList=tablesList,x=x,t=n, status=status)-pxyzt(tablesList=tablesList,x=x,t=y, status=status)
+	}
+	return(out)
+}
+
+#curtate expectation of future lifetime
+
+exyzt<-function(tablesList,x,t=Inf, status="joint",type="Kx",...)
+{
+	#initial checkings
+	numTables=length(tablesList)
+	if(length(x)!=numTables) stop("Error! Initial ages vector length does not match with number of lives")
+	for(i in 1:numTables) {
+	if(!(class(tablesList[[i]]) %in% c("lifetable", "actuarialtable"))) stop("Error! A list of lifetable objects is required")
+	}
+	#get the max omega
+	maxAge=0 
+	for(i in 1:numTables)
+	{
+		maxAge=max(maxAge, getOmega(tablesList[[i]]))
+	}
+	minAge=min(x)
+	term=0
+	#curtate expectation of future lifetime
+	if(missing(t)||is.infinite(t)) term=maxAge-minAge+1 else term=t
+	#perform the calculation
+	out=0
+	for(j in 1:term) out=out+pxyzt(tablesList=tablesList,x=x,t=j, status=status,...)
+	if(type=="Tx") out=out+0.5
+	return(out)
+}

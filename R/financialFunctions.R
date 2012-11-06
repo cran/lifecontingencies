@@ -87,7 +87,12 @@ annuity=function(i, n,m=0,k=1, type="immediate")
 	if(missing(n)) stop("Error! Missing periods")
 	if(m<0) stop("Error! Negative deferring period") 
 	if(k<1) stop("Error! Payment frequency must be greater or equal than 1") 
-	if(is.infinite(n)) return(1/i) #perpetuity
+	
+	if(is.infinite(n)) {
+		out=ifelse(type=="immediate",1/i,1/interest2Discount(i))
+		return(out)
+	} 
+	
 	if(n==0) return(0)
 	ieff=i #i è il tasso effettivo
 	if(type=="immediate") timeIds=seq(from=1/k, to=n, by=1/k)+m
@@ -135,6 +140,12 @@ increasingAnnuity=function(i, n,type="immediate")
 	return(out)
 }
 
+Isn=function(i,n,type="immediate"){
+	out=NULL
+	out=(1+i)^n*increasingAnnuity(i=i,n=n,type=type)
+	return(out)
+}
+
 accumulatedValue=function(i, n, m=0,k=1, type="immediate")
 {
 	if(is.infinite(n)) return(1/i)
@@ -173,4 +184,16 @@ interest2Intensity=function(i)
 {
 	out=log(1+i)
 	return(out)
+}
+
+#convert the interest to discount
+interest2Discount=function(i)
+{
+	return(i/(1+i))
+}
+
+#convert the discount to interest
+discount2Interest=function(d)
+{
+	return(d/(1-d))
 }

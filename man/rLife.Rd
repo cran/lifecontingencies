@@ -13,7 +13,7 @@ rLife(n, object, x = 0, k=1, type = "Tx")
 
 \arguments{
   \item{n}{
-Number of observations
+Number of variates to generate.
 }
   \item{object}{
 An object of class lifetable.
@@ -24,8 +24,7 @@ The attained age of subject x. Default value is 0.
   \item{k}{
 Number of periods within the year when it is possible death to happen. Default value is 1.
 }
-  \item{type}{
-Either "Tx" for continuous time until death or "Kx" for curtate 
+  \item{type}{Either "Tx" for continuous future lifetime or "Kx" for curtate future lifetime
 }
 }
 \details{

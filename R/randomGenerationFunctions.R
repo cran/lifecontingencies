@@ -12,7 +12,18 @@
 #x=20
 #k=2
 #type="Tx"
-#
+#modified dxt to return the 1/k fraction of deaths between
+#x and t
+
+.dxtk<-function(object, x,t,k){
+out=NULL
+out=ifelse((x>getOmega(object)),0,dxt(object = object, 
+		x=floor(x),t=t)/k)
+	return(out)
+}
+
+
+
 
 rLife=function(n,object, x=0,k=1, type="Tx")
 {
@@ -24,27 +35,64 @@ rLife=function(n,object, x=0,k=1, type="Tx")
 	if(type=="Tx") const2Add=0.5/k # the continuous future lifetime 
 	#is the curtate future lifetime + 0.5
 	#determine the deaths
-	omega=max(object@x)
-	sequence=seq(from=0, to=omega, by=1) #the sequence of possible death periods 
+	omega=getOmega(object)
+	#the sequence of possible death periods 
+	#sequence=seq(from=0, to=omega, by=1)
+	sequence=seq(from=0, to=omega+1, by=1/k)
 	#dx<-sapply(sequence,dxt,object=object,t=1)
-	dx<-sapply(sequence,dxt,object=object,t=1)
-	
+	dx<-sapply(sequence,.dxtk,object=object,t=1,k=k)
 	#determine the perimeter of x
-	index=which(object@x>=x)
-	x2Sample<-object@x[index]
+#	index=which(object@x>=x)
+#	x2Sample<-object@x[index]
+	
+	index=which(sequence>=x)
+	x2Sample<-sequence[index]
+	
+	
 	deathsOfSample<-dx[index]
 	probsOfDeath<-deathsOfSample/sum(deathsOfSample)	
 	out=sample(x=x2Sample,size=n,replace=TRUE, prob=probsOfDeath)+const2Add-x
 	return(out)
 }
 
+
+rLifexyz=function(n,tablesList,x,k=1, type="Tx")
+{
+	
+	#initial checkings
+	numTables=length(tablesList)
+	if(length(x)!=numTables) stop("Error! Initial ages vector length does not match with number of lives")
+	for(i in 1:numTables) {
+		if(!(class(tablesList[[i]]) %in% c("lifetable", "actuarialtable"))) stop("Error! A list of lifetable objects is required")
+	}	
+	outVec=numeric(0)
+	for(i in 1:numTables)
+	{
+		outI=numeric(n)
+		outI=rLife(n=n,object=tablesList[[i]],x=x[i],k=k,type=type)
+		outVec=c(outVec,outI)
+	}	
+	out=matrix(data=outVec,nrow=n,ncol=numTables,byrow=FALSE)
+	return(out)
+}
+
+
 ##get 20000 random future lifetimes for the Soa life table at birth
 #data(soa08Act)
-#lifes=rLife(n=20000,object=soa08Act, x=0, type="Tx")
-##check if the expected life at birth derived from the life table
-##is statistically equal to the expected value of the sample
-#
+#lifes=rLife(n=1000000,object=soa08Act, x=0, type="Tx")
+###check if the expected life at birth derived from the life tableis statistically equal to the expected value of the sample
+##
 #t.test(x=lifes, mu=exn(soa08Act, x=0, type="continuous"))
+#
+#lifes=rLife(n=2000000,object=soa08Act, x=0, type="Tx",k=12)
+#t.test(x=lifes, mu=exn(soa08Act, x=0, type="continuous"))
+#
+#lifes=rLife(n=500000,object=soa08Act, x=50, type="Tx",k=12)
+#t.test(x=lifes, mu=exn(soa08Act, x=50, type="continuous"))
+
+#lifes=rLife(n=500000,object=soa08Act, x=50, type="Kx",k=1)
+#t.test(x=lifes, mu=exn(soa08Act, x=50, type="curtate"))
+
 
 #y=absolute policyholder's age
 #T=death period
@@ -56,7 +104,7 @@ rLife=function(n,object, x=0,k=1, type="Tx")
 #pure endowment function
 .fExn<-function(T,y,n, i)
 {
-	out=0*(T<y+n)+(T>=y+n)*(1+i)^(-n)
+	out=ifelse(T<y+n,0,(1+i)^(-n))
 	return(out)
 }
 
@@ -69,6 +117,25 @@ rLife=function(n,object, x=0,k=1, type="Tx")
 	out=ifelse(((T>=y+m) && (T<=y+m+n-1/k)),(1+i)^-(T-y+1/k),0)
 	return(out)
 }
+
+
+# x=40
+# t=100
+# n=100000
+# object=soa08Act
+# lifecontingency="Axn"
+# i=0.06
+# m=0
+# k=12
+##
+# outs<-rLifeContingencies(n=n,lifecontingency=lifecontingency, object=object, x=x,t=t,i=i, 
+#		m=m,k=k, parallel=TRUE)
+#APV=Axn(object, x=x, k=k)
+# mean(outs)
+## APV
+# t.test(x=outs, mu=APV)
+
+
 
 #increasing life insurance function
 
@@ -203,19 +270,18 @@ rLifeContingencies<-function(n,lifecontingency, object, x,t,i=object@interest, m
 
 # x=60
 # t=20
-# n=10000
+# n=100000
 # object=soa08Act
 # lifecontingency="axn"
 # i=0.06
 # m=0
-# k=1
-
+# k=2
+#
 # outs<-rLifeContingencies(n=n,lifecontingency=lifecontingency, object=object, x=x,t=t,i=i, 
-		# m=m,k=k, parallel=TRUE)
-# APV=axn(object, x=x,n=t, k=k)
+#		m=m,k=k, parallel=TRUE)
+#APV=axn(object, x=x,n=t, k=k)
 # mean(outs)
 # APV
-
 # t.test(x=outs, mu=APV)
 
 #

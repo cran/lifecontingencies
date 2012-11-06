@@ -39,10 +39,8 @@ setMethod("getOmega","lifetable",
 	Lx=numeric(lenlx)
 	ex=numeric(lenlx)
 	for(i in 1:lenlx) Tx[i]=sum(object@lx[i:lenlx])
-	for(i in object@x) Lx[i]=Lxt(object=object, x=i)
-	for(i in object@x) ex[i]=exn(object=object, x=i,type="complete")
-	
-	
+	#for(i in 1:lenlx) Lx[i]=Lxt(object=object, x=i) # 1:lenlx prima object@x
+	for(i in 1:lenlx) ex[i]=exn(object=object, x=i-1,type="curtate") #prima x=i e come sopra e c'era complete
 	out<-data.frame(x=object@x, lx=object@lx,px=lxplus/object@lx, 
 			ex=ex)
 	#remove last row

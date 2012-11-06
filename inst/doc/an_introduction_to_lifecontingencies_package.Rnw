@@ -36,9 +36,11 @@ and Actuarial Mathematics Calculations in \proglang{R}}
   \pkg{lifecontingencies} \proglang{R} package performs financial and actuarial mathematics calculations to model life contingencies insurance. Its functions are able to 
   determine both the expected value and the stochastic distribution of insured benefits. Therefore they can be used both to price life insurance coverage as long as to 
   assess portfolios' risk based capital requirements.\\ 
-  This paper briefly summarizes the theory regarding life contingencies, that is grounded on concepts of financial mathematics and demography. 
-  Then it shows how \pkg{lifecontingencies} functions represent a perfect tool to perform life insurance actuarial analysis and related 
-  stochastic simulations through applied examples.
+  This paper briefly summarizes the theory regarding life contingencies, that is grounded on concepts of financial mathematics 
+  and demography. 
+  Then it shows how \pkg{lifecontingencies} package is a useful tool to
+  perform routinary deterministic or stochastic calculations on life
+  contingencies actuarial mathematics. Applied examples will be shown.
 }
 \Keywords{life tables, financial mathematics, actuarial mathematics, life insurance}
 \Plainkeywords{life tables, financial mathematics, actuarial mathematics, life insurance} %% without formatting
@@ -75,6 +77,7 @@ and Actuarial Mathematics Calculations in \proglang{R}}
 
 
 \begin{document}
+%\SweaveOpts{concordance=TRUE}
 
 
 
@@ -82,14 +85,14 @@ and Actuarial Mathematics Calculations in \proglang{R}}
 <<echo=FALSE, results=hide>>=
 	options(prompt = "R> ", continue = "+ F ", width = 70, useFancyQuotes = FALSE)
 	set.seed(123)
-	numSim=20000
+	numSim=200
 @
 
 \maketitle
 
 \section{Introduction}
-As of May 2012, \pkg{lifecontingencies} appears to be the first \proglang{R} package that deals with life insurance evaluation. \proglang{R} statistical 
-programming environment, \cite{rSoftware}, has became the reference statistical software for academics. In the industry it is now considered a valid alternative to affirmed 
+As of October 2012, \pkg{lifecontingencies} appears to be the first \proglang{R}
+package that deals with life insurance evaluation. \proglang{R} statistical programming environment, \cite{rSoftware}, has became the reference statistical software for academics. In the industry it is now considered a valid alternative to affirmed 
 commercial packages for data analysis, like as as \proglang{SAS},\cite{SAS-STAT}, \proglang{MATLAB}, \cite{MATLAB}, and \proglang{SPSS}, \cite{SPSS}.  
 With respect to the insurance industry, some actuarial packages have been already available in \proglang{R}, however most of these packages mainly focus non-life actuaries. 
   In fact non - life insurance modeling uses more data analysis and applied statistical modelling than life 
@@ -116,16 +119,19 @@ applied \pkg{lifecontingencies} examples, finally Section~\ref{sec:discussion} d
 \section{Life contingencies statistical and financial foundations}\label{sec:statistics}
 
 Life insurance analysis involves the calculation of statistics regarding occurrences and amounts 
-of future cash flows. I.e., the insurance pure premium (also known as benefit premium) is the present value of 
-the series of future cash flows whose probability is based on the occurrence of the policyholder's life events (life 
-contingencies). Therefore, life insurance actuarial mathematics grounds itself on concepts 
-derived from demography and the theory of interest.\\
+of future cash flows. I.e., the insurance pure premium (also known as benefit
+premium) is the expected value of the distribution of the insurance benefits
+future cash flows. Cash flows probability is based on the occurrence of the
+policyholder's life events (life contingencies). Therefore, life insurance actuarial mathematics 
+grounds itself on concepts derived from demography and the theory of interest.\\
 
 A life table (also called a mortality table or actuarial table) is a table
 that shows how mortality affects subject of a cohort across different ages. It reports for 
 each age $x$, the number of $l_x$ individuals living at the beginning of age $x$. It represents a sequence of $l_0, l_1, \ldots, l_{\omega}$, 
 where $\omega$, the terminal age, is the farthest age until which a subject of the cohort can survive. 
-Life table are typically distinguished according to gender, year of birth and nationality.\\
+Life table are typically distinguished according to gender, year of birth and
+nationality. Life tables are also commonly developed by line of business,
+assurance vs annuity for example.\\
 
 Using a statistical perspective, a life table allows the probability distribution of the the future lifetime for a subject aged $x$, to be 
 deduced. In particular, a life table allows to derive two key probability distributions: $\tilde T_x$, the future lifetime for a subject 
@@ -135,10 +141,10 @@ A non exhaustive list follows:
 	\item $_t{p_x} = \frac{l_{x + t}}{l_x}$, the probability that someone living at age $x$ will reach age $x+t$.
 	\item $_t{q_x}$, the complementary probability of $_t{p_x}$.
 	\item $_t{d_x}$, the number of deaths between age $x$ and $x+t$.
-	\item $_t{L_x} = \sum\limits_{k = 0}^t {{l_{x + k}}}$, the expected number of years lived by the cohort between ages $x$ and  $x+t$.  
+	\item $_t{L_x} = \int_0^t {l_{x + y}}dy$, the expected number of years lived by the cohort between ages $x$ and  $x+t$.  
 	\item $_t{m_x} = \frac{{_t{d_x}}}{{_t{L_x}}}$, the central mortality rate between ages $x$ and  $x+t$.
-	\item $e_x$, the curtate expectation of life for a subject aged $x$, $e_x = E\left( \tilde K_x \right)$ and 
-	its complete form $\mathop e\limits^ \circ  _x = E\left( \tilde T_x \right)$.
+	\item $e_x$, the curtate expectation of life for a 
+    subject aged $x$, $e_x = E\left[ \tilde K_x \right] = \sum\limits_{k = 1}^\infty  {_k{p_x}} $.
 \end{itemize}
 
 The Keyfitz textbook, \cite{keyfitz2005applied}, provides an exhaustive coverage about 
@@ -150,10 +156,19 @@ tables and to adapt them to the insurer's portfolio actual experience.
 Classical financial mathematics deals with monetary amount that could be available in different times. The present value 
 of a series of cash flows, reported in Equation~\ref{eq:CF}, is probably the most important concept. The present value represents the current value of a 
 series of monetary cash flows, $CF_t$, that will be available in different periods of time.\\
-The interest rate, $i_t$, represents the measure of the price of money available in future times. 
-This paper will use $i$ to express the effective (real) compound interest. It means that if $i$ is the interest 
-rate, a sum of 1 monetary unit accumulates through time according to the accumulation function, $A\left( t \right) = \left( 1 + i \right)^t$. Arrangements 
-lead to discount and nominal (m-compound) interest rates as shown in Equation~\ref{eq:interest}.
+The interest rate, $i$, represents the measure of the price of money available in future times.
+Parallel to the interest rate, the time value of the money can be
+expressed by means of discount rates, $d = \frac{i}{1 + i}$. This
+paper will use the $i$ symbol to express the effective compound interest, when
+money is invested once per period. In case money is invested more frequenty, say
+$m$ times per perior, each fractional period represents the interest conversion
+period. During each interest conversion period, the real interest rate
+$\frac{i^{\left( m \right)}}{m}$ is earned, where the $i^{\left( m \right)}$
+expression defines the nominal rate of interest payable $m$ times per period.
+
+Equation~\ref{eq:interest} combines interest and discount rates, both
+on effective and nominal basis, to express how an amount of \$1 growths until 
+time $t$.
 
 \begin{equation}
 A \left( t \right)=\left( 1 + i \right)^{t}=\left( 1 - d \right )^{-t} = \left( 1 + \frac{i^{m}}{m} \right)^{t * m} = \left( 1 - \frac{d^m}{m} \right)^{-t * m}
@@ -188,31 +203,42 @@ Few examples of life contingencies follow:
 \begin{enumerate}
 
 	\item An n-year term life insurance provides payment of \$ b, if the insured dies within n years from issue. If the 
-	payment is performed at the end of year of death, we can write $\tilde Z$ as 
-	$\tilde Z = \left\{ \begin{array}{l}
-	b*v^{\tilde K_x + 1},\tilde K_x \le n\\
-	0,\tilde K_x > n
-	\end{array} \right.$ Its APV expression is $\termins{x}{n}$. 
+	payment is performed at the end of year of death, we can write $\tilde Z$ as $\tilde Z = \left\{ \begin{array}{l}
+v^{K + 1},\,K = 0,1, \ldots ,n - 1\\
+0,\,K \ge n
+\end{array} \right.$ Its APV expression is $\termins{x}{n}$. 
 	
 	\item A life annuity consists in a sequence of benefits paid contingent upon survival of a given life. In particular,
-	 a temporary life annuity due pays a benefit  at the beginning of each period so long as the annuitant (x) survives, for up to a total of n years, 
-	 or n payments. Assuming \$1 payment, we can write $\tilde Z$ as
-	  $\tilde Z = a_{\left. \overline {\, \tilde K + 1 \,}\! \right| }$. Its APV expression is $\anndue{x}{n}$. 
+	 a temporary life annuity due pays a benefit at the beginning of each period so long as the annuitant (x) survives, for up to a total of n years, 
+	 or n payments. We can write $\tilde Z$ as
+	  $\tilde Z = \left\{ \begin{array}{l}
+{\ddot a_{\left. {\overline {\, 
+ {K + 1} \,}}\! \right| }},\,K < n\\
+{\ddot a_{\left. {\overline {\, 
+ n \,}}\! \right| }},\,K \ge n
+\end{array} \right.$. Its APV expression is $\anndue{x}{n}$. 
  
  	\item An n-year pure endowment insurance grants a benefit payable at the
 end of n years, if the insured survives at least n years from issue. The expression of $\tilde Z$ is 
 $v^n*I\left( \tilde K_x \ge n \right)$. Its APV expression is ${}_{n}E_{x}$.
 
 	\item A n-year endowment insurance will pay a benefit either at the earlier of the year of death or 
-	the end of the n-th year, whichever occurs earlier. We can write  $\tilde Z$ as $\tilde Z = v^{\min \left( n,\tilde K_x \right)}$.
-	Its APV expression is $\pureend{x}{n}$.
+	the end of the n-th year, whichever occurs earlier. We can write  $\tilde Z$ as $\tilde Z = \left\{ \begin{array}{l}
+v^{K + 1},\,K = 0,1, \ldots ,n - 1\\
+{v^n},\,K \ge n
+\end{array} \right.$.
+	Its APV expression is $\insend{x}{n}$.
 
 \end{enumerate}
 
 
 We send interested readers to the \cite{bowers1997actuarial} textbook for formulas regarding other life contingencies 
-insurances as $\lcterm{(DA)}{x}{n}$, the decreasing term life insurance, $IA_{x}$, the increasing term life insurance, and common 
-variations on payment form arrangements like deferment and fractional payments.
+insurances as $\lcterm{(DA)}{x}{n}$, the decreasing term life insurance, $\lcterm{(IA)}{x}{n}$, the increasing term 
+life insurance, and common variations on payment form arrangements like
+deferment and fractional payments. Similarly it is possible to define insurances
+and annuities depending on the survival status of two or more lives. $A_{xy}$
+and $\bar{a}_{\overline{xy}}$ represent respectively the two lives joint-live
+insurance and the two lives last-survivor annuity immediate APVs.
 
 The \pkg{lifecontingencies} package provides functions that allows the actuary to evaluate the APV and to draw 
 random samples from $\tilde Z$ distribution. The evaluation of 
@@ -237,7 +263,7 @@ using the current payment technique. Finally, Equation~\ref{eq:anndueEVT} calcul
 
 
 \begin{equation}
-APV = \sum\limits_{k = 0}^{\min \left( \omega  - x - 1,n \right)} {{p_{x,t}}} 
+APV = \sum\limits_{k = 0}^{\min \left( \omega  - x ,n \right)} {{}_{k}p_{x}*v^{k}} 
 	\label{eq:anndueCVA}
 \end{equation}
 
@@ -262,38 +288,46 @@ library("lifecontingencies")
 Two main S4 classes, \cite{chambers2008software}, have been defined within the \pkg{lifecontingencies} package: 
 the \code{lifetable} class and the \code{actuarialtable} class. The lifetable class is defined as follows
 
-<<show classes,keep.source=TRUE>>=
+<<showClasses,keep.source=TRUE>>=
 showClass("lifetable")
 @
 
 Class \code{actuarialtable} inherits from \code{lifetable} class adding one more slot 
 dedicated to the interest rate.
 
-<<show actuarial,keep.source=TRUE>>=
+<<showActuarial,keep.source=TRUE>>=
 showClass("actuarialtable")
 @
 
 
 Beyond generic \code{S4} classes and method there are three groups of functions, reported 
-in Table~\ref{tab:demofun}, Table~\ref{tab:finfun}, Table~\ref{tab:actfun}: demographics functions, financial mathematics functions and 
-actuarial mathematics functions.
+in Table~\ref{tab:demofun}, Table~\ref{tab:finfun} and Table~\ref{tab:actfun}:
+demographics functions, financial mathematics functions and actuarial
+mathematics functions. Finally, Table~\ref{tab:pars} shows
+\pkg{lifecontingencies} package parameters' convention.
 
 \begin{table}[h]
 \centering
 \begin{tabular}{ll}
+  \hline
 	function & purpose\\
-	\code{dxt} & deaths between age $x$ and $x+t$, $d_{x,t}$.\\
-	\code{pxt} & survival probability between age $x$ and $x+t$, $p_{x,t}$.\\
-	\code{pxyt} & survival probability for two lives, $d_{xy,t}$.\\
-	\code{qxt} & death probability between age $x$ and $x+t$, $q_{x,t}$.\\
-	\code{qxyt} & survival probability for two lives, $q_{xy,t}$.\\
-	\code{Txt} & number of person-years lived after exact age $x$, $T_{x,t}$.\\
-	\code{mxt} & central mortality rate, $m_{x,t}$.\\
-	\code{exn} & complete or curtate expectation of life from age $x$ to $x+n$, $e_{x,n}$.\\
+      \hline  \hline
+	\code{dxt} & deaths between age $x$ and $x+t$, ${}_{t}d_{x}$.\\
+	\code{pxt} & survival probability between age $x$ and $x+t$, ${}_{t}p_{x}$.\\
+	\code{pxyzt} & survival probability for two (or more) lives, ${}_{t}p_{xy}$.\\
+	\code{qxt} & death probability between age $x$ and $x+t$, ${}_{t}q_{x}$.\\
+	\code{qxyzt} & death probability for two (or more) lives, ${}_{t}q_{xy}$.\\
+	\code{Txt} & number of person-years lived after exact age $x$, ${}_{t}T_{x}$.\\
+	\code{mxt} & central death rate, ${}_{t}m_{x}$.\\
+	\code{exn} & expected lifetime between age $x$ and age $x + n$,
+	${}_{n}e_{x}$.\\
 	\code{rLife} & sample from the time until death distribution underlying 
 	a life table.\\
-	\code{exyt} &  expected life time for two lives between age $x$ and $x+t$.\\
+    \code{rLifexyz} & sample from the time until death distribution underlying 
+	 two or more life.\\
+	\code{exyz} &  n-year curtate lifetime of the joint-life status.\\
 	\code{probs2lifetable}  &  life table $l_x$ from raw one - year survival / death probabilities.\\
+      \hline
 \end{tabular}
 \caption{\pkg{lifecontingencies} functions for demographic analysis.}
 \label{tab:demofun}
@@ -302,19 +336,22 @@ actuarial mathematics functions.
 \begin{table}[h]
 \centering
 \begin{tabular}{ll}
+  \hline
 	function & purpose\\
-	\code{presentValue} &   present value for a series of cash flows, $PV = \sum\limits_i^{}{ CF_i*v^{t_i}}$.\\
+      \hline  \hline
+	\code{presentValue} &   present value for a series of cash flows.\\
 	\code{annuity} &  present value of a annuity - certain, $a_{\lcroof{n}}$.\\
 	\code{accumulatedValue} & future value of a series of cash flows, $s_{\lcroof{n}}$.\\
 	\code{increasingAnnuity} & present value of an increasing annuity - certain, $IA_{n}$.\\
 	\code{decreasingAnnuity} & present value of a decreasing annuity, $DA_{\lcroof{n}}$.\\
 	\code{nominal2Real} & conversion from nominal to real interest (discount) rate.\\
-	\code{real2Nominal} & conversion from real to nominal interest (discount) rate.\\
-	\code{intensity2Interest} & intensity of interest $\delta$ given the interest rate $i$.\\
-	\code{interest2Intensity} & interest rate $i$ given the intensity of interest $\delta$.\\
-	%spostare dopo
-	\code{duration} & duration of a series of cash flows\\
+	\code{real2Nominal} & \code{nominal2Real} inverse.\\
+	\code{intensity2Interest} & conversion to intensity of interest from the
+	interest rate.\\
+	\code{interest2Intensity} & \code{intensity2Interest} inverse.\\
+	\code{duration} & dollar / Macaulay duration of a series of cash flows\\
 	\code{convexity} & convexity of a series of cash flows.\\
+      \hline
 	\end{tabular}
 \caption{\pkg{lifecontingencies} functions for financial mathematics.}
 \label{tab:finfun}
@@ -323,89 +360,134 @@ actuarial mathematics functions.
 \begin{table}[h]
 \centering
 \begin{tabular}{lll}
+  \hline
 	function & purpose & APV symbol\\
-	\code{Axn} & one head life insurance & $\termins{x}{n}$.\\
+      \hline   \hline
+	\code{Axn} & one  life insurance & $\termins{x}{n}$.\\
 	\code{AExn} & the n-year  endowment & $\pureend{x}{n}$.\\
-	\code{Axyn} & two heads life insurances & $\lcterm{\bar{A}}{\overline{xy}}{n}$.\\
-	\code{axn} & one head annuity & $\ddot{a}_x$.\\
-	\code{axyn} & two heads annuities & $\ddot{a}_{xy}$.\\
+	\code{Axyzn} & two lives life insurances &
+	$\lcterm{\bar{A}}{\overline{xy}}{n}$.\\
+	\code{axn} & one life annuity & $\ddot{a}_x$.\\
+	\code{axyzn} & two lives annuities & $\ddot{a}_{xy}$.\\
 	\code{Exn} & pure endowment & $\pureendc{x}{n}$.\\
+
 	\code{Iaxn} & increasing annuity & $Ia_{x}$.\\
-	\code{IAxn} & increasing life insurance & $IA_{x}$.\\
-	\code{DAxn} & decreasing life insurance &  $DA_{x}$.\\
+	\code{IAxn} & increasing life insurance & $\lcterm{(IA)}{x}{n}$.\\
+	\code{DAxn} & decreasing life insurance &  $\lcterm{(DA)}{x}{n}$.\\
+      \hline
 \end{tabular}
 \caption{\pkg{lifecontingencies} functions for actuarial mathematics.}
 \label{tab:actfun}
 \end{table}
 
+\begin{table}[h]
+  \centering
+  \begin{tabular}{lll}
+    \hline
+  parameter & significance \\
+    \hline  \hline
+  \code{x} & the policyholder's age.\\
+  \code{n} & the coverage duration or payment duration.\\
+  \code{actuarialtable} & the actuarial table.\\
+  \code{i} & interest rate, that could be varying.\\
+  \code{k} & the frequency of payments.\\
+    \hline
+\end{tabular}
+\caption{\pkg{lifecontingencies} functions parameters naming conventions.}
+\label{tab:pars}
+\end{table}  
+
 \clearpage
-
-As general remark, standard financial and actuarial mathematics functions parameters are:
-\begin{itemize}
-	\item \code{x}, the policyholder's age at the policy issuance time.
-	\item \code{n}, the coverage duration that could be missing if the policy lasts for the remaining lifetime. For financial mathematics 
-	function it represent the length of the payment.
-	\item \code{actuarialtable}, an actuarial table on which life insurance calculation are performed.
-	\item \code{i}, the interest rate, that in some case could be time - varying.
-	\item \code{k}, the frequency of payments per year (default value is 1).
-\end{itemize}
-
 
 
 
 \section{Code and examples} \label{sec:examples}
-\subsection{Classical financial mathematics example}\label{sec:subsecFin}
+The example secton of this paper is structured as follows: Section~\ref{ss:mathFin} 
+deals with classical financial mathematics, Section~\ref{ss:lfActT} deals with 
+creating and managing life tables and actuarial tables, Section~\ref{ss:actMath} deals with classical actuarial mathematics while Section~\ref{ss:stochastic} presents the \pkg{lifecontingencies} packages functions to perform simulation analysis.
+\subsection{Classical financial mathematics example}\label{ss:mathFin}
 
 The \pkg{lifecontingencies} package provides functions to perform classical financial mathematics calculations.
 Examples that follows show how to handle interest and discount rates with different compounding frequency,
 how to perform present value, annuities and future values analysis calculations as long as loans amortization and bond pricing.
 
-\subsubsection{Interest rate functions}\label{sec:subsubInterest}
+\subsubsection{Interest rate functions}\label{sss:subsubInterest}
 
-The code below shows how to switch from effective interest rates (APR) to nominal 
-interest rates and vice versa. Similarly, it is possible 
-to work with discount rates also. To switch from real to nominal interest rate,  $
-i^{\left( m \right)} \to i$, \code{real2Nominal} function can be used:
+Interest rates represent the time - value of the money. However different
+types of rates can be found in literature. As a remark,
+Equation~\ref{eq:intdisc} displays the relationship between effective interest
+rate, nominal interest rate, force of interest, effective discount rate and
+nominal discount rate.
+
+\begin{equation}
+\left( 1 + i \right)^t = \left( 1 + \frac{i^{\left( m \right)}}{m} \right)^t = 
+\exp \left( \delta t \right) = \left( 1 - d \right)^{ - t} = 
+\left( 1 - \frac{d^{\left( m \right)}}{m} \right)^{ - t}
+\label{eq:intdisc}
+\end{equation}
+
+Functions \code{interest2Discount}, \code{discount2Interest},
+\code{nominal2Real}, \code{real2Nominal}, \code{interest2Intensity}, 
+\code{intensity2Interest} have been based on Equation~\ref{eq:intdisc} and
+inverse formulas implied therein. Throughout the paper interest rate is deemed
+effective interest rate unless otherwise stated.\\
+
+As examples, functions \code{interest2Discount} and \code{discount2Interest}
+represent a convenient way to switch from interest to discount rates and
+conversely.
+
 <<ir1, keep.source=TRUE>>=
-real2Nominal(0.03,12)
+interest2Discount(0.03)
+discount2Interest(interest2Discount(0.03))
 @
-while \code{nominal2Real} function compute the real interest rate given the nominal one:
-<<ir2, keep.source=TRUE>>=
-nominal2Real(0.06,12)
-@
-Rates of discount, e.g, $d^{\left( m \right)} \to d$, can be given in input too, as following code displays
-<<ir3, keep.source=TRUE>>=
-real2Nominal(i=0.04,k=12,type="discount")
+
+Function \code{nominal2Real} can help to evaluate what is the effective
+interest rate implied in a consumer - credit loan that offers 10\% nominal
+interest rate with quarterly compounding.
+
+<<ir1, keep.source=TRUE>>=
+nominal2Real(i=0.10,4)
 @
 
 
-\subsubsection{Present value analysis}\label{sec:pva}
+\subsubsection{Present value and internal rate of return
+analysis}\label{sss:pva}
 
 Performing a project appraisal means evaluating the net present value (NPV) of all projected cash flows.
-NPV evaluation assuming a varying cash flow pattern is performed by code below
-and uncertain cash flow (example 3).
+Code below shows an example of NPV analysis 
+
 <<npv1, keep.source=TRUE>>=
 capitals=c(-1000,200,500,700)
 times=c(0,1,2,5)
 presentValue(cashFlows=capitals, timeIds=times,interestRates=0.03)
 @
-while if interest rate varies throughout time following example applies 
-<<npv2, keep.source=TRUE>>=
-presentValue(cashFlows=capitals, timeIds=times, 
-interestRates=c( 0.04, 0.02, 0.03, 0.05))
-@
-finally if cash flows are uncertain the \code{presentValue} function parameter \code{probabilities} can 
-be properly set as following example displays.
+finally both interest rate varies and cash flows are uncertain the
+\code{presentValue} function parameter \code{probabilities} can be properly set as following example displays.
+
 <<npv3, keep.source=TRUE>>=
 presentValue(cashFlows=capitals, timeIds=times, 
 interestRates=c( 0.04, 0.02, 0.03, 0.05), 
 probabilities=c(1,1,1,0.5))
 @
 
+The internal rate of return (IRR) is defined as the interest rate that make the
+NPV zero. It is used to rank alternative projects alternatively to NPV. The
+following example displays how to compute IRR using \pkg{lifecontingencies}
+package and \proglang{R} functions.
 
-\subsubsection{Annuities and future values}\label{sec:annfv}
+<<npv3, keep.source=TRUE>>=
+getIrr<-function(p) (presentValue(cashFlows=capitals, timeIds=times, 
+interestRates=p) - 0)^2
+nlm(getIrr,0.1)$estimate
+@
 
-Code below shows examples of annuities, $a_{\left. {\overline {\, n \,}}\! \right| }$, and accumulated values, $s_{\left. {\overline {\, n \,}}\! \right| }$,  evaluations.\\
+
+\subsubsection{Annuities and future values}\label{sss:annfv}
+
+An annuity (certain) is a sequence of payments with specified amount that is
+present - value, while when it is valued at the end of the term of payment is is
+called future values. Code below shows examples of annuities, $a_{\left.
+{\overline {\, n \,}}\! \right| }$, and accumulated values, $s_{\left. {\overline {\, n \,}}\! \right| }$,  evaluations.\\
 The PV of an annuity immediate \$100 payable at the end of next 5 years at 3\% is
 <<ann1, keep.source=TRUE>>=
 100*annuity(i=0.03,n=5)
@@ -414,27 +496,23 @@ while the corresponding future value is
 <<ann2, keep.source=TRUE>>=
 100*accumulatedValue(i=0.03,n=5)
 @
-A more concrete and meaningful example follows. A man wants to save \$ 100,000 to pay for the education
-of his son in 10 years time. An education fund requires the investors to deposit equal 
-installments annually at the end of each year. If interest of 0.05 is paid, how much does the man need to save each year, $R$,
-in order to meet his target?
+
+Annuities and future values payable k-thly (where fractional payments of $1/k$
+are received for each k-th of period) can be evaluated also.
+
 <<ann3, keep.source=TRUE>>=
-C=100000
-R=C/accumulatedValue(i=0.05,n=10)
-R
+ann1<-annuity(i=0.03,n=5,k=1,type="immediate")
+ann2<-annuity(i=0.03,n=5,k=12,type="immediate")
+c(ann1,ann2)
 @
 
-The fractional payments annuities represent an important class of financial contracts.
-An annuity with m fractional payments per period grants a payment of $\frac{1}{m}$ on each period. \pkg{lifecontingencies} package allows fractional payments to be handled when using \code{annuity} and \code{accumulatedValue} 
-functions. E.g, the present value of an annuity-immediate of 100 per quarter for 4 years, 
-assuming interest to be compounded semiannually at the nominal rate of 6\% is 
-<<ann4, keep.source=TRUE>>=
-100*4*annuity(i=nominal2Real(0.06,2),n=4,k=4)
-@
+
+
 
 \code{increasingAnnuity} and \code{decreasingAnnuity} functions handle
-increasing and decreasing annuities, whose APV symbols are $(IA)_{x}$, $(DA)_{x}$. Assuming a ten years duration and a 3\% interest rate,
-examples of increasing and decreasing annuities follow
+increasing and decreasing annuities, whose APV symbols are $IA_{x}$, $DA_{x}$
+respectively. Assuming a ten years term and a 3\% interest rate,
+examples of increasing and decreasing annuities follow.
 <<ann5, keep.source=TRUE>>=
 incrAnn<-increasingAnnuity(i=0.03, n=10,type="due")
 decrAnn<-decreasingAnnuity(i=0.03, n=10,type="immediate")
@@ -442,8 +520,9 @@ c(incrAnn, decrAnn)
 @
 
 The last example of this section exemplifies the calculation of the present value 
-of a geometrically increasing annuity that increases its value by 3\%, 
-being the interest rate is 4\% and its duration  10 years.
+of a geometrically increasing annuity. If amounts increase by
+3\% and the interest rate is 4\% and its term is 10 years, the implied present
+value is
 <<ann6, keep.source=TRUE>>=
 annuity(i=((1+0.04)/(1+0.03)-1),n=10)
 @
@@ -451,11 +530,10 @@ annuity(i=((1+0.04)/(1+0.03)-1),n=10)
 
 
 
-\subsubsection{Loan amortization}\label{sec:finloan}
+\subsubsection{Loan amortization}\label{sss:finloan}
 
-\pkg{lifecontingencies} financial mathematics function allow to define the 
-repayments schedule of any loan arrangement, as exemplified in this section. In the following example, let $C$ denote the loaned capital (principal), then 
-assuming an interest rate $i$, the amount due to the lender at each installment is $R =\frac{C}{a_{\left. {\overline {\, n \,}}\! \right| }}$.
+\pkg{lifecontingencies} financial mathematics functions allow to define the 
+repayments schedule of any loan arrangement, as this section exemplifies. Let $C$ denote the loaned capital (principal), then assuming an interest rate $i$, the amount due to the lender at each installment is $R =\frac{C}{a_{\left. {\overline {\, n \,}}\! \right| }}$.
 Therefore the $R_t$ amount repays $I_t = C_{t-1} * i$ as interest and  $C_t = R_t - I_t$ as 
 capital at each installment. The loan installment, $R$, is initially estimated as follows
 
@@ -483,6 +561,7 @@ duration loan, assuming a 5\% interest rate on a principal of \$ 100,000.
 
 \begin{figure}
 \begin{center}
+
 <<label=figBalanceDue,fig=TRUE,echo=FALSE>>=
 plot(x=c(1:length(balanceDue)),y=balanceDue, main="Loan amortization", 
 		ylab="EoP balance due", xlab="year", type="l",col="steelblue")
@@ -493,19 +572,24 @@ plot(x=c(1:length(balanceDue)),y=balanceDue, main="Loan amortization",
 \end{figure}
 
 
-\subsubsection{Bond analysis, duration and convexity}\label{sec:finbond}
+\subsubsection{Bond pricing}\label{sss:finbond}
 
 Bond pricing represents another application of present value analysis. A standard bond whose 
-principal (face value) will be repaid at time $T$ consists in a sequence of coupons $c_t$, priced 
-according to a coupon rate $j^{\left( k \right)}$ on a principal $C$. Equation~\ref{eq:bond} expresses the 
-present value of a bond.
+face value $C$ will be repaid at time $T$ consists in a sequence of
+equal coupons $c_t$ paid at regular intervals and a final payment of  $C_T + c_T$. 
+Equation~\ref{eq:bond} expresses the present value of a bond.
 
 \begin{equation}
 B_t = {c_t}{a^{\left( k \right)}}_{\left. {\overline {\, n \,}}\! \right| } + C{v^T}
 	\label{eq:bond}
 \end{equation}
 
-Examples follow showing how \pkg{lifecontingencies} package elementary functions can be combined to price any bond. 
+Perpetuities are financial contracts that offers an indefinite sequence of
+payments either at the end (perpetuity-immediate) or at the beginning of the
+period (perpetuity-due).\\
+
+Following examples show how \pkg{lifecontingencies} package elementary
+functions can be combined to price bond and perpetuities.
 <<BPFun1, keep.source=TRUE>>=
 bond<-function(faceValue, couponRate, couponsPerYear, yield,maturity)
 {
@@ -521,22 +605,54 @@ bond<-function(faceValue, couponRate, couponsPerYear, yield,maturity)
                    timeIds=times)
 	return(out)
 }
+
+perpetuity<-function(yield, immediate=TRUE)
+{
+	out=NULL
+	out=1/yield
+	out=ifelse(immediate==TRUE,out,out*(1+yield))
+	return(out)
+}
+
 @
-\code{bond} function defined above can be used to price any 
-bond, given face value, coupon rate and term, as \code{bndEx1} and \code{bndEx2} code show.
+
+\code{bond} and \code{perpetuity} functions defined above can be used to price
+any bond, given face value, coupon rate and term, as code show displays.
 
 <<BPFun2, keep.source=TRUE>>=
 bndEx1<-bond(1000,0.06,2,0.05,3)
 bndEx2<-bond(1000,0.06,2,0.06,3)
-c(bndEx1, bndEx2)
+ppTy1<-perpetuity(0.1)
+c(bndEx1, bndEx2,ppTy1)
 @
 
-Duration, $D = \sum\limits_t^{T} \frac{t*CF_{t} \left( 1 + \frac{i}{m} \right)^{ - t * m}}{P}$, and convexity, $C = \sum\limits_{t}^{T} t * \left( t + \frac{1}{m} \right) * CF_t \left( 1 + \frac{y}{m} \right)^{ - m * t - 2}$, assessment is needed when asset liability management of a portfolio is performed. The interested 
-reader could find details on \cite{mathFinAct}. However, last financial mathematics examples show how Macaulay duration (\code{ex1}), 
-modified duration (\code{ex2}) and convexity (\code{ex3}) 
-of any series of cash flows can be estimated by \pkg{lifecontingencies} package functions.\\
+E
 
-<<duration and convexity, keep.source=TRUE>>=
+\subsubsection{Duration and ALM}\label{sss:DurationAndAlm}
+
+
+Duration and convexity formulas are reported in Equation~\ref{eq:duration} and
+Equation~\ref{eq:convexity} respectively. They are used to perform portfolios
+asset - liability management (ALM).
+The interested reader could find details on \cite{mathFinAct}.
+However, the example that follow shows how Macaulay duration (\code{ex1}),
+modified duration (\code{ex2}) and convexity (\code{ex3}) of any series of cash flows can 
+be estimated by \pkg{lifecontingencies} package functions.\\
+
+\begin{equation}
+D = \sum\limits_t^{T} \frac{t*CF_{t} \left( 1 + \frac{i}{m} \right)^{
+- t * m}}{P}
+\label{eq:duration}
+\end{equation}
+
+
+\begin{equation}
+C = \sum\limits_{t}^{T} t * \left( t +
+\frac{1}{m} \right) * CF_t \left( 1 + \frac{y}{m} \right)^{ - m * t - 2}
+\label{eq:convexity}
+\end{equation}
+
+<<durationAndConvexity, keep.source=TRUE>>=
 cashFlows=c(100,100,100,600,500,700)
 timeVector=seq(1:6)
 interestRate=0.03
@@ -549,7 +665,94 @@ ex3<-convexity(cashFlows=cashFlows, timeIds=timeVector,
 c(ex1, ex2,ex3)
 @
 
-\subsection{Life tables and actuarial tables analysis}\
+The last example works out a small ALM problem. Suppose an insurance company has
+sold a guarantee term certificate (GTC) of face value \$ 10,000, that will
+mature in 7 years at a 5\% interest rate. Its final value would be:
+
+<<almEx1, keep.source=TRUE>>=
+GTCFin=10000*1.05^7
+GTCFin
+@
+
+Imagine the company can hedge its liability with two alternative investments:
+\begin{enumerate}
+  \item A five year bond, with face value of 100 yearly coupon with coupon rate
+  of 3\%.
+  \item A perpetuity-immediate. As a remark, the formulas for the PV and
+  Duration of the perpetuity immediate are $\frac{1}{y}$ and $\frac{1+y}{y}$
+  respectively when the yield is $y$.
+ \end{enumerate}
+ 
+In order to solve the ALM problem we need to immunize the porfolio against
+interest rate variation. A portfolio is immunized against parallel shift of the
+yield curve if both the PV and the duration of asset is set equal to the
+duration of liabilities. We start to figure out some parameters:
+
+<<alm2, keep.source=TRUE>>=
+yieldT0=0.04
+durLiab=7
+pvLiab=GTCFin/(1+yieldT0)^7
+pvBond=bond(100,0.03,1,yieldT0,5)
+durBond=duration(cashFlows=c(3,3,3,3,103),timeIds=seq(1,5),i=yieldT0)
+durPpty=(1+yieldT0)/yieldT0
+pvPpty=perpetuity(yieldT0)
+@
+
+%%nota: metti il sistema
+
+Then the ALM problem is set out in a three steps problem, \cite{mathFinAct}:
+\begin{enumerate}
+  \item setting initial the present value of cash inflows (asset) to be equal to
+  the present value of cash outflows (liabilities).
+  \item setting the interest rate sensitivity (i.e., the duration) of asset to be equal to the
+  interesr rate sensitivity of liabilities.
+%  \item setting the convexity of asset to be greater than the convexity
+%  of liabilities. In other word, this means verifying that assets decline
+%  (growth) to be slow (faster) than liability decline in case of changing
+%   interest rate.
+\end{enumerate}
+
+<<alm3, keep.source=TRUE>>=
+a=matrix(c(durBond, durPpty,1,1),nrow=2,byrow=TRUE)
+b=as.vector(c(7,1))
+weights=solve(a,b)
+weights
+@
+
+Vector \code{weights} displays the portfolio composition in term of bonds and
+liabilities respectively. Therefore the number of bonds and perpetuities that
+can be purchased is determined by 
+
+<<alm4, keep.source=TRUE>>=
+bondNum=weights[1]*pvLiab/pvBond
+pptyNum=weights[2]*pvLiab/pvPpty	
+bondNum
+pptyNum
+@
+
+The portfolio is immunized since if interest rates suddently drops to 3\% just
+after, the present value of assets comes to be greater than the present
+value of liabilities. The same occurs in case of upward shift of interest rates.
+
+<<alm5, keep.source=TRUE>>=
+yieldT1low=0.03
+immunizationTestLow<-(bondNum*bond(100,0.03,1,yieldT1low,5)+
+			pptyNum*perpetuity(yieldT1low)>GTCFin/(1+yieldT1low)^7)
+yieldT1high=0.05
+immunizationTestHigh<-(bondNum*bond(100,0.03,1,yieldT1high,5)+
+			pptyNum*perpetuity(yieldT1high)>GTCFin/(1+yieldT1high)^7)
+immunizationTestLow
+immunizationTestHigh
+@
+
+It is worth to remember that the assets allocation within the portfolio should
+be rebalanced since both time and changes of interest rates changes elementary
+securities' durations.
+
+\clearpage
+
+
+\subsection{Life tables and actuarial tables analysis}\label{ss:lfActT}
 
 \code{lifetable} and \code{actuarialtable} classes are designed to handle demographic 
 and actuarial mathematics calculations. A \code{actuarialtable} class inherits from \code{lifetable} class. It has one more slot dedicated to 
@@ -557,7 +760,7 @@ the rate of interest. Both classes have been designed using the \code{S4} \progl
 Following examples show how to initialize these classes, basic survival 
 probabilities and life table analysis. 
 
-\subsubsection{Creating lifetable and actuarialtable objects}
+\subsubsection{Creating lifetable and actuarialtable objects}\label{sss:creating}
 Life table objects can be created by raw \proglang{R} commands or using existing \code{data.frame} objects.
 However, to build a \code{lifetable} class object three components are needed:
 \begin{enumerate}
@@ -577,31 +780,58 @@ There are three main approaches to create a \code{lifetable} object:
 
 To create a \code{lifetable} object directly we can do as code below shows
 
-<<create a lifecontingencies object, keep.source=TRUE>>=
+<<createALifecontingenciesObject, keep.source=TRUE>>=
 x_example=seq(from=0,to=9, by=1)
 lx_example=c(1000,950,850,700,680,600,550,400,200,50)
 exampleLt=new("lifetable",x=x_example, lx=lx_example, name="example lifetable")
 @
 
 while \code{print} and \code{show}  methods tabulate 
-the x, l, px and ex values for a given life table.
+the $x$, $l_x$, ${}_{t}p_{x}$ and $e_x$ values for a given life table.
 
-<<print - show, keep.source=TRUE>>=
+<<printShow, keep.source=TRUE>>=
 print(exampleLt)
 @
 
 \code{head} and \code{tail} methods for \code{data.frame} S3 classes have also 
 been implemented on \code{lifetable} classes
 
-<<head and tail, keep.source=TRUE>>==
+<<headAndTail, keep.source=TRUE>>==
 head(exampleLt)
 @
 
 Nevertheless the easiest way to create a \code{lifetable} object is to start 
-from a suitable existing \code{data.frame}. It would be also the most real concrete approach 
-an actuary would use to handle \code{lifetable} objects. In the following example the US Social 
-Security life tables are loaded from the existing \code{demoUsa} data set bundled in the \pkg{lifecontingencies}
-package.  
+from a suitable existing \code{data.frame}. This will be probably the most
+practical approach for working actuaries. Some tables or mortality rates have
+been bundled within \pkg{lifecontingencies} package, as Table~\ref{tab:lifeTables} displays.
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ll}
+\hline
+	data set & description\\
+ \hline \hline
+    \code{AF92Lt} & UK AF92 life table object.\\
+    \code{AM92Lt} & UK AF92 life table object.\\
+    \code{demoChina} & China mortality rates from SOA website.\\
+	\code{demoIta} & Various Italian life tables including RG48 and IPS55 projected
+	tables.\\
+    \code{demoJapan} & Japan mortality rates from SOA website.\\
+    \code{demoUsa} & US Social Security life tables.\\
+    \code{demoFrance} & 1990 and 2002 French life tables.\\
+    \code{soa08} & SOA illustrative life table.\\
+    \code{soa08Act} & SOA illustrative actuarial table at
+    6\%.\\    
+ \hline
+\end{tabular}
+\caption{\pkg{lifecontingencies} bundled life tables.}
+\label{tab:lifeTables}
+\end{table}
+
+
+In the following example the US Social
+Security life tables are loaded from the existing \code{demoUsa} data set bundled in the \pkg{lifecontingencies} package.  
 
 <<fromDataFrame1, keep.source=TRUE>>=
 data("demoUsa")
@@ -646,7 +876,7 @@ creation of "cut-down" mortality tables. The latter application is exemplified i
 a \code{itaM2002reduced} life table is obtained cutting down the one - year mortality rates of Italian males aged between 20 and 
 60 to 20\% of its original value.
 
-<<create from survival rates, keep.source=TRUE>>=
+<<createFromSurvivalRates, keep.source=TRUE>>=
 
 data("demoIta")
 itaM2002<-demoIta[,c("X","SIM92")]
@@ -667,7 +897,7 @@ itaM2002reduced<-probs2lifetable(probs=itaM2002[,"qx"], radix=100000,
 An \code{actuarialtable} can be easily created from a \code{lifetable} existing 
 object.
 
-<<create a actuarialtable object, keep.source=TRUE>>=
+<<createAnActuarialtableObject, keep.source=TRUE>>=
 
 exampleAct=new("actuarialtable",x=exampleLt@x, lx=exampleLt@lx, 
 interest=0.03, name="example actuarialtable")
@@ -711,7 +941,7 @@ data("soa08Act")
 
 \clearpage
 
-\subsubsection{Basic demographic analysis}
+\subsubsection{Basic demographic analysis}\label{sss:demograph}
 
 
 Basic demographic estimations can be performed on 
@@ -719,7 +949,7 @@ valid \code{lifetable} or \code{actuariatable} objects.
 Code below shows how ${}_{1}p_{20}$, ${}_{2}q_{30}$ and $\mathring{e}_{50:\lcroof{20}}$ respectively
 can be calculated on the IPS55 male population table 
 
-<<probability and demographics, keep.source=TRUE>>=
+<<probabilityAndDemographics, keep.source=TRUE>>=
 demoEx1<-pxt(ips55M,20,1)
 demoEx2<-qxt(ips55M,30,2) 
 demoEx3<-exn(ips55M, 50,20) 
@@ -731,7 +961,7 @@ constant force of mortality (\code{pxtCnst}) and hyperbolic Balducci's assumptio
 \cite{bowers1997actuarial} textbook details. We will show these concepts on the SOA
 illustrative life table, assuming insured age to be 80 years old.\\
 
-<<fractional ages, keep.source=TRUE>>==
+<<fractionalAges, keep.source=TRUE>>==
 data("soa08Act")
 pxtLin=pxt(soa08Act,80,0.5,"linear") 
 pxtCnst=pxt(soa08Act,80,0.5,"constant force") 
@@ -739,14 +969,15 @@ pxtHyph=pxt(soa08Act,80,0.5,"hyperbolic")
 c(pxtLin,pxtCnst,pxtHyph)
 @
 
-Survival probabilities calculations on two heads can be performed also. As a remark, two life status are defined 
-until multiple heads survival analysis: "joint" survival status and "last" survival status. The "joint" survival 
-status exists until all the members are alive, while the "last" survival status exists until at least one member survives. Equation~\ref{eq:2headssurv} 
+Survival probabilities calculations on two lives can be performed also. As a
+remark, two life status are defined until multiple lives survival analysis:
+"joint" survival status and "last" survival status. The "joint" survival status exists until all the members are alive, while the "last" survival status exists until at least one member survives. 
+Equation~\ref{eq:2headssurv} 
 defines the time until death until the joint and last survival status respectively.
 
 \begin{equation}
 \begin{gathered}
-  \tilde T_{\bar{xy}} = \min \left( T_x,T_y \right) \hfill \\
+  \tilde T_{xy} = \min \left( T_x,T_y \right) \hfill \\
   \tilde T_{\bar{xy}} = \max \left( T_x,T_y \right) \hfill \\ 
 \end{gathered}
 \label{eq:2headssurv}
@@ -755,25 +986,25 @@ defines the time until death until the joint and last survival status respective
 Following code lines show how joint survival probabilities (\code{jps}), last survival probabilities (\code{lsp}) and 
 expected joint lifetime (\code{jelt}) can be evaluated using \pkg{lifecontingencies} functions.
 
-<<more than one head, keep.source=TRUE>>=
+<<moreThanOneHead, keep.source=TRUE>>=
 jsp=pxyt(ips55M,ips55F,x=65, y=63, t=2)
 lsp=pxyt(ips55M,ips55F,x=65, y=63, t=2,status="last") 
 jelt=exyt(ips55M, ips55F, x=65,y=63, status="joint") 
 c(jsp,lsp,jelt)
 @
 
-\subsection{Classical actuarial mathematics examples}
+\subsection{Classical actuarial mathematics examples}\label{ss:actMath}
 Classical actuarial mathematics examples on life contingencies are presented.
 The SOA illustrative life table assuming a 6\% interest rates (the same used in most \cite{bowers1997actuarial} examples) will be used, unless otherwise stated. Similarly, the insured amount (or the annuity term payment) will be \$1, unless otherwise stated.  
 
-\subsubsection{Life insurance examples}
+\subsubsection{Life insurance examples}\label{sss:lifeInsurances}
 
 Following examples show the APV calculation (that is the lump sum benefit premium) for: 
 \begin{enumerate}
 	\item \code{lins1}: 10-year term life insurance for a policyholder aged 30 assuming 4\% interest rate, 
 	$\lcterm{A}{30}{10}$.
-	\item \code{lins2}: 10-year term life insurance for a policyholder aged 30 with benefit 
-	payable at the end of month of death at 4\% interest rate.
+	\item \code{lins2}: whole life insurance for a policyholder aged 30 with
+	benefit payable at the end of month of death at 4\% interest rate, $A_{30}^{(12)}$.
 	\item \code{lins3}: whole life insurance for a policyholder aged 40 assuming 4\% interest rate, $A_{40}$.
 	\item \code{lins4}: 5 years deferred 10-years term life insurance for a policyholder aged 40 assuming 5\% 
 	interest rate, ${}_{5|10}\bar{A}_{40}$.
@@ -783,10 +1014,10 @@ Following examples show the APV calculation (that is the lump sum benefit premiu
 	$\lcterm{(IA)}{40}{10}$.
 \end{enumerate}
 
-<<life insurance 1, keep.source=TRUE>>=
+<<lifeInsurance1, keep.source=TRUE>>=
 lins1=Axn(soa08Act, 30,10,i=0.04)
-lins2=Axn(soa08Act, x=30,n=10,i=0.04,k=12)
-lins3=Axn(soa08Act, 40) 
+lins2=Axn(soa08Act, x=30,i=0.04,k=12)
+lins3=Axn(soa08Act, 40,i=0.04)
 lins4=Axn(soa08Act, x=40,n=10,m=5,i=0.05) 
 lins5=DAxn(soa08Act, 50,5)
 lins6=IAxn(soa08Act, 40,10)
@@ -797,20 +1028,23 @@ Any APV depends by several parameters: the class of insurance benefit, the polic
 the interest rate are some of them. Following lines show an interest rate sensitivity analysis on the APV of a $\pureendc{30}{25}$ pure endowment 
 insurance.
 
-<<pure endowments, keep.source=TRUE>>=
+<<pureEndowments, keep.source=TRUE>>=
 puEnd1<-Exn(soa08Act, x=30, n=35, i=0.06)
 puEnd2<-Exn(soa08Act, x=30, n=35, i=0.03)
 c(puEnd1,puEnd2)
 @
 
-\subsubsection{Life annuities examples}
-Life contingencies annuities consist in a sequence of payments whose occurrence and duration depend on $\tilde K_x$ and $\tilde T_x$. Many variations of such sequence of payments exists, of which a selection of examples follows. The SOA life table and a policyholder age of 65 apply in all following examples.
+\subsubsection{Life annuities examples}\label{sss:annuities}
+Life contingencies annuities consist in sequences of payments whose occurrence
+and duration depend on $\tilde K_x$ (or $\tilde T_x$). Different types of
+annuities exist, of which a selection of examples follows.
+The SOA life table and a policyholder age of 65 apply in all following examples.
 \begin{enumerate}
-  \item \code{annEx1}: annuity immediate, APV $a_{65}$.
-  \item  \code{annEx2}: annuity due, APV $\ddot{a}_{65}$.
-  \item  \code{annEx3}: \$ 1,000 annuity due with monthly payment provision, APV $\ddot{a}_{65}^{(12)}$.
-  \item  \code{annEx4}: \$ 1,000 annuity due with monthly payment provision 20 years term, APV $\ddot{a}_{65:\lcroof{20}}^{(12)}$.
-  \item  \code{annEx5}: \$ 1,000 annuity immediate with monthly payment provision 20 years term, APV $a_{65:\lcroof{20}}^{(12)}$.
+  \item \code{annEx1}: annuity immediate, $a_{65}$.
+  \item  \code{annEx2}: annuity due, $\ddot{a}_{65}$.
+  \item  \code{annEx3}: \$ 1,000 annuity due with monthly payment provision, $\ddot{a}_{65}^{(12)}$.
+  \item  \code{annEx4}: \$ 1,000 annuity due with monthly payment provision 20 years term, $\ddot{a}_{65:\lcroof{20}}^{(12)}$.
+  \item  \code{annEx5}: \$ 1,000 annuity immediate with monthly payment provision 20 years term, $a_{65:\lcroof{20}}^{(12)}$.
 \end{enumerate}
 
 <<annuities, keep.source=TRUE>>=
@@ -822,14 +1056,14 @@ annEx5<-12*1000*axn(soa08Act, x=65,k=12,n=20,m=1/12)
 c(annEx1,annEx2,annEx3,annEx4,annEx5)
 @
 
-\subsubsection{Benefit premiums examples}
+\subsubsection{Benefit premiums examples}\label{sss:benefitPremium}
 \pkg{lifecontingencies} package functions can be used to evaluate benefit premium, $P$, for life contingencies 
 insurance. A (level) benefit premium is defined as the actuarial present value of the 
 provided coverage paid in h installments, $P=\frac{APV}{\ddot{a}_{x:\lcroof{h}}}$. The following example displays yearly, 
 \code{Pa}, and monthly, \code{Pm}, level benefit premium calculations for a \$ 250,000 35 term life insurance 
 for a 30 years old policyholder, assuming the payment of premium to occur during the first 15 years.
 
-<<life insurance 2, keep.source=TRUE>>=
+<<lifeInsurance2, keep.source=TRUE>>=
 APV=100000*Axn(soa08Act, x=30,n=35,i=0.025)
 Pa=APV/axn(soa08Act, x=30,n=15,i=0.025)
 Pm=APV/(12*axn(soa08Act, x=30,n=15,i=0.025,k=12))
@@ -837,7 +1071,7 @@ c(Pa,Pm)
 @
 
 
-\subsubsection{Benefit reserves examples}
+\subsubsection{Benefit reserves examples}\label{sss:benefitReserves}
 
 The (prospective) benefit reserve consists in the difference between the APV of future insurers' benefits payments obligations and 
 the APV of projected inflows (remaining scheduled premiums). It represents the outstanding insurer's obligation to the policyholder for the underwritten insurance policy.
@@ -850,12 +1084,12 @@ The benefit premium and reserve equations for this life contingency insurance ar
 \begin{equation}
 \begin{gathered}
   P \anndue{25}{40} = 100000 \lcterm{A}{25}{40} \hfill \\
-{}_{k}\lcterm{V}{25+t}{n-t}=100000\lcterm{A}{25+t}{40-t}-P\anndue{25+t}{40-t} \hfill \\ 
+{}_{k}\lcterm{V}{25+t}{n-t} = 100000\lcterm{A}{25+t}{40-t} - P\anndue{25+t}{40-t} \hfill \\ 
 \end{gathered}
 \label{eq:benResExample1}
 \end{equation}
 
-<<life insurance benefit reserve, keep.source=TRUE>>=
+<<lifeInsuranceBenefitReserve, keep.source=TRUE>>=
 P=100000*Axn(soa08Act,x=25,n=40,i=0.03)/axn(soa08Act,x=25,n=40,i=0.03)
 reserveFun=function(t) return(100000*Axn(soa08Act,x=25+t,n=40-t,i=0.03)-P*
 					axn(soa08Act,x=25+t,n=40-t,i=0.03))
@@ -869,7 +1103,7 @@ The calculation of the benefit reserve for a deferred annuity due is the final e
 $x \ldots n$, $\ddot{a}_{x+k}$ otherwise. The code below calculates the level premium in the initial part and 
 the reserve function while Figure~\ref{fig:a65Res} displays the reserve function.
 
-<<annuity reserve, keep.source=TRUE>>=
+<<annuityReserve, keep.source=TRUE>>=
 yearlyRate=12000
 irate=0.02
 APV=yearlyRate*axn(soa08Act, x=25, i=irate,m=65-25,k=12)
@@ -903,7 +1137,7 @@ ylab="amount",xlab="years",type="l")
 \end{center}
 \end{figure}
 
-\subsubsection{Expenses considerations}\label{sec:expenses}
+\subsubsection{Expenses considerations}\label{sss:expenses}
 
 The premium the policyholder is usually charged to contains an allowance for expenses 
 and profit loading. Those expenses cover the policy servicing, the producers' commission. In some 
@@ -927,44 +1161,47 @@ on a 35 year old insured $100,000 A_{35}$ is calculated assuming the following: 
 year, 25 per year of policy expense, annual maintenance expense of 2.5 per 1,000 unit of capital.\\
 
 The equation to be solved is $G \ddot{a}_{35} = 100000 A_{35} + \left( 2.5*100000/1000 + 25 + 0.1 G \right) \ddot{a}_{35}$.
-<<exp augmented, keep.code=TRUE>>=
+<<expAugmented, keep.code=TRUE>>=
 G=(100000*Axn(soa08Act, x=35)+ 275)/(1-.1)
 G
 @
 
 
 
-\subsubsection{Insurances and annuities on two heads}\label{sec:ssstwoheads}
+\subsubsection{Insurances and annuities on two lives}\label{sec:ssstwoheads}
 
 \pkg{lifecontingencies} package provides functions designed to evaluate life insurance and annuities on two lives.
 Following examples check the equality $a_{\overline{xy}} = a_{x} + a_{y} - a_{xy}$.
 
-<<two heads annuity immediate, keep.source=TRUE>>=
+<<twoHeadsAnnuitImmediate, keep.source=TRUE>>=
+twoLifeTables=list(maleTable=soa08Act, femaleTable=soa08Act)
 ex1<-axn(soa08Act, x=65,m=1)+axn(soa08Act, x=70,m=1)-
 		axyn(soa08Act,soa08Act,	x=65,y=70,status="joint",m=1) 
-ex2<-axyn(soa08Act,soa08Act, x=65,y=70, status="last",m=1)
-ex1-ex2
+ex2<-axyzn(twoLifeTables, x=c(65,y=70), status="last",m=1)
+round(ex1-ex2,2)
 @
 
 Reversionary annuities (annuities payable to life y upon death of x), 
 $a_{x|y}=a_{y} - a_{xy}$ can also be evaluate combining \pkg{lifecontingencies} functions.
 
-<<revesionary annuity, keep.source=TRUE>>=
-axn(soa08Act, x=60,m=1)-axyn(soa08Act,soa08Act, x=65,y=60,status="joint",m=1)
+<<revesionaryAnuity, keep.source=TRUE>>=
+axn(soa08Act, x=60,m=1)-axyzn(twoLifeTables, x=c(65,60),status="joint",m=1)
 @
 
 \clearpage
 \newpage
 
-\subsection{Stochastic analysis}\label{ss:stochasticAnalysis}
+\subsection{Stochastic analysis}\label{ss:stochastic}
 This last section illustrates some stochastic analysis that can be performed by 
-our package, both in demographic analysis and life insurance evaluation.\\
+our package, both in demographic analysis and life insurance evaluation. Section~ 
+\ref{sss:demo} applies stochastic analysis on demographic issues, while Section~\ref{sss:actmath} applies stochastic analysis on insurance pricing.\\
 
 \subsubsection{Demographic examples}\label{sss:demo}
 
 The age-until-death, both in the continuous, $\tilde T_x$,  or curtate form, $\tilde K_x$, is a stochastic variable whose 
 distribution is intrinsic in the deaths within a life table. The code below shows how \code{rLife} function 
-can be used to draw sample of size 10 from the continuous and curtate future lifetime implicit in the SOA life table. 
+can be used to draw sample of size 10 from 
+the continuous and curtate future lifetime implicit in the SOA life table. 
 
 <<rLife1,keep.source=TRUE>>=
 
@@ -980,7 +1217,6 @@ exn(soa08Act, x=29,type="curtate")
 t.test(x=rLife(2000,soa08Act, x=29,type="Kx"),
 		mu=exn(soa08Act, x=29,type="curtate"))$p.value
 deathsIPS55M<-rLife(n=numSim,ips55M, x=0, type="Kx")
-
 @
 
 Finally, Figure~\ref{fig:deathsIPS55M} shows the deaths distribution implicit in the ips55M life table 
@@ -1020,7 +1256,7 @@ For each example, the unbiaseness is verified by comparing the mean of simulated
 with the theoretical APV using a classical t - test. All examples are referred to an individual aged 20 years old for an insurance duration of 40 years.
 Figure~\ref{fig:Zdistrs} shows the resulting $\tilde Z$ distributions.
 
-<<Axn APV and stochastic,keep.source=TRUE>>=
+<<AxnAPVAndStochastic,keep.source=TRUE>>=
 
 APVAxn=Axn(soa08Act,x=25,n=40,type="EV")
 APVAxn
@@ -1085,7 +1321,7 @@ risk margin.\\
 
 In the initial part of the example, we set out the parameter of the model and configure the  parallel computation facility available by the package \pkg{parallel}. The code parallelization has been adapted from examples found in \cite{mccallum2011parallel} textbook.
 
-<<stochastic example full 1, keep.source=TRUE>>==
+<<stochasticExampleFull1, keep.source=TRUE>>==
 nsim=100
 employees=500
 salaryDistribution=rlnorm(n=employees,m=10.77668944,s=0.086177696)
@@ -1116,7 +1352,7 @@ clusterExport(cl, varlist=c("employees","getEmployeeBenefit",
 @
 Then we perform best estimate and risk margin calculations.
 
-<<stochastic example full 2, keep.source=TRUE>>==
+<<stochasticExampleFull2, keep.source=TRUE>>==
 employeeBenefits=numeric(employees)
 employeeBenefits<- parSapply(cl, 1:employees,getEmployeeBenefit, type="EV")
 employeeBenefit=sum(employeeBenefits)

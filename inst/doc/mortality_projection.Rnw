@@ -1,0 +1,222 @@
+% 
+\documentclass[nojss]{jss}
+\usepackage[OT1]{fontenc}
+%\usepackage[latin1]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{lifecon}
+
+
+
+%\usepackage{myVignette}
+%\VignetteIndexEntry{Mortality projection using lifecontingencies package}
+%\VignetteKeywords{vig2}
+%\VignettePackage{lifecontingencies}
+% need no \usepackage{Sweave.sty}
+
+\begin{document}
+
+\author{Giorgio Alfredo Spedicato, Ph.D}
+\title{Mortality projection with \pkg{demography} and \pkg{lifecontingencies}
+packages}
+
+\Plainauthor{Giorgio Alfredo Spedicato, Ph.D}
+\Plaintitle{Mortality projection with demography and lifecontingencies packages}
+%% without formatting
+\Shorttitle{Projection pensions cost with \pkg{R}} %% a short title (if necessary)
+
+
+
+\abstract{This paper shows the application of mortality projection techniques
+(Lee Carter) to the projection of retirement costs. The main purpose of the
+paper is to show how \proglang{R} can be successfully used to perform life
+expectancy projection with practical actuarial purpose for annuity business and
+social security insurance system. \pkg{demography} and \pkg{lifecontingencies}
+pagkages will be used. The analysis performed within this paper are mechanical
+and intended for didactic purposes.}
+
+\Keywords{life insurance, mortality projection, annuity, Lee Carter model,
+\proglang{R}}
+\Plainkeywords{life insurance, mortality projection, annuity, Lee Carter
+model,\proglang{R}}
+
+\Address{
+  Giorgio Alfredo Spedicato\\
+  StatisticalAdvisor\\
+  Via Firenze 11
+  20037 Italy\\
+  Telephone: +39/334/6634384\\
+  E-mail: \email{lifecontingencies@statisticaladvisor.com}\\
+  URL: \url{www.statisticaladvisor.com}
+}
+
+%% need no \usepackage{Sweave.sty}
+
+
+
+\maketitle
+
+
+\section{Introduction}
+
+Mortality across any ages is showing continuous reduction across the world. In
+addition, a reliable projection of mortality is very important to accurately
+estimate the cost of life - insurance and pension annuities.\\ 
+Methodologies have been developed to project the evolution of the mortality. Lee
+- Carter method is probably the most well known, among these.\\
+The Lee Cartel forecasts results could be used to project a life table
+for each specific cohort (year) of birth on which pension annuities projection
+could be fit.\\
+
+Our exercise will be based on Italian data downloaded from the Human Mortality
+Databases via \pkg{demography} package dedicated function. We will use
+\pkg{demography} and \pkg{forecast} package to fit Lee - Carter model and
+perform 100 - years in advance extrapolations.\\
+Finally, \pkg{lifecontingencies} package will be used to project the cost of a
+pension annuity, $\ddot{a}_{x}^{(m)}$ for the cohorts of 1940, 1950, \ldots,
+2000 borns cohorts. Following demographic and economic assumptions will be hold:
+\begin{itemize}
+  \item $x$, the retirement age will be set equal to 65 regardless the cohort.
+  \item $m$, the number of fractional payments per year, will be equal to 12.
+  \item $\ddot{a}_{x}^{(m)}$ to be the actuarial present value of a yearly
+  annuity of 1 monetary unit, that will be evaluated assuming an interest rate
+  of 4\% and an inflation rate of 2\%.
+\end{itemize}
+
+The projection has been performed using a mechanical approach, since the purpose
+of this paper lies in showing the procedure instead of providing sensible
+results.\\
+Finally, most of this paper is based on the examples provided in
+\cite{rmetrics1}.
+
+\section{Fitting Lee Carter model}
+
+Lee Carter original model \cite{Lee1992} assumes that the mortality (hazard
+rate) for age $x$ in calendar year $t$ can be expressed as
+Equation~\ref{eq:LeeCarter}.
+
+\begin{equation}
+\ln {\mu _{x,t}} = {a_x} + {b_x}{k_t} + \varepsilon _{x,t}
+\label{eq:LeeCarter}
+\end{equation}
+
+Term in Equation~\ref{eq:LeeCarter} can be interpreted as follows:
+\begin{enumerate}
+  \item $a_x$ to be a base mortality rate for age $x$.
+  \item $k_t$ to be the calendar year - related latent variable factor.
+  \item $b_x$ is the sensitivity of age $x$ to factor $k_t$.
+  \item $\varepsilon _{x,t}$ represents the residual component.
+\end{enumerate}
+
+The one - year survival probability at age $x$ during calendar year $t$ is
+expressed by Equation~\ref{eq:Probability}. A longitudinal life table for the
+cohort of born in calendar year YYYY can be created selecting all $p_{x,t}$ for
+which $t-x=YYYY$.
+
+\begin{equation}
+p_{x,t} = \exp \left(  - \mu _{x,t} \right)
+\label{eq:Probability}
+\end{equation}
+
+We will perform such exercise on Italy HMD data, saved in mortalityDataset db.
+
+<<load, keep.source=TRUE>>=
+library(demography)
+library(forecast)
+library(lifecontingencies)
+load(file="mortalityDatasets.RData")
+@
+
+Following code creates a \code{demogdata} object from HDM data structure.
+
+<<createDemogData, keep.source=TRUE>>=
+italyDemo<-demogdata(data=italyMx$rate$total,
+		pop=italyMx$pop$total, 
+		name="total",
+		ages=italyMx$age, 
+		years=italyMx$year, 
+		type="mortality",
+		label="Italy",lambda=1)
+@
+
+Plot method is available on \code{demogdata}.
+
+<<italyDemoFig,fig=TRUE>>=
+	plot(italyDemo)
+@
+
+To fit Lee - Carter model (without going throught logaritms) we do 
+
+<<fitLeeCarter, keep.source=TRUE>>=
+italyLca<-lca(italyDemo)
+@
+
+\code{lca} returned object allows us to inspect $a_x$, $b_x$ and $k_t$.
+
+<<leeCarterResultsFig, fig=TRUE>>=
+	par(mfrow=c(1,3))
+	plot(x=italyLca$age, y=italyLca$ax, main="ax")
+	plot(x=italyLca$age, y=italyLca$bx, main="bx")
+	plot(x=italyLca$year, y=italyLca$kt, main="kt")
+@
+
+We can therefore use \pkg{forecast} package to project the future $k_{t}$s (up to 110).
+
+<<ktProjections, keep.source=TRUE>>=
+ktSeries<-italyLca$kt
+ktArima<-auto.arima(ktSeries,allowdrift=TRUE,max.order=20)
+ktArimaForecasts<-forecast(ktArima, h=110)
+fullKt<-ts(c(ktArimaForecasts$fitted, ktArimaForecasts$mean),start=1872)	
+@
+
+and project results
+
+<<ktProjectionFig, fig=TRUE>>=
+plot(fullKt)
+@
+
+Then we create a function to project life table depending by year of birth.
+
+<<lifeTableProject, keep.source=TRUE>>=
+
+createActuarialTable<-function(yearOfBirth){
+	#get projected Px
+	ktSubset<-window(fullKt, start=yearOfBirth)
+	predictionTable<-data.frame(age=italyLca$age,ax=italyLca$ax,bx=italyLca$bx)
+	predictionTable$kt=ktSubset[1:nrow(predictionTable)]
+	predictionTable$mux=with(predictionTable,exp(ax+bx*kt))
+	predictionTable$px=with(predictionTable,exp(-mux))
+	fittedPx=predictionTable$px
+	px4Completion=seq(from=predictionTable$px[length(fittedPx)], to=0, length=20)
+	totalPx=c(fittedPx,px4Completion[2:length(px4Completion)])
+	#create life table
+	irate=1.04/1.02-1
+
+	cohortLt=probs2lifetable(probs=totalPx, radix=100000,type="px", name=paste("Cohort",yearOfBirth))
+	cohortAct=new("actuarialtable",x=cohortLt@x, lx=cohortLt@lx, 
+			interest=irate, name=cohortLt@name)
+	return(cohortAct)
+	}
+
+@
+
+We can therefore calculate the APV of $\ddot{a}_{65}^{(12)}$ for the selected
+cohorts.
+
+<<annuityAPV, keep.source=TRUE>>=
+	getAnnuityAPV<-function(yearOfBirth) {
+		actuarialTable<-createActuarialTable(yearOfBirth)
+		out=axn(actuarialTable,x=65,m=12)
+		return(out)
+	}
+	for(i in seq(1920,2000,by=10)) {
+		cat("For cohort ",i, " the expected lifetime at birth is",
+				round(exn(createActuarialTable(i)),2),
+				" and the APV is :",round(getAnnuityAPV(i),2),"\n")
+		
+	}
+@
+
+\bibliography{vignetteBiblio}
+
+\end{document}

@@ -75,8 +75,11 @@ axyn<-function(tablex, tabley, x,y, n,i, m,k=1, status="joint", type="EV")
 		probs=numeric(n*k)		
 		times=m+seq(from=0, to=(n-1/k),by=1/k)
 		
-		for(i in 1:length(times)) probs[i]=pxyt(objectx=tablex,objecty=tabley, 
-			x=x,y=y,t=times[i],status=status)
+		xVec=c(x,y)
+		tablesList=list(tablex, tabley)
+		
+		for(i in 1:length(times)) probs[i]=pxyzt(tablesList=tablesList,x=xVec,
+					t=times[i],status=status)
 		#discounts=(1+actuarialtable@interest)^-times
 		#out<-sum(payments*discounts*probs)
 	if(type=="EV") {
@@ -84,6 +87,53 @@ axyn<-function(tablex, tabley, x,y, n,i, m,k=1, status="joint", type="EV")
 	} else	if(type=="ST"){
 		out=0
 		for(i in 1:length(times)) out=out+1/k*rbinom(n=1, size=1, prob=probs[i])*(1+interest)^-times[i]
+	}
+	return(out)
+}
+
+
+axyzn<-function(tablesList, x, n,i, m,k=1, status="joint", type="EV")
+{
+	out<-numeric(1)	
+	#initial checkings
+	numTables=length(tablesList)
+	if(length(x)!=numTables) stop("Error! Initial ages vector length does not match with number of lives")
+	for(j in 1:numTables) {
+		if(!(class(tablesList[[j]]) %in% c("lifetable", "actuarialtable"))) stop("Error! A list of lifetable objects is required")
+	}
+
+	if(k<1) stop("Error! Periods in a year shall be no less than 1")
+	if(missing(m)) m=0
+	
+	if(missing(n)) {
+		n=0
+		for(j in 1:numTables) n=(max(n,(getOmega(tablesList[[j]]) - x[j])))
+		n=n-m-1
+	}
+	
+	if(!missing(i)) interest=i else {
+		temp=0
+		for(j in 1:numTables) temp=temp+tablesList[[j]]@interest
+		interest=temp/numTables
+	}
+	
+	if(any(x<0,m<0,n<0)) stop("Error! Negative parameters")
+	#computation of quantities, assuming fractional payments
+	payments=rep(1/k,n*k)
+	probs=numeric(n*k)		
+	times=m+seq(from=0, to=(n-1/k),by=1/k)
+	
+	
+	
+	for(j in 1:length(times)) probs[j]=pxyzt(tablesList=tablesList,x=x,
+				t=times[j],status=status)
+	#discounts=(1+actuarialtable@interest)^-times
+	#out<-sum(payments*discounts*probs)
+	if(type=="EV") {
+		out<-presentValue(cashFlows=payments, timeIds=times, interestRates=interest, probabilities=probs)
+	} else	if(type=="ST"){
+		out=0
+		for(j in 1:length(times)) out=out+1/k*rbinom(n=1, size=1, prob=probs[j])*(1+interest)^-times[j]
 	}
 	return(out)
 }
@@ -108,7 +158,7 @@ axyn<-function(tablex, tabley, x,y, n,i, m,k=1, status="joint", type="EV")
 #type: output requested: default expected value
 Axn<-function(actuarialtable, x, n,i, m, k=1, type="EV")
 {
-	out<-NULL
+	out<-numeric(1)
 	if(missing(actuarialtable)) stop("Error! Need an actuarial actuarialtable")
 	if(missing(x)) stop("Error! Need age!")
 	if(k<1) stop("Error! Periods in a year shall be no less than 1")
@@ -122,11 +172,15 @@ Axn<-function(actuarialtable, x, n,i, m, k=1, type="EV")
 		probs=numeric(n*k)		
 		times=m+seq(from=0, to=(n-1/k),by=1/k)
 		startAge=x
-		for(i in 1:length(times)) probs[i]=(pxt(object=actuarialtable, x=startAge,t=times[i])*qxt(object=actuarialtable, x=startAge+times[i],t=1/k))
-		discounts=(1+interest)^-(times+1/k)
+
+		#for(i in 1:length(times)) probs[i]=(pxt(object=actuarialtable, x=startAge,t=times[i])*qxt(object=actuarialtable, x=startAge+times[i],t=1/k))
+		for(i in 1:length(times)) probs[i]=.qxnt(object=actuarialtable, x=startAge,n=times[i],t=1/k)
+	
+	discounts=(1+interest)^-(times+1/k)
 	
 	if(type=="EV") {
-		out<-sum(payments*discounts*probs)
+		#out<-sum(payments*discounts*probs)
+		out<-presentValue(cashFlows=payments, timeIds=(times+1/k), interestRates=interest, probabilities=probs)
 	} else if(type=="ST"){
 		out=rLifeContingencies(n=1,lifecontingency="Axn", 
 				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=k)
@@ -134,10 +188,11 @@ Axn<-function(actuarialtable, x, n,i, m, k=1, type="EV")
 	return(out)
 }
 
+#Axn(soa08Act,65,k=12)
 
 Axyn<-function(tablex, x,tabley, y, n,i, m, k=1, status="joint", type="EV")
 {
-	out<-NULL
+	out<-numeric(1)
 	if(any(missing(tablex),missing(tabley))) stop("Error! Need tables")
 	if(any(missing(x),missing(y))) stop("Error! Need ages!")
 	if(k<1) stop("Error! Periods in a year shall be no less than 1")
@@ -159,11 +214,9 @@ Axyn<-function(tablex, x,tabley, y, n,i, m, k=1, status="joint", type="EV")
 		times=m+seq(from=0, to=(n-1/k),by=1/k)
 		startAgex=x
 		startAgey=y
-		for(i in 1:length(times)) probs[i]=(pxyt(objectx=tablex,objecty=tabley, x=startAgex,y=startAgey, 
-		status=status, t=times[i])*qxyt(objectx=tablex,objecty=tabley, 
-								x=startAgex+times[i],y=startAgey+times[i],
-								t=1/k,status=status))
-
+		tablesList=list(tablex, tabley)
+		for(i in 1:length(times)) 
+		probs[i]=.qxyznt(tablesList=tablesList,x=c(startAgex,startAgey),n=times[i],t=1/k, status=status)
 		discounts=(1+interest)^-(times+1/k)
 
 	if(type=="EV") {
@@ -176,8 +229,63 @@ Axyn<-function(tablex, x,tabley, y, n,i, m, k=1, status="joint", type="EV")
 			if(out>0) break
 		}
 	}
+	#warning("Warning: this function in deprecated. Use Axyzn instead!")
 	return(out)
 }
+
+
+Axyzn<-function(tablesList, x, n,i, m, k=1, status="joint", type="EV")
+{
+	out=numeric(1)
+	#initial checkings
+	numTables=length(tablesList)
+	if(length(x)!=numTables) stop("Error! Initial ages vector length does not match with number of lives")
+	for(j in 1:numTables) {
+		if(!(class(tablesList[[j]]) %in% c("lifetable", "actuarialtable"))) stop("Error! A list of lifetable objects is required")
+	}
+	
+	if(k<1) stop("Error! Periods in a year shall be no less than 1")
+	if(missing(m)) m=0
+	
+	if(missing(n)) {
+		n=0
+		for(j in 1:numTables) n=(max(n,(getOmega(tablesList[[j]]) - x[j])))
+		n=n-m-1
+	}
+	
+	if(!missing(i)) interest=i else {
+			temp=0
+			for(j in 1:numTables) temp=temp+tablesList[[j]]@interest
+			interest=temp/numTables
+		}
+
+	if(n==0) return(0)
+	if(any(x<0,m<0,n<0)) stop("Error! Negative parameters")
+	
+	#perform calculations
+	
+	payments=rep(1,n*k)
+	probs=numeric(n*k)		
+	times=m+seq(from=0, to=(n-1/k),by=1/k)
+	
+
+	for(j in 1:length(times)) probs[j]=.qxyznt(tablesList=tablesList,x=x,n=times[j],t=1/k, status=status)
+	discounts=(1+interest)^-(times+1/k)
+	
+	if(type=="EV") {
+		out<-sum(payments*discounts*probs)
+	} else if(type=="ST"){
+		out=0
+		for(j in 1:length(times)) 
+		{
+			out=((1+interest)^-(times[j]+1/k))*rbinom(n=1, size=1, prob=probs[j])
+			if(out>0) break
+		}
+	}
+	return(out)
+}
+
+
 
 # tablex=soa08Act
 # tabley=soa08Act
@@ -186,15 +294,14 @@ Axyn<-function(tablex, x,tabley, y, n,i, m, k=1, status="joint", type="EV")
 # n=10
 # i=0.06
 # m=0
-
+#
 # Ax=Axn(soa08Act, x=x,n=n)
 # Ay=Axn(soa08Act, x=y,n=n)
 # AxynJ=Axyn(tablex=soa08Act, x=x,tabley=soa08Act, y=y, n=n,i=i, m=m, k=1, status="joint", type="EV")
 # AxynL=Axyn(tablex=soa08Act, x=x,tabley=soa08Act, y=y, n=n,i=i, m=m, k=1, status="last", type="EV")
 # AxynJ
 # AxynL
-
-# Ax+Ay-AxynJ
+#Ax+Ay-AxynJ
 
 
 #n-year term whole life

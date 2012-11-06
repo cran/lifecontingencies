@@ -14,10 +14,10 @@ annuity(i, n,m=0, k=1,type = "immediate")
 \arguments{
 \item{i}{
 	Effective interest rate expressed in decimal form. E.g. 0.03 means 3\%. It can be a vector of interest rates of the same length
-	of periods. If i = \code{infinity} then \code{annuity} returns the value of a perpetuity.
+	of periods. 
 }
 \item{n}{
-	Periods for payments.
+	Periods for payments. If n = \code{infinity} then \code{annuity} returns the value of a perpetuity (either immediate or due). 
 }
 \item{m}{
 	Deferring period, whose default value is zero.
@@ -57,7 +57,7 @@ annuity(i, n,m=0, k=1,type = "immediate")
 \code{\link{accumulatedValue}}
 }
 \examples{
-# The present value of 5 payments of 1000 at one year interval beginnin now when the interest rate is 2.5% is
+# The present value of 5 payments of 1000 at one year interval that begins now when the interest rate is 2.5% is
 1000*annuity(i=0.05, n=5, type = "due")
 #A man borrows a loan of 20,000 to purchase a car at
 # a nominal annual rate of interest of 0.06. He will pay back the loan through monthly
