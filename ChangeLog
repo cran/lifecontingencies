@@ -1,4 +1,6 @@
 ChangeLog
+-Version 0.9.7
+	Minor changes to documentation
 -Version 0.9.6
 	Add summary method for lifetable and actuarialtable objects
 	Improvements and fix in simulation of life contingent insurances

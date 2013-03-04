@@ -27,7 +27,7 @@ life tables are reported.
 	See \url{http://www.ssa.gov/oact/NOTES/as120/LifeTables_Body.html}
 }
 \references{
-	Introduzione alla demografia Livi-Bacci, M. 2007
+	Social Security Agency.
 }
 
 

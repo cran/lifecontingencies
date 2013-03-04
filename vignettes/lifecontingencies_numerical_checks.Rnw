@@ -53,7 +53,7 @@ Axn(soa08Act, 50,20)/axn(soa08Act, 50,20)
 @
 
 \bibliographystyle{plain} 
-\bibliography{vignetteBiblio}
+\bibliography{lifecontingenciesBiblio}
 
 
 
