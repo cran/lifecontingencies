@@ -6,7 +6,7 @@
 	Both actuarial value and stochastic random sample can be returned.
 }
 \usage{
-	DAxn(actuarialtable, x, n, i,m = 0,k=1, type = "EV")
+	DAxn(actuarialtable, x, n, i=actuarialtable@interest,m = 0,k=1, type = "EV", power=1)
 }
 \arguments{
   \item{actuarialtable}{
@@ -30,6 +30,9 @@
   \item{type}{
 Default value is "EV", where APV is returned. "ST" returns a sample from the underlying 
 present value of benefits distribution.
+}
+  \item{power}{
+The power of the APV. Default is 1 (mean)
 }
 }
 \details{

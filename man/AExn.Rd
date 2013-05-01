@@ -8,7 +8,7 @@ Function to evaluate the n-year endowment insurance
 This function evaluates the n-year endowment insurance.
 }
 \usage{
-AExn(actuarialtable, x, n, i,  k = 1, type = "EV")
+AExn(actuarialtable, x, n, i=actuarialtable@interest,  k = 1, type = "EV", power=1)
 }
 \arguments{
   \item{actuarialtable}{
@@ -28,6 +28,10 @@ Frequency of benefit payment.
 }
   \item{type}{
 Character value, either "EV" or "ST". EV is the default value.
+}
+
+  \item{power}{
+The power of the APV. Default is 1 (mean)
 }
 }
 \details{

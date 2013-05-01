@@ -1,4 +1,8 @@
 ChangeLog
+-Version 0.9.8
+	Improved documentation.
+	Add as.numeric method for lifetable and actuarialtable objects.
+	Add power argument to APV function to evaluate higher moments.
 -Version 0.9.7
 	Minor changes to documentation
 -Version 0.9.6

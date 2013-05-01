@@ -10,7 +10,7 @@ The amount payable at the end of year of death are: \eqn{1, 2, \ldots, n-1, n}.
 N can be set as \eqn{\omega-x-1}.
 }
 \usage{
-IAxn(actuarialtable, x, n,i,  m = 0, k=1, type = "EV")
+IAxn(actuarialtable, x, n,i=actuarialtable@interest,  m = 0, k=1, type = "EV", power=1)
 }
 \arguments{
   \item{actuarialtable}{
@@ -34,6 +34,9 @@ The deferring period. If missing, m is set as 0.
   \item{type}{
 Default value is "EV", where APV is returned. "ST" returns a sample from the underlying 
 present value of benefits distribution.
+}
+  \item{power}{
+The power of the APV. Default is 1 (mean).
 }
 }
 \details{

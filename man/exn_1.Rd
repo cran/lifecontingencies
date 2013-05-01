@@ -7,9 +7,7 @@
 \description{
 	Given an actuarial table, this function evaluate the pure endowment. 
 }
-\usage{
-Exn(actuarialtable, x, n, i, type = "EV")
-}
+\usage{Exn(actuarialtable, x, n, i=actuarialtable@interest, type = "EV", power=1)}
 
 \arguments{
  \item{actuarialtable}{
@@ -26,6 +24,9 @@ Exn(actuarialtable, x, n, i, type = "EV")
 }
   \item{type}{
 	A string, eithed "EV" (default value),  "ST" (stocastic realization) or "VR" if the value of the variance is needed.
+}
+  \item{power}{
+The power of the APV. Default is 1 (mean)
 }
 }
 \details{

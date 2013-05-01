@@ -7,7 +7,7 @@ Increasing annuity life contingencies
 This function evaluates increasing annuities
 }
 \usage{
-Iaxn(actuarialtable, x, n, i, m = 0, type = "EV")
+Iaxn(actuarialtable, x, n, i, m = 0, type = "EV", power=1)
 }
 \arguments{
   \item{actuarialtable}{
@@ -27,6 +27,9 @@ The deferring period.
 }
   \item{type}{
 Yet only "EV" is implemented.
+}
+  \item{power}{
+The power of the APV. Default is 1 (mean)
 }
 }
 \details{

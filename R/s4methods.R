@@ -175,3 +175,20 @@ setAs("actuarialtable","data.frame",
 		}
 )
 
+#coerce methods to numeric
+
+setAs("lifetable","numeric",
+	function(from) {
+		out<-numeric(getOmega(from)+1)
+		for(i in 0:getOmega(from)) out[i+1]<-qxt(object=from,x=i,t=1)
+		return(out)
+	}
+)
+
+setAs("actuarialtable","numeric",
+		function(from) {
+			out<-numeric(getOmega(from))
+			for(i in 0:(getOmega(from)-2)) out[i+1]<-Axn(actuarialtable=from,x=i)
+			return(out)
+		}
+)

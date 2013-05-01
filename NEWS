@@ -1,2 +1,4 @@
-04-03-2013
-Improved documentation
+	01-05-2013
+	Improved documentation.
+	Add as.numeric method for lifetable and actuarialtable objects.
+	Add power argument to APV function to evaluate higher moments.

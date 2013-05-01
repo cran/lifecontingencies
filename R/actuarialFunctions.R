@@ -5,24 +5,25 @@
 ###############################################################################
 
 #function to obtain the endowment
-Exn<-function(actuarialtable, x, n, i,type="EV")
+Exn<-function(actuarialtable, x, n, i=actuarialtable@interest,type="EV",power=1)
 {
-	out<-NULL
+	interest<-i
+	out<-numeric(1)
 	if(missing(actuarialtable)) stop("Error! Need an actuarial actuarialtable") #request an actuarial actuarialtable
 	prob=pxt(actuarialtable,x,n)
-	if(!missing(i)) interest=i else interest=actuarialtable@interest #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
 	discount=(1+interest)^(-n)
 	#defines the outputs
 	if(type=="EV") out=presentValue(cashFlows=1, timeIds=n, 
-				interestRates=interest, probabilities=prob) else if(type=="ST") out=rLifeContingencies(n=1,lifecontingency="Exn", 
+				interestRates=interest, probabilities=prob,power=power) else if(type=="ST") out=rLifeContingencies(n=1,lifecontingency="Exn", 
 				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=1,k=1)
 	#out=discount^2*prob*(1-prob)
 	return(out)
 }
 #function to obtain the annuity
-axn<-function(actuarialtable, x, n,i, m,k=1, type="EV")
+axn<-function(actuarialtable, x, n,i=actuarialtable@interest, m,k=1, type="EV",power=1)
 {
-	out<-NULL
+	interest<-i
+	out<-numeric(1)
 	if(missing(actuarialtable)) stop("Error! Need an actuarial actuarialtable")
 	if(missing(x)) stop("Error! Need age!")
 	
@@ -47,7 +48,7 @@ axn<-function(actuarialtable, x, n,i, m,k=1, type="EV")
 		discounts=(1+actuarialtable@interest)^-times #prima era asteriskato
 		#out<-sum(payments*discounts*probs)
 	if(type=="EV") {
-		out<-presentValue(cashFlows=payments, timeIds=times, interestRates=interest, probabilities=probs)
+		out<-presentValue(cashFlows=payments, timeIds=times, interestRates=interest, probabilities=probs,power=power)
 		#out=.C("add3", x=as.double(payments), y=as.double(discounts),z=as.double(probs),n=as.integer(length(probs)),out=numeric(1))$out
 	} else if(type=="ST"){
 		out=rLifeContingencies(n=1,lifecontingency="axn", 
@@ -63,7 +64,7 @@ axn<-function(actuarialtable, x, n,i, m,k=1, type="EV")
 #shall write the Rd file
 axyn<-function(tablex, tabley, x,y, n,i, m,k=1, status="joint", type="EV")
 {
-	out<-NULL
+	out<-numeric(1)
 	if(missing(tablex)) stop("Error! Need table for X life")
 	if(missing(tabley)) stop("Error! Need table for Y life")
 	if(missing(x)) stop("Error! Need age for X!")
@@ -97,7 +98,7 @@ axyn<-function(tablex, tabley, x,y, n,i, m,k=1, status="joint", type="EV")
 }
 
 
-axyzn<-function(tablesList, x, n,i, m,k=1, status="joint", type="EV")
+axyzn<-function(tablesList, x, n,i, m,k=1, status="joint", type="EV",power=1)
 {
 	out<-numeric(1)	
 	#initial checkings
@@ -132,7 +133,7 @@ axyzn<-function(tablesList, x, n,i, m,k=1, status="joint", type="EV")
 	discounts=(1+interest)^-times #prima asteriskato
 	#out<-sum(payments*discounts*probs)
 	if(type=="EV") {
-		out<-presentValue(cashFlows=payments, timeIds=times, interestRates=interest, probabilities=probs)
+		out<-presentValue(cashFlows=payments, timeIds=times, interestRates=interest, probabilities=probs,power=power)
 		#out=.C("add3", x=as.double(payments), y=as.double(discounts),z=as.double(probs),n=as.integer(length(probs)),out=numeric(1))$out
 	} else	if(type=="ST"){
 		out=rLifeContingenciesXyz(n=1,lifecontingency="axyz", tablesList=tablesList, x=x,t=n,i=i, m=m,k=k,status=status)
@@ -160,15 +161,15 @@ axyzn<-function(tablesList, x, n,i, m,k=1, status="joint", type="EV")
 #x: beginnin life age
 #m: deferring term
 #type: output requested: default expected value
-Axn<-function(actuarialtable, x, n,i, m, k=1, type="EV")
+Axn<-function(actuarialtable, x, n,i=actuarialtable@interest, m, k=1, type="EV",power=1)
 {
 	out<-numeric(1)
+	interest<-i
 	if(missing(actuarialtable)) stop("Error! Need an actuarial actuarialtable")
 	if(missing(x)) stop("Error! Need age!")
 	if(k<1) stop("Error! Periods in a year shall be no less than 1")
 	if(missing(m)) m=0
 	if(missing(n)) n=getOmega(actuarialtable)-x-m-1
-	if(!missing(i)) interest=i else interest=actuarialtable@interest #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
 	if(n==0) return(0)
 	if(any(x<0,m<0,n<0)) stop("Error! Negative parameters")
 		#we have n*k possible payment times
@@ -184,7 +185,7 @@ Axn<-function(actuarialtable, x, n,i, m, k=1, type="EV")
 	
 	if(type=="EV") {
 		#out<-sum(payments*discounts*probs)
-		out<-presentValue(cashFlows=payments, timeIds=(times+1/k), interestRates=interest, probabilities=probs)
+		out<-presentValue(cashFlows=payments, timeIds=(times+1/k), interestRates=interest, probabilities=probs,power=power)
 		#out=.C("add3", x=as.double(payments), y=as.double(discounts),z=as.double(probs),n=as.integer(length(payments)),out=numeric(1))$out
 	} else if(type=="ST"){
 		out=rLifeContingencies(n=1,lifecontingency="Axn", object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=k)
@@ -238,7 +239,7 @@ Axyn<-function(tablex, x,tabley, y, n,i, m, k=1, status="joint", type="EV")
 }
 
 
-Axyzn<-function(tablesList, x, n,i, m, k=1, status="joint", type="EV")
+Axyzn<-function(tablesList, x, n,i, m, k=1, status="joint", type="EV",power=1)
 {
 	out=numeric(1)
 	#initial checkings
@@ -277,7 +278,7 @@ Axyzn<-function(tablesList, x, n,i, m, k=1, status="joint", type="EV")
 	discounts=(1+interest)^-(times+1/k)
 	
 	if(type=="EV") {
-		out=sum(payments*discounts*probs)
+		out<-sum(((payments*discounts)^power)*probs)
 		#out=.C("add3", x=as.double(payments), y=as.double(discounts),z=as.double(probs),n=as.integer(length(payments)),out=numeric(1))$out
 	} else if(type=="ST"){
 		out=0
@@ -316,15 +317,16 @@ Axyzn<-function(tablesList, x, n,i, m, k=1, status="joint", type="EV")
 # m=0
 # k=2
 
-IAxn<-function(actuarialtable, x, n,i, m=0, k=1, type="EV")
+IAxn<-function(actuarialtable, x, n,i=actuarialtable@interest, m=0, k=1, type="EV",power=1)
 {
-	out<-NULL
+	out<-numeric(1)
+	interest<-i
 	if(missing(actuarialtable)) stop("Error! Need an actuarial actuarialtable")
 	if(missing(m)) m=0
 	if(missing(x)) stop("Error! Need age!")
 
 	if(missing(n)) n=getOmega(actuarialtable)-x-m #n=getOmega(actuarialtable)-x-m-1
-	if(!missing(i)) interest=i else interest=actuarialtable@interest #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
+
 	if(any(x<0,m<0,n<0)) stop("Error! Negative parameters")
 	#we have n*k possible payment times
 	payments=seq(from=1/k, to=n, by=1/k)
@@ -341,7 +343,7 @@ IAxn<-function(actuarialtable, x, n,i, m=0, k=1, type="EV")
 #		for(i in 1:length(times)) probs[i]=(pxt(actuarialtable, x,times[i])*qxt(actuarialtable, 
 #								x+times[i],1))
 #		discounts=(1+interest)^-(times+1)
-		out<-sum(payments*discounts*probs)
+		out<-sum(((payments*discounts)^power)*probs)
 	} else if(type=="ST") {
 		out=rLifeContingencies(n=1,lifecontingency="IAxn", object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=k) #!fix: prima = 1
 	}
@@ -369,14 +371,15 @@ IAxn<-function(actuarialtable, x, n,i, m=0, k=1, type="EV")
 # IAxn(soa08Act, x=50,n=10,k=2,type="EV")
 # IAxn(soa08Act, x=50,n=10,k=2,type="ST")
 
-DAxn<-function(actuarialtable, x, n,i, m=0, k=1, type="EV")
+DAxn<-function(actuarialtable, x, n,i=actuarialtable@interest, m=0, k=1, type="EV",power=1)
 {
-	out<-NULL
+	out<-numeric(1)
+	interest<-i
 	if(missing(actuarialtable)) stop("Error! Need an actuarial actuarialtable")
 	if(missing(x)) stop("Error! Need age!")
 	if(missing(m)) m=0
 	if(missing(n)) n=getOmega(actuarialtable)-x-m #n=getOmega(actuarialtable)-x-m-1
-	if(!missing(i)) interest=i else interest=actuarialtable@interest #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
+
 
 	payments=seq(from=n, to=1/k, by=-1/k)
 	probs=numeric(n*k)		
@@ -386,7 +389,7 @@ DAxn<-function(actuarialtable, x, n,i, m=0, k=1, type="EV")
 	discounts=(1+interest)^-(times+1/k)
 
 	if(type=="EV") {
-		out<-sum(payments*discounts*probs)
+		out<-sum(((payments*discounts)^power)*probs)
 	} else if(type=="ST")
 	{
 		out=rLifeContingencies(n=1,lifecontingency="DAxn", 
@@ -416,15 +419,16 @@ DAxn<-function(actuarialtable, x, n,i, m=0, k=1, type="EV")
 
 #n-year increasing
 #recursive function
-Iaxn<-function(actuarialtable, x, n,i, m=0, type="EV")
+Iaxn<-function(actuarialtable, x, n,i=actuarialtable@interest, m=0, type="EV",power=1)
 {
-  out<-NULL
+  out<-numeric(1)
+  interest<-i
 	if(missing(actuarialtable)) stop("Error! Need an actuarial actuarialtable")
 	if(missing(m)) m=0
 	if(missing(x)) stop("Error! Need age!")
 	#m is set equal to zero at the moment
 	if(missing(n)) n=getOmega(actuarialtable)-x-m #n=getOmega(actuarialtable)-x-m-1
-	if(!missing(i)) interest=i else interest=actuarialtable@interest 
+
 	#i an interest rate is provided the provided interest rate overrides the 
 	#actuarialtable interest rate
 		payments=numeric(n)
@@ -436,27 +440,28 @@ Iaxn<-function(actuarialtable, x, n,i, m=0, type="EV")
 		times=m+seq(from=0, to=(n-1),by=1) 
 		for(i in 1:length(times)) probs[i]=pxt(actuarialtable, x,times[i])
 		discounts=(1+interest)^-(times)
-		out<-sum(payments*discounts*probs)
+		out<-sum(((payments*discounts)^power)*probs)
 	return(out)
 }
 
 
 
 #pure endowment function
-AExn<-function(actuarialtable, x, n,i, k=1, type="EV")
+AExn<-function(actuarialtable, x, n,i=actuarialtable@interest, k=1, type="EV",power=1)
 {
-	out<-NULL
+	out<-numeric(1)
+	interest<-i
 	if(missing(actuarialtable)) stop("Error! Need an actuarial actuarialtable")
 	if(missing(x)) stop("Error! Need age!")
 	if(k<1) stop("Error! Periods in a year shall be no less than 1")
 	if(missing(n)) n=getOmega(actuarialtable)-x-1
-	if(!missing(i)) interest=i else interest=actuarialtable@interest #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
+	
 	if(n==0) return(0)
 	if(any(x<0,n<0)) stop("Error! Negative parameters")
 	
 	if(type=="EV") {
-		out<-Axn(actuarialtable=actuarialtable, x=x, n=n, i=i,m=0, k=k,type="EV")+Exn(actuarialtable=actuarialtable, x=x, n=n, i=i,
-				type="EV")
+		out<-Axn(actuarialtable=actuarialtable, x=x, n=n, i=i,m=0, k=k,type="EV",power=power)+Exn(actuarialtable=actuarialtable, x=x, n=n, i=i,
+				type="EV",power=power)
 	} else if(type=="ST"){
 		out=rLifeContingencies(n=1,lifecontingency="AExn", 
 				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, k=k)

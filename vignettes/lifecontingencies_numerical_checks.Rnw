@@ -27,6 +27,8 @@ Yet very incomplete.\\
 library(lifecontingencies)
 @
 
+\section{Financial mathematics}
+
 
 
 \section{Actuarial mathematics}
@@ -38,16 +40,23 @@ data(soa08Act)
 Axn(soa08Act, x=30, n=10, i=0.04)
 @
 
+\cite[p 111]{bowers1997actuarial}, variance of above mentioned insurance.
+
+<<act2, keep.source=TRUE>>=
+#should be 0.01247099
+Axn(soa08Act, x=30, n=10, i=0.04,power=2)-Axn(soa08Act, x=30, n=10, i=0.04,power=1)^2
+@
+
 \cite[p 112]{bowers1997actuarial}, $A_{30}$, at 6\%.
 
-<<act1, keep.source=TRUE>>=
+<<act3, keep.source=TRUE>>=
 #should be 102.4835
 1000*Axn(soa08Act, x=30,i=0.06)
 @
 
 \cite[p 437]{mlc}, $\anndue{50}{20}$
 
-<<act3, keep.source=TRUE>>=
+<<act4, keep.source=TRUE>>=
 #should be 0.01155
 Axn(soa08Act, 50,20)/axn(soa08Act, 50,20)
 @

@@ -8,7 +8,7 @@
 	This function evaluates n - years term and whole life insurance.
 }
 \usage{
-	Axn(actuarialtable, x, n, i,m, k=1, type = "EV")
+	Axn(actuarialtable, x, n, i=actuarialtable@interest,m, k=1, type = "EV",power=1)
 }
 
 \arguments{
@@ -33,6 +33,9 @@
 }
   \item{type}{
 	A character value, either "EV" (default value) or "ST".
+}
+  \item{power}{
+The power of the APV. Default is 1 (mean)
 }
 }
 \details{

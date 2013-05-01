@@ -8,8 +8,8 @@ Multiple lifes insurances and annuities
 Function to evalate the multiple lives insurances and annuities
 }
 \usage{
-Axyzn(tablesList, x, n, i, m, k = 1, status = "joint", type = "EV")
-axyzn(tablesList, x, n, i, m, k = 1, status = "joint", type = "EV")
+Axyzn(tablesList, x, n, i, m, k = 1, status = "joint", type = "EV", power=1)
+axyzn(tablesList, x, n, i, m, k = 1, status = "joint", type = "EV", power=1)
 }
 
 \arguments{
@@ -37,6 +37,9 @@ Either "joint" (for the joint-life status model) or "last".
 }
   \item{type}{
 "EV", for expected value. "ST" for stochastic value.
+}
+  \item{power}{
+The power of the APV. Default is 1 (mean).
 }
 
 }

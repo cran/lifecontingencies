@@ -13,8 +13,8 @@ Package to perform actuarial mathematics on life contingencies and classical fin
 \tabular{ll}{
 Package: \tab lifecontingencies\cr
 Type: \tab Package\cr
-Version: \tab 0.9.7\cr
-Date: \tab 2013-01-29\cr
+Version: \tab 0.9.8\cr
+Date: \tab 2013-05-01\cr
 License: \tab GPL-2.0\cr
 LazyLoad: \tab yes\cr
 }

@@ -2,8 +2,8 @@
 #number of deaths between age x and x+t
 dxt<-function(object, x, t) {
 	#checks
-	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
-	out<-NULL
+	out<-numeric(1)
+	if(!is(object, "lifetable")) stop("Error! Need lifetable or actuarialtable objects")
 	if(missing(x)) stop("Error! Missing x")
 	if(missing(t)) t=1
 	omega=getOmega(object) #prima object+1
@@ -13,7 +13,6 @@ dxt<-function(object, x, t) {
 	if((x+t)>omega) out=lx else #before >=
 		out=lx-object@lx[which(object@x==t+x)]
 	} else {
-		
 		fracPart=(t%%1)
 		intPart=t-fracPart
 		out=dxt(object=object, x=x, t=intPart)+fracPart*dxt(object=object, x=x+intPart, t=1)
@@ -26,7 +25,7 @@ pxt<-function(object, x, t, fractional="linear")
 {
 	out<-NULL
 	#checks
-	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
+	if(!is(object, "lifetable")) stop("Error! Need lifetable or actuarialtable objects")
 	if(missing(x)) stop("Missing x")
 	if(any(x<0,t<0)) stop("Check x or t domain")
 	if(missing(t)) t=1 #default 1
@@ -61,7 +60,7 @@ pxt<-function(object, x, t, fractional="linear")
 {
 	out<-NULL
 	#checks
-	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
+	if(!is(object, "lifetable")) stop("Error! Need lifetable or actuarialtable objects")
 	if(missing(x)) stop("Missing x")
 	#force of mortality
 	out<-log(pxt(object=object, x=x, t=1))
@@ -75,7 +74,7 @@ Lxt<-function(object, x,t=1,fxt=0.5)
 	out<-NULL
 	#checks
 
-	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
+	if(!is(object, "lifetable")) stop("Error! Need lifetable or actuarialtable objects")
 	if(missing(x)) stop("Missing x")
 	if(any(x<0,t<0)) stop("Check x or t domain")
 
@@ -92,7 +91,7 @@ Tx<-function(object,x)
 {
 	out<-NULL
  	#checks
-	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
+	if(!is(object, "lifetable")) stop("Error! Need lifetable or actuarialtable objects")
 	if(missing(x)) stop("Missing x")
 	n=getOmega(object)-x
 	lives=seq(from=x,to=x+n,by=1)
@@ -106,7 +105,7 @@ mxt<-function(object,x,t)
 	out<-NULL
 	#checks
 	if(missing(t)) t=1 #default 1
-	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
+	if(!is(object, "lifetable")) stop("Error! Need lifetable or actuarialtable objects")
 	if(missing(x)) stop("Missing x")
 	if(any(x<0,t<0)) stop("Check x or t domain")
 	
@@ -121,7 +120,7 @@ qxt<-function(object, x, t, fractional="linear")
 {
 	out<-NULL
 	#checks
-	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
+	if(!is(object, "lifetable")) stop("Error! Need lifetable or actuarialtable objects")
 	if(missing(x)) stop("Missing x")
 	if(any(x<0,t<0)) stop("Check x or t domain")
 	if(missing(t)) t=1 #default 1
@@ -134,7 +133,7 @@ qxt<-function(object, x, t, fractional="linear")
 exn<-function(object,x,n,type="curtate") {
 	out<-NULL
 	#checks
-	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Need lifetable or actuarialtable objects")
+	if(!is(object, "lifetable")) stop("Error! Need lifetable or actuarialtable objects")
 	if(missing(x)) x=0
 	if(missing(n)) n=getOmega(object)-x +1 #to avoid errors
 	if(n==0) return(0)
@@ -156,8 +155,8 @@ pxyt<-function(objectx, objecty,x,y,t, status="joint")
 {
 	out<-NULL
 	#checks
-	if((class(objectx) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Objectx needs be lifetable or actuarialtable objects")
-	if((class(objecty) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Objectx needs be lifetable or actuarialtable objects")
+	if(!is(objectx, "lifetable")) stop("Error! Objectx needs be lifetable or actuarialtable objects")
+	if(!is(objecty, "lifetable")) stop("Error! Objectx needs be lifetable or actuarialtable objects")
 	if(missing(x)) stop("Missing x")
 	if(missing(y)) stop("Missing y")
 	if(missing(t)) t=1 #default 1
@@ -173,8 +172,8 @@ qxyt<-function(objectx, objecty,x,y,t, status="joint")
 {
 	out<-NULL
 	#checks
-	if((class(objectx) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Objectx needs be lifetable or actuarialtable objects")
-	if((class(objecty) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Objectx needs be lifetable or actuarialtable objects")
+	if(!is(objectx, "lifetable")) stop("Error! Objectx needs be lifetable or actuarialtable objects")
+	if(!is(objecty, "lifetable")) stop("Error! Objectx needs be lifetable or actuarialtable objects")
 	if(missing(x)) stop("Missing x")
 	if(missing(y)) stop("Missing y")
 	if(missing(t)) t=1 #default 1
@@ -189,8 +188,8 @@ exyt<-function(objectx, objecty,x,y,t,status="joint")
 {
 	out<-NULL
 	#checks
-	if((class(objectx) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Objectx needs be lifetable or actuarialtable objects")
-	if((class(objecty) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Objectx needs be lifetable or actuarialtable objects")
+	if(!is(objectx, "lifetable")) stop("Error! Objectx needs be lifetable or actuarialtable objects")
+	if(!is(objecty, "lifetable")) stop("Error! Objectx needs be lifetable or actuarialtable objects")
 	if(missing(x)) stop("Missing x")
 	if(missing(y)) stop("Missing y")
 	maxTime=max(getOmega(objectx)-x, getOmega(objecty)-y)  #maximum number of years people can live togeter

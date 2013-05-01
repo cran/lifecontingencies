@@ -9,7 +9,7 @@ Annuity immediate and due function.
 	evaluated.	Moreover it can be used to simulate the stochastic distribution of the annuity value.
 }
 \usage{
-	axn(actuarialtable, x, n, i, m,  k = 1, type = "EV")
+	axn(actuarialtable, x, n, i, m,  k = 1, type = "EV",power=1)
 }
 	
 \arguments{
@@ -34,6 +34,10 @@ Annuity immediate and due function.
   \item{type}{
 	A string, eithed "EV" (default value) or "ST" (stochastic realization).
 }
+  \item{power}{
+The power of the APV. Default is 1 (mean)
+}
+
 }
 \details{
 	When "ST" has been selected a stochastic value representing a number drawn from the domain of \deqn{

@@ -9,7 +9,7 @@ This function evaluates the present values of a series of cash flows, given occu
 Probabilities of occurrence can also be taken into account.
 }
 \usage{
-presentValue(cashFlows, timeIds, interestRates, probabilities)
+presentValue(cashFlows, timeIds, interestRates, probabilities,power=1)
 }
 
 \arguments{
@@ -25,10 +25,14 @@ Vector of cashFlow, must be coherent with \code{timeIds}
   \item{probabilities}{
 	Optional vector of probabilities.
 }
+  \item{power}{
+	Power to square discount and cash flows. Default is set to 1
+}
 }
 \details{
 	\code{probabilities} is optional, a sequence of 1 length of timeIds is assumed.
-	Interest rate shall be a fixed number or a vector of the same size of \code{timeIds}.
+	Interest rate shall be a fixed number or a vector of the same size of \code{timeIds}. \code{power} parameters is generally useless 
+	beside life contingencies insurances evaluations.
 }
 \value{
 	A numeric value representing the present value of cashFlows vector, or the 

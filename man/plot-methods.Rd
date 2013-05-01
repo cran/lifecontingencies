@@ -11,11 +11,11 @@
 \describe{
 
 \item{\code{signature(x = "ANY")}}{
-This method shows the survival function implied in actuarialtable and lifetable objects.
+This method shows the survival function implied in \code{actuarialtable} and \code{lifetable} objects.
 }
 
 \item{\code{signature(x = "lifetable")}}{
-A lifetable (or actuarial table) object.
+A \code{lifetable} (or \code{actuarialtable}) object.
 }
 }}
 \keyword{methods}

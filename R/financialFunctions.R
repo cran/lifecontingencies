@@ -2,7 +2,7 @@
 #TO DO: add k to increasing and decreasing annuities function
 #function to evaluate the present value of a series of cash flows
 
-presentValue=function(cashFlows, timeIds,interestRates, probabilities)
+presentValue=function(cashFlows, timeIds,interestRates, probabilities, power=1)
 {
 	out=0
 	if(missing(timeIds)) #check coherence on time id vector
@@ -21,7 +21,7 @@ presentValue=function(cashFlows, timeIds,interestRates, probabilities)
 	
 	interestRates=rep(interestRates,length.out=length(timeIds))
 	v=(1+interestRates)^-timeIds
-	out=sum((cashFlows*v)*probabilities)
+	out=sum(((cashFlows^power)*(v^power))*probabilities) #power used for APV, usually=1
 	#out=.C("add3", x=as.double(cashFlows), y=as.double(v),z=as.double(probabilities),n=as.integer(length(probabilities)),out=numeric(1))$out
 	return(out)
 }
