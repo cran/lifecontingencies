@@ -1,10 +1,10 @@
 ### R code from vignette source 'an_introduction_to_lifecontingencies_package.Rnw'
-### Encoding: ISO8859-1
 
 ###################################################
 ### code chunk number 1: setup
 ###################################################
 	options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
+
 	set.seed(123)
 	numSim=200
 
@@ -544,13 +544,13 @@ APVAxn <- Axn(soa08Act,x=25,n=40,type="EV")
 APVAxn
 sampleAxn <- rLifeContingencies(n=numSim, lifecontingency="Axn",
 		object=soa08Act,x=25,t=40,parallel=TRUE)
-tt1<-t.test(x=sampleAxn,mu=APVAxn)$p.value
+tt1 <-t.test(x=sampleAxn,mu=APVAxn)$p.value
 
 APVIAxn <- IAxn(soa08Act,x=25,n=40,type="EV")
 APVIAxn
 sampleIAxn <- rLifeContingencies(n=numSim, lifecontingency="IAxn",
 		object=soa08Act,x=25,t=40,parallel=TRUE)
-tt2<-t.test(x=sampleIAxn,mu=APVIAxn)$p.value
+tt2 <-t.test(x=sampleIAxn,mu=APVIAxn)$p.value
 
 APVaxn <- axn(soa08Act,x=25,n=40,type="EV")
 APVaxn
@@ -562,7 +562,7 @@ APVAExn <- AExn(soa08Act,x=25,n=40,type="EV")
 APVAExn
 sampleAExn <- rLifeContingencies(n=numSim, lifecontingency="AExn",
 		object=soa08Act,x=25,t=40,parallel=TRUE)
-tt4<-t.test(x=sampleAExn,mu=APVAExn)$p.value
+tt4 <-t.test(x=sampleAExn,mu=APVAExn)$p.value
 c(tt1, tt2,tt3, tt4)
 
 
@@ -602,7 +602,7 @@ pct90Pr2
 ###################################################
 ### code chunk number 63: stochasticExampleFull1
 ###################################################
-nsim <- 100
+nsim <- 50
 employees <- 100
 salaryDistribution <- rlnorm(n=employees,m=10.77668944,s=0.086177696)
 ageDistribution <- round(runif(n=employees,min=25, max=65))

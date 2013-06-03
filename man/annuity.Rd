@@ -31,7 +31,8 @@ annuity(i, n,m=0, k=1,type = "immediate")
 }
 }
 \details{
-	This function calculates the present value of a stream of fixed payments separated by equal interval of time. Annuity immediate has the 
+	This function calculates the present value of a stream of fixed payments 
+	separated by equal interval of time. Annuity immediate has the 
 	fist payment at time t=0, while an annuity due has the first payment at time t=1.
 }
 \value{
@@ -57,7 +58,8 @@ annuity(i, n,m=0, k=1,type = "immediate")
 \code{\link{accumulatedValue}}
 }
 \examples{
-# The present value of 5 payments of 1000 at one year interval that begins now when the interest rate is 2.5% is
+# The present value of 5 payments of 1000 at one year interval that begins 
+# now when the interest rate is 2.5% is
 1000*annuity(i=0.05, n=5, type = "due")
 #A man borrows a loan of 20,000 to purchase a car at
 # a nominal annual rate of interest of 0.06. He will pay back the loan through monthly

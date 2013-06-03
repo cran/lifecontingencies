@@ -72,6 +72,7 @@ These functions are the more general version of \code{\link{axyn}} and \code{\li
 	listOfTables=list(soa08Act, soa08Act) 
 	#Check actuarial equality
 	axyzn(listOfTables,x=c(60,70),status="last")
-	axn(listOfTables[[1]],60)+axn(listOfTables[[2]],70)-axyzn(listOfTables,x=c(60,70),status="joint")	
+	axn(listOfTables[[1]],60)+axn(listOfTables[[2]],70)-
+	axyzn(listOfTables,x=c(60,70),status="joint")	
 }
 

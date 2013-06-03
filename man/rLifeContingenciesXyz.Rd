@@ -7,7 +7,8 @@ Function to return samples from lifecontingencies on multiple heads
 This function returns samples from multiple heads life contingent insurances.
 }
 \usage{
-rLifeContingenciesXyz(n, lifecontingency, tablesList, x, t, i, m = 0, k = 1, status = "joint", parallel = FALSE)
+rLifeContingenciesXyz(n, lifecontingency, tablesList, x, t, i, m = 0, 
+k = 1, status = "joint", parallel = FALSE)
 }
 \arguments{
   \item{n}{Sample size}
@@ -53,7 +54,8 @@ t=30
 k=1
 #
 APV=Axyzn(tablesList=tablesList,x=x,n=t,m=m,k=k,status=status,type="EV")
-samples<-rLifeContingenciesXyz(n=n,lifecontingency = lifecontingency,tablesList = tablesList,x=x,t=t,m=m,k=k,status=status, 
+samples<-rLifeContingenciesXyz(n=n,lifecontingency = lifecontingency,
+tablesList = tablesList,x=x,t=t,m=m,k=k,status=status, 
 		parallel=TRUE)
 APV
 mean(samples)

@@ -6,7 +6,9 @@
 	Both actuarial value and stochastic random sample can be returned.
 }
 \usage{
-	DAxn(actuarialtable, x, n, i=actuarialtable@interest,m = 0,k=1, type = "EV", power=1)
+	DAxn(actuarialtable, x, n, 
+	i=actuarialtable@interest,m = 0,k=1, 
+	type = "EV", power=1)
 }
 \arguments{
   \item{actuarialtable}{

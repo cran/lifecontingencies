@@ -1,4 +1,7 @@
 ChangeLog
+-Version 0.9.8.5
+	Fixed axn function.
+	Finalized main vignette.
 -Version 0.9.8
 	Improved documentation.
 	Add as.numeric method for lifetable and actuarialtable objects.

@@ -1,0 +1,40 @@
+\begin{thebibliography}{4}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem[{Charpentier(2012)}]{rmetrics1}
+Charpentier A (2012).
+\newblock \enquote{{Actuarial Science with R} 2: Life Insurance and Mortality
+  Tables.}
+\newblock
+  \url{http://freakonometrics.blog.free.fr/index.php?post/2012/04/04/Life-insurance,-with-R,-Meielisalp}.
+\newblock Accessed: 04/11/2012.
+
+\bibitem[{Charpentier and Dutang(2013)}]{charpentierDutang}
+Charpentier A, Dutang C (2013).
+\newblock \emph{Actuariat Avec \proglang{R}}.
+\newblock
+  \url{http://cran.r-project.org/doc/contrib/Charpentier_Dutang_actuariat_avec_R.pdf}.
+
+\bibitem[{Lee and Carter(1992)}]{Lee1992}
+Lee R, Carter L (1992).
+\newblock \enquote{Modeling and Forecasting U.S. Mortality.}
+\newblock \emph{Journal of the American Statistical Association},
+  \textbf{87}(419), 659--675.
+\newblock \doi{10.2307/2290201}.
+
+\bibitem[{Wright()}]{wrightContingencies}
+Wright D (????).
+\newblock \enquote{Expectation of life.}
+\newblock
+  \url{http://www.staff.city.ac.uk/b.d.rickayzen/wright%20contingencies%20notes.pdf}.
+\newblock Accessed: 27/01/2013.
+
+\end{thebibliography}

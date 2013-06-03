@@ -9,7 +9,8 @@ This function returns a n-size sample from the underlying present value of benef
 stochastic variable defined by a specific life contingencies insurance form.
 }
 \usage{
-rLifeContingencies(n, lifecontingency, object, x, t, i = object@interest, m=0, k = 1 , parallel=FALSE)
+rLifeContingencies(n, lifecontingency, object, x, t, 
+i = object@interest, m=0, k = 1 , parallel=FALSE)
 }
 
 \arguments{
@@ -26,7 +27,8 @@ An \code{actuarialtable} object.
 Policyholder's age at issue time.
 }
   \item{t}{
-The lenght of the insurance. Must be specified according to the present value of benefits definition.
+The lenght of the insurance. Must be specified according to the present 
+value of benefits definition.
 }
   \item{i}{
 The interest rate, whose default value is the \code{actuarialtable} interest rate slot value.

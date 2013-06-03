@@ -32,7 +32,7 @@ axn<-function(actuarialtable, x, n,i=actuarialtable@interest, m,k=1, type="EV",p
 		return(out)
 	}
 	if(missing(m)) m=0
-	if(missing(n)) n=getOmega(actuarialtable)-x-m #n=getOmega(actuarialtable)-x-m-1
+	if(missing(n)) n=getOmega(actuarialtable)+1-x-m #n=getOmega(actuarialtable)-x-m Patch by Reinhold
 	if(n==0) {
 		out=0
 		return(out)
@@ -114,7 +114,8 @@ axyzn<-function(tablesList, x, n,i, m,k=1, status="joint", type="EV",power=1)
 	if(missing(n)) {
 		n=0
 		for(j in 1:numTables) n=(max(n,(getOmega(tablesList[[j]]) - x[j])))
-		n=n-m-1
+		n=n-m
+		#n=n-m-1 patch by Reinhold
 	}
 	
 	if(!missing(i)) interest=i else {

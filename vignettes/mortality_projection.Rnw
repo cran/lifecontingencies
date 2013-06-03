@@ -1,38 +1,54 @@
 
-
-\documentclass[a4paper]{article}
-\usepackage{Sweave}
+\documentclass[nojss]{jss}
 \usepackage{lifecon}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{hyperref}
 
-%\usepackage{myVignette}
-%\VignetteIndexEntry{Mortality projection using lifecontingencies package}
-%\VignetteKeywords{vig2}
-%\VignettePackage{lifecontingencies}
+
+
+\author{Giorgio Alfredo Spedicato\\ Ph.D C.Stat ACAS}
+
+
+\title{Mortality projection with \pkg{demography} and \pkg{lifecontingencies}
+packages}
+
+\Plainauthor{Giorgio Alfredo Spedicato, Ph.D C.Stat ACAS}
+\Plaintitle{Mortality projection with demography and lifecontingencies packages}
+\Shorttitle{Mortality projection in \proglang{R}}
+\Keywords{mortality projection, lifecontingencies, \proglang{R}}
+\Plainkeywords{mortality projection, lifecontingencies, R}
 
 
 \begin{document}
-
-\title{Mortality projection with \textbf{demography} and
-\textbf{lifecontingencies} packages}
-
-\author{Giorgio Alfredo Spedicato, Ph.D}
-
 
 \begin{abstract}
 This paper applies mortality projection techniques
 (Lee Carter) to the evaluation of retirement costs. The main purpose of the
 paper is to show how R can be successfully used to perform life
 expectancy projections with practical actuarial applications for annuity
-insurances and social security issues. \textbf{demography} and
-\textbf{lifecontingencies} packages will be used. The analysis performed within
+insurances and social security issues. \pkg{demography} and
+\pkg{lifecontingencies} packages will be used. The analysis performed within
 this paper are mechanical and intended for didactic purposes.
 \end{abstract}
 
 
-\maketitle
+
+
+%%\usepackage{Sweave} %% already provided by jss.cls
+%%\VignetteIndexEntry{Mortality projection using lifecontingencies package}
+%%\VignetteDepends{lifecontingencies}
+%%\VignetteKeywords{mortality projection, lifecontingencies, R}
+%%\VignettePackage{lifecontingencies}
+
+
+
+\SweaveOpts{eps=FALSE, keep.source=TRUE}
+<<echo=FALSE,print=FALSE,results=hide>>=
+options(width=80, prompt='R> ')
+@
+
+
 
 
 \section{Introduction}
@@ -111,7 +127,7 @@ library(lifecontingencies)
 load(file="mortalityDatasets.RData")
 @
 
-Following code creates a \textbf{demogdata} object from HDM data structure.
+Following code creates a \code{demogdata} object from HDM data structure.
 
 <<createDemogData, keep.source=TRUE>>=
 italyDemo<-demogdata(data=italyMx$rate$total,
@@ -123,7 +139,7 @@ italyDemo<-demogdata(data=italyMx$rate$total,
 		label="Italy",lambda=1)
 @
 
-Plot method is available on \textbf{demogdata}.
+Plot method is available on \code{demogdata}.
 
 <<italyDemoFig,fig=TRUE>>=
 	plot(italyDemo)
@@ -144,7 +160,8 @@ italyLca<-lca(italyDemo)
 	plot(x=italyLca$year, y=italyLca$kt, main="kt")
 @
 
-We can therefore use \textbf{forecast} package to project the future $k_{t}$s (up to 110).
+We can therefore use \pkg{forecast} package to project the future $k_{t}$s (up
+to 110).
 
 <<ktProjections, keep.source=TRUE>>=
 ktSeries<-italyLca$kt
@@ -214,7 +231,6 @@ cohorts.
 	}
 @
 
-\bibliographystyle{apalike}
 \bibliography{lifecontingenciesBiblio}
 
 \end{document}

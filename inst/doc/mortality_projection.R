@@ -1,7 +1,13 @@
 ### R code from vignette source 'mortality_projection.Rnw'
 
 ###################################################
-### code chunk number 1: load
+### code chunk number 1: mortality_projection.Rnw:47-48
+###################################################
+options(width=80, prompt='R> ')
+
+
+###################################################
+### code chunk number 2: load
 ###################################################
 library(demography)
 library(forecast)
@@ -10,7 +16,7 @@ load(file="mortalityDatasets.RData")
 
 
 ###################################################
-### code chunk number 2: createDemogData
+### code chunk number 3: createDemogData
 ###################################################
 italyDemo<-demogdata(data=italyMx$rate$total,
 		pop=italyMx$pop$total, 
@@ -22,19 +28,19 @@ italyDemo<-demogdata(data=italyMx$rate$total,
 
 
 ###################################################
-### code chunk number 3: mortality_projection.Rnw:144-145
+### code chunk number 4: italyDemoFig
 ###################################################
 	plot(italyDemo)
 
 
 ###################################################
-### code chunk number 4: fitLeeCarter
+### code chunk number 5: fitLeeCarter
 ###################################################
 italyLca<-lca(italyDemo)
 
 
 ###################################################
-### code chunk number 5: leeCarterResults
+### code chunk number 6: leeCarterResultsFig
 ###################################################
 	par(mfrow=c(1,3))
 	plot(x=italyLca$age, y=italyLca$ax, main="ax")
@@ -43,7 +49,7 @@ italyLca<-lca(italyDemo)
 
 
 ###################################################
-### code chunk number 6: ktProjections
+### code chunk number 7: ktProjections
 ###################################################
 ktSeries<-italyLca$kt
 ktArima<-auto.arima(ktSeries,allowdrift=TRUE,max.order=20)
@@ -52,23 +58,23 @@ fullKt<-ts(c(ktArimaForecasts$fitted, ktArimaForecasts$mean),start=1872)
 
 
 ###################################################
-### code chunk number 7: ktProjectionPlot
+### code chunk number 8: ktProjectionFig
 ###################################################
 plot(fullKt)
 
 
 ###################################################
-### code chunk number 8: lifeTableProject
+### code chunk number 9: lifeTableProject
 ###################################################
 
 createActuarialTable<-function(yearOfBirth){
 	#get projected Px
 	ktSubset<-window(fullKt, start=yearOfBirth)
 	predictionTable<-data.frame(age=italyLca$age,ax=italyLca$ax,bx=italyLca$bx)
-	predictionTable$kt=ktSubset[1:nrow(predictionTable)]
-	predictionTable$mux=with(predictionTable,exp(ax+bx*kt))
-	predictionTable$px=with(predictionTable,exp(-mux))
-	fittedPx=predictionTable$px
+	predictionTable$kt=ktSubset[1:nrow(predictionTable)] 
+	predictionTable$mux=with(predictionTable,exp(ax+bx*kt)) #fit mux
+	predictionTable$px=with(predictionTable,exp(-mux)) #get px
+	fittedPx=predictionTable$px #add px to table
 	px4Completion=seq(from=predictionTable$px[length(fittedPx)], to=0, length=20)
 	totalPx=c(fittedPx,px4Completion[2:length(px4Completion)])
 	#create life table
@@ -83,7 +89,7 @@ createActuarialTable<-function(yearOfBirth){
 
 
 ###################################################
-### code chunk number 9: annuityAPV
+### code chunk number 10: annuityAPV
 ###################################################
 	getAnnuityAPV<-function(yearOfBirth) {
 		actuarialTable<-createActuarialTable(yearOfBirth)

@@ -1,15 +1,33 @@
-% 
-\documentclass[a4paper]{article}
-\usepackage{Sweave}
+
+
+\documentclass[nojss]{jss}
 \usepackage{lifecon}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
 
-%\usepackage{myVignette}
-%\VignetteIndexEntry{Lifecontingencies package numerical accuracy tests}
-%\VignetteKeywords{vig3}
-%\VignettePackage{lifecontingencies}
 
-\title{Lifecontingencies package numerical accuracy tests}
-\author{Giorgio Spedicato}
+
+
+%%\usepackage{Sweave} %% already provided by jss.cls
+%%\VignetteIndexEntry{Lifecontingencies package numerical accuracy tests}
+%%\VignetteDepends{lifecontingencies}
+%%\VignetteKeywords{numerical checks}
+%%\VignettePackage{lifecontingencies}
+
+\Plainauthor{Giorgio Alfredo Spedicato, Ph.D C.Stat ACAS}
+\Plaintitle{\pkg{lifecontingencies} package numerical accuracy tests}
+\Shorttitle{lifecontingencies package numerical accuracy tests}
+\Keywords{lifecontingencies, \proglang{R}}
+\Plainkeywords{lifecontingencies, R}
+
+
+\SweaveOpts{eps=FALSE, keep.source=TRUE}
+<<echo=FALSE,print=FALSE,results=hide>>=
+options(width=80, prompt='R> ')
+@
+
+
 
 \begin{document}
 \maketitle
@@ -61,7 +79,6 @@ Axn(soa08Act, x=30, n=10, i=0.04,power=2)-Axn(soa08Act, x=30, n=10, i=0.04,power
 Axn(soa08Act, 50,20)/axn(soa08Act, 50,20)
 @
 
-\bibliographystyle{plain} 
 \bibliography{lifecontingenciesBiblio}
 
 
