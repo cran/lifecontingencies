@@ -15,18 +15,18 @@ Exn<-function(actuarialtable, x, n, i=actuarialtable@interest,type="EV",power=1)
 	#defines the outputs
 	if(type=="EV") out=presentValue(cashFlows=1, timeIds=n, 
 				interestRates=interest, probabilities=prob,power=power) else if(type=="ST") out=rLifeContingencies(n=1,lifecontingency="Exn", 
-				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=1,k=1)
+				object=actuarialtable, x=x,t=n,i=interest, m=1,k=1)
 	#out=discount^2*prob*(1-prob)
 	return(out)
 }
 #function to obtain the annuity
-axn<-function(actuarialtable, x, n,i=actuarialtable@interest, m,k=1, type="EV",power=1)
+axn<-function(actuarialtable, x, n,i=actuarialtable@interest, m,k=1, type="EV",power=1,payment="advance")
 {
 	interest<-i
 	out<-numeric(1)
 	if(missing(actuarialtable)) stop("Error! Need an actuarial actuarialtable")
 	if(missing(x)) stop("Error! Need age!")
-	
+
 	if(x>getOmega(actuarialtable)) {
 		out=0
 		return(out)
@@ -37,22 +37,22 @@ axn<-function(actuarialtable, x, n,i=actuarialtable@interest, m,k=1, type="EV",p
 		out=0
 		return(out)
 	}
-	if(!missing(i)) interest=i else interest=actuarialtable@interest #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
 	if(any(x<0,m<0,n<0)) stop("Error! Negative parameters")
 	#computation of quantities, assuming fractional payments
 		payments=rep(1/k,n*k)
 		probs=numeric(n*k)		
 		times=m+seq(from=0, to=(n-1/k),by=1/k)
-		
+	if (payment=="arrears") times = times + 1/k
+
 		for(i in 1:length(times)) probs[i]=pxt(actuarialtable, x,times[i])
-		discounts=(1+actuarialtable@interest)^-times #prima era asteriskato
+		discounts=(1+interest)^-times #prima era asteriskato
 		#out<-sum(payments*discounts*probs)
 	if(type=="EV") {
 		out<-presentValue(cashFlows=payments, timeIds=times, interestRates=interest, probabilities=probs,power=power)
 		#out=.C("add3", x=as.double(payments), y=as.double(discounts),z=as.double(probs),n=as.integer(length(probs)),out=numeric(1))$out
 	} else if(type=="ST"){
 		out=rLifeContingencies(n=1,lifecontingency="axn", 
-				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=k)
+				object=actuarialtable, x=x,t=n,i=interest, m=m,k=k, payment=payment)
 	}
 	return(out)
 }
@@ -62,7 +62,7 @@ axn<-function(actuarialtable, x, n,i=actuarialtable@interest, m,k=1, type="EV",p
 
 
 #shall write the Rd file
-axyn<-function(tablex, tabley, x,y, n,i, m,k=1, status="joint", type="EV")
+axyn<-function(tablex, tabley, x,y, n,i, m,k=1, status="joint", type="EV", payment="advance")
 {
 	out<-numeric(1)
 	if(missing(tablex)) stop("Error! Need table for X life")
@@ -80,10 +80,11 @@ axyn<-function(tablex, tabley, x,y, n,i, m,k=1, status="joint", type="EV")
 		payments=rep(1/k,n*k)
 		probs=numeric(n*k)		
 		times=m+seq(from=0, to=(n-1/k),by=1/k)
-		
+    if (payment=="arrears") times = times + 1/k
+
 		xVec=c(x,y)
 		tablesList=list(tablex, tabley)
-		
+
 		for(i in 1:length(times)) probs[i]=pxyzt(tablesList=tablesList,x=xVec,
 					t=times[i],status=status)
 		#discounts=(1+actuarialtable@interest)^-times
@@ -98,7 +99,7 @@ axyn<-function(tablex, tabley, x,y, n,i, m,k=1, status="joint", type="EV")
 }
 
 
-axyzn<-function(tablesList, x, n,i, m,k=1, status="joint", type="EV",power=1)
+axyzn<-function(tablesList, x, n,i, m,k=1, status="joint", type="EV",power=1, payment="advance")
 {
 	out<-numeric(1)	
 	#initial checkings
@@ -110,25 +111,26 @@ axyzn<-function(tablesList, x, n,i, m,k=1, status="joint", type="EV",power=1)
 
 	if(k<1) stop("Error! Periods in a year shall be no less than 1")
 	if(missing(m)) m=0
-	
+
 	if(missing(n)) {
 		n=0
 		for(j in 1:numTables) n=(max(n,(getOmega(tablesList[[j]]) - x[j])))
 		n=n-m
 		#n=n-m-1 patch by Reinhold
 	}
-	
+
 	if(!missing(i)) interest=i else {
 		temp=0
 		for(j in 1:numTables) temp=temp+tablesList[[j]]@interest
 		interest=temp/numTables
 	}
-	
+
 	if(any(x<0,m<0,n<0)) stop("Error! Negative parameters")
 	#computation of quantities, assuming fractional payments
 	payments=rep(1/k,n*k)
 	probs=numeric(n*k)		
 	times=m+seq(from=0, to=(n-1/k),by=1/k)
+  if (payment=="arrears") times = times + 1/k
 	for(j in 1:length(times)) probs[j]=pxyzt(tablesList=tablesList,x=x,
 				t=times[j],status=status)
 	discounts=(1+interest)^-times #prima asteriskato
@@ -137,7 +139,7 @@ axyzn<-function(tablesList, x, n,i, m,k=1, status="joint", type="EV",power=1)
 		out<-presentValue(cashFlows=payments, timeIds=times, interestRates=interest, probabilities=probs,power=power)
 		#out=.C("add3", x=as.double(payments), y=as.double(discounts),z=as.double(probs),n=as.integer(length(probs)),out=numeric(1))$out
 	} else	if(type=="ST"){
-		out=rLifeContingenciesXyz(n=1,lifecontingency="axyz", tablesList=tablesList, x=x,t=n,i=i, m=m,k=k,status=status)
+		out=rLifeContingenciesXyz(n=1,lifecontingency="axyz", tablesList=tablesList, x=x,t=n,i=i, m=m,k=k,status=status, payment=payment)
 	}
 	return(out)
 }
@@ -181,15 +183,15 @@ Axn<-function(actuarialtable, x, n,i=actuarialtable@interest, m, k=1, type="EV",
 
 		#for(i in 1:length(times)) probs[i]=(pxt(object=actuarialtable, x=startAge,t=times[i])*qxt(object=actuarialtable, x=startAge+times[i],t=1/k))
 		for(i in 1:length(times)) probs[i]=.qxnt(object=actuarialtable, x=startAge,n=times[i],t=1/k)
-	
+
 	discounts=(1+interest)^-(times+1/k) #prima asteriskato
-	
+
 	if(type=="EV") {
 		#out<-sum(payments*discounts*probs)
 		out<-presentValue(cashFlows=payments, timeIds=(times+1/k), interestRates=interest, probabilities=probs,power=power)
 		#out=.C("add3", x=as.double(payments), y=as.double(discounts),z=as.double(probs),n=as.integer(length(payments)),out=numeric(1))$out
 	} else if(type=="ST"){
-		out=rLifeContingencies(n=1,lifecontingency="Axn", object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=k)
+		out=rLifeContingencies(n=1,lifecontingency="Axn", object=actuarialtable, x=x,t=n,i=interest, m=m,k=k)
 	}
 	return(out)
 }
@@ -209,12 +211,12 @@ Axyn<-function(tablex, x,tabley, y, n,i, m, k=1, status="joint", type="EV")
 		warning("Warning! Intesters differ between tablex and tabley. The average will be used")
 		}
 	if(!missing(i)) interest=i else interest=0.5*(tablex@interest+tabley@interest) #i an interest rate is provided the provided interest rate overrides the actuarialtable interest rate
-	
+
 	if(n==0) return(0)
 	if(any(x<0,y<0,m<0,n<0)) stop("Error! Negative parameters")
-	
+
 	#perform calculations
-		
+
 		payments=rep(1,n*k)
 		probs=numeric(n*k)		
 		times=m+seq(from=0, to=(n-1/k),by=1/k)
@@ -249,16 +251,16 @@ Axyzn<-function(tablesList, x, n,i, m, k=1, status="joint", type="EV",power=1)
 	for(j in 1:numTables) {
 		if(!(class(tablesList[[j]]) %in% c("lifetable", "actuarialtable"))) stop("Error! A list of lifetable objects is required")
 	}
-	
+
 	if(k<1) stop("Error! Periods in a year shall be no less than 1")
 	if(missing(m)) m=0
-	
+
 	if(missing(n)) {
 		n=0
 		for(j in 1:numTables) n=(max(n,(getOmega(tablesList[[j]]) - x[j])))
 		n=n-m-1
 	}
-	
+
 	if(!missing(i)) interest=i else {
 			temp=0
 			for(j in 1:numTables) temp=temp+tablesList[[j]]@interest
@@ -267,17 +269,17 @@ Axyzn<-function(tablesList, x, n,i, m, k=1, status="joint", type="EV",power=1)
 
 	if(n==0) return(0)
 	if(any(x<0,m<0,n<0)) stop("Error! Negative parameters")
-	
+
 	#perform calculations
-	
+
 	payments=rep(1,n*k)
 	probs=numeric(n*k)		
 	times=m+seq(from=0, to=(n-1/k),by=1/k)
-	
+
 
 	for(j in 1:length(times)) probs[j]=.qxyznt(tablesList=tablesList,x=x,n=times[j],t=1/k, status=status)
 	discounts=(1+interest)^-(times+1/k)
-	
+
 	if(type=="EV") {
 		out<-sum(((payments*discounts)^power)*probs)
 		#out=.C("add3", x=as.double(payments), y=as.double(discounts),z=as.double(probs),n=as.integer(length(payments)),out=numeric(1))$out
@@ -336,7 +338,7 @@ IAxn<-function(actuarialtable, x, n,i=actuarialtable@interest, m=0, k=1, type="E
 	startAge=x #we start from x
 	for(i in 1:length(times)) probs[i]=(pxt(object=actuarialtable, x=startAge,t=times[i])*qxt(object=actuarialtable, x=startAge+times[i],t=1/k))
 	discounts=(1+interest)^-(times+1/k)
-	
+
 	if(type=="EV") {
 #		payments=seq(from=1, to=n, by=1)
 #		probs=numeric(n)
@@ -346,7 +348,7 @@ IAxn<-function(actuarialtable, x, n,i=actuarialtable@interest, m=0, k=1, type="E
 #		discounts=(1+interest)^-(times+1)
 		out<-sum(((payments*discounts)^power)*probs)
 	} else if(type=="ST") {
-		out=rLifeContingencies(n=1,lifecontingency="IAxn", object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=k) #!fix: prima = 1
+		out=rLifeContingencies(n=1,lifecontingency="IAxn", object=actuarialtable, x=x,t=n,i=interest, m=m,k=k) #!fix: prima = 1
 	}
 	return(out)
 }
@@ -394,7 +396,7 @@ DAxn<-function(actuarialtable, x, n,i=actuarialtable@interest, m=0, k=1, type="E
 	} else if(type=="ST")
 	{
 		out=rLifeContingencies(n=1,lifecontingency="DAxn", 
-				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, m=m,k=k)
+				object=actuarialtable, x=x,t=n,i=interest, m=m,k=k)
 	}
 	return(out)
 }
@@ -436,7 +438,7 @@ Iaxn<-function(actuarialtable, x, n,i=actuarialtable@interest, m=0, type="EV",po
 		probs=numeric(n)
 		times=numeric(n)
 		discounts=numeric(n)
-		
+
 		payments=seq(from=1, to=n, by=1)
 		times=m+seq(from=0, to=(n-1),by=1) 
 		for(i in 1:length(times)) probs[i]=pxt(actuarialtable, x,times[i])
@@ -456,16 +458,16 @@ AExn<-function(actuarialtable, x, n,i=actuarialtable@interest, k=1, type="EV",po
 	if(missing(x)) stop("Error! Need age!")
 	if(k<1) stop("Error! Periods in a year shall be no less than 1")
 	if(missing(n)) n=getOmega(actuarialtable)-x-1
-	
+
 	if(n==0) return(0)
 	if(any(x<0,n<0)) stop("Error! Negative parameters")
-	
+
 	if(type=="EV") {
 		out<-Axn(actuarialtable=actuarialtable, x=x, n=n, i=i,m=0, k=k,type="EV",power=power)+Exn(actuarialtable=actuarialtable, x=x, n=n, i=i,
 				type="EV",power=power)
 	} else if(type=="ST"){
 		out=rLifeContingencies(n=1,lifecontingency="AExn", 
-				object=actuarialtable, x=x,t=n,i=actuarialtable@interest, k=k)
+				object=actuarialtable, x=x,t=n,i=interest, k=k)
 	}
 	return(out)
 }
@@ -479,5 +481,4 @@ AExn<-function(actuarialtable, x, n,i=actuarialtable@interest, k=1, type="EV",po
 #i=0.06
 #out<-rLifeContingencies(n=20000,lifecontingency="Axn", object=soa08Act, x=35,
 #		t=30,i=0.06,k=1, parallel=TRUE)
-
 

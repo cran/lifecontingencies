@@ -8,12 +8,13 @@ Multiple lifes insurances and annuities
 Function to evalate the multiple lives insurances and annuities
 }
 \usage{
-Axyzn(tablesList, x, n, i, m, k = 1, status = "joint", type = "EV", power=1)
-axyzn(tablesList, x, n, i, m, k = 1, status = "joint", type = "EV", power=1)
+Axyzn(tablesList, x, n, i, m, k = 1, status = "joint", type = "EV", 
+power=1)
+axyzn(tablesList, x, n, i, m, k = 1, status = "joint", type = "EV", 
+power=1, payment="advance")
 }
 
 \arguments{
-
   \item{tablesList}{
 A list whose elements are either lifetable or actuarialtable class objects.
 }
@@ -41,7 +42,9 @@ Either "joint" (for the joint-life status model) or "last".
   \item{power}{
 The power of the APV. Default is 1 (mean).
 }
-
+  \item{payment}{
+Payment type: "advance" default is the annuity due, otherwise annuity due.
+}
 }
 \details{
 In theory, these functions apply the sames concept of life insurances 
@@ -58,7 +61,8 @@ Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition),
 Giorgio Alfredo Spedicato
 }
 \note{
-These functions are the more general version of \code{\link{axyn}} and \code{\link{Axyn}}.
+These functions are the more general version of \code{\link{axyn}} and 
+\code{\link{Axyn}}.
 }
 
 \seealso{

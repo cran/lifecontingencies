@@ -8,7 +8,7 @@ This function returns samples from multiple heads life contingent insurances.
 }
 \usage{
 rLifeContingenciesXyz(n, lifecontingency, tablesList, x, t, i, m = 0, 
-k = 1, status = "joint", parallel = FALSE)
+k = 1, status = "joint", parallel = FALSE,payment = "advance")
 }
 \arguments{
   \item{n}{Sample size}
@@ -21,6 +21,7 @@ k = 1, status = "joint", parallel = FALSE)
   \item{k}{Frequency of payments}
   \item{status}{Either "joint" (default) or "last"}
   \item{parallel}{Use parallel computation}
+  \item{payment}{Payment type: "advance" default is the annuity due, otherwise annuity immediate.}
 }
 \details{This function should return samples from multiple life contingent insurances.}
 \value{A matrix of variates
@@ -41,7 +42,6 @@ A matrix is returned.
 \code{\link{rLifeContingencies}},\code{\link{Axyzn}},\code{\link{axyzn}} 
 }
 \examples{
-
 data(soa08Act)
 n=10000
 lifecontingency="Axyz"
@@ -59,6 +59,4 @@ tablesList = tablesList,x=x,t=t,m=m,k=k,status=status,
 		parallel=TRUE)
 APV
 mean(samples)
-
-
 }

@@ -10,38 +10,21 @@ stochastic variable defined by a specific life contingencies insurance form.
 }
 \usage{
 rLifeContingencies(n, lifecontingency, object, x, t, 
-i = object@interest, m=0, k = 1 , parallel=FALSE)
+i = object@interest, m=0, k = 1 , parallel=FALSE, payment="advance")
 }
 
 \arguments{
-  \item{n}{
-Size of sample
-}
-  \item{lifecontingency}{
-A character string, either "Exn" or "Axn" or "axn" or "IAxn" or "DAxn".
-}
-  \item{object}{
-An \code{actuarialtable} object.
-}
-  \item{x}{
-Policyholder's age at issue time.
-}
-  \item{t}{
-The lenght of the insurance. Must be specified according to the present 
-value of benefits definition.
-}
-  \item{i}{
-The interest rate, whose default value is the \code{actuarialtable} interest rate slot value.
-}
-  \item{m}{
-Deferring period, default value is zero.
-}
-  \item{k}{
-Fractional payment, default value is 1.
-}
-  \item{parallel}{
-Uses the parallel computation facility.
-}
+\item{n}{Size of sample}
+\item{lifecontingency}{A character string, either "Exn" or "Axn" or "axn" or "IAxn" or "DAxn".}
+\item{object}{An \code{actuarialtable} object.}
+\item{x}{Policyholder's age at issue time.}
+\item{t}{The lenght of the insurance. Must be specified according to the present 
+value of benefits definition.}
+\item{i}{The interest rate, whose default value is the \code{actuarialtable} interest rate slot value.}
+\item{m}{Deferring period, default value is zero.}
+\item{k}{Fractional payment, default value is 1.}
+\item{parallel}{Uses the parallel computation facility.}
+\item{payment}{Payment type: "advance" default is the annuity due, otherwise annuity due.}
 }
 \details{
 This function is a wrapper for internal function that returns the present value of insured 

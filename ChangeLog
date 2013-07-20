@@ -1,4 +1,7 @@
 ChangeLog
+-Version 0.9.8.6
+	Add annuities paid in advance / deferred option
+	Add functions getLifecontingencyPV and getLifecontingencyXyzPV to obtain Present Value given the age of death.
 -Version 0.9.8.5
 	Fixed axn function.
 	Finalized main vignette.

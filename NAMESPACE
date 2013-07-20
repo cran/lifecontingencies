@@ -9,6 +9,7 @@ exportPattern("^[[:alpha:]]+")
 exportMethods(
     "coerce",
     "plot",
+    "print",
     "show",
     "summary",
     "getOmega"

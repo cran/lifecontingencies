@@ -61,6 +61,18 @@ setMethod("show","lifetable", #metodo show
 		}
 		)
 
+#show method 4 lifetable: prints x, lx, px, ex
+setMethod("print","lifetable", #metodo show
+          function(x){
+            cat(paste("Life table",x@name),"\n")
+            cat("\n")
+            
+            out<-.createLifeTableCols(x)
+            print(out)
+            cat("\n")
+          }
+)
+
 #head and tail methods
 setMethod("head",
 		signature(x = "lifetable"),

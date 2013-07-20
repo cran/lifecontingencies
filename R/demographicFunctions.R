@@ -1,4 +1,3 @@
-
 #number of deaths between age x and x+t
 dxt<-function(object, x, t) {
 	#checks
@@ -108,7 +107,7 @@ mxt<-function(object,x,t)
 	if(!is(object, "lifetable")) stop("Error! Need lifetable or actuarialtable objects")
 	if(missing(x)) stop("Missing x")
 	if(any(x<0,t<0)) stop("Check x or t domain")
-	
+
 	deaths=dxt(object,x,t)
 	lived=Lxt(object,x,t)
 	out=deaths/lived
@@ -162,7 +161,7 @@ pxyt<-function(objectx, objecty,x,y,t, status="joint")
 	if(missing(t)) t=1 #default 1
 	if(any(x<0,y<0,t<0)) stop("Check x, y and t domain")
 	#joint survival status
-	
+
 	pxy=pxt(objectx, x,t)*pxt(objecty,y,t)
 	if(status=="joint") out=pxy else out=pxt(objectx, x,t)+pxt(objecty,y,t)-pxy 
 	return(out)
@@ -208,9 +207,9 @@ probs2lifetable<-function(probs, radix=10000, type="px", name="ungiven")
 {
 	if(any(probs>1) | any(probs<0)) stop("Error: probabilities must lie between 0 an 1")
 	if(!(type %in% c("px","qx"))) stop("Error: type must be either px or qx")
-	if(type=="px" & probs[length(probs)]!=0) stop("Error: last survival probability must be 0")
-	if(type=="qx" & probs[length(probs)]!=1) stop("Error: last death probability must be 1")
-	lx=numeric(length(probs))
+	if(type=="px" & probs[length(probs)]!=0) probs[length(probs)+1]=0;
+	if(type=="qx" & probs[length(probs)]!=1) probs[length(probs)+1]=1;
+  lx=numeric(length(probs))
 	lx[1]=radix
 	for(i in 2:length(probs))
 	{

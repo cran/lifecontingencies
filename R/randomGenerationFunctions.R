@@ -58,7 +58,7 @@ rLife=function(n,object, x=0,k=1, type="Tx")
 
 rLifexyz=function(n,tablesList,x,k=1, type="Tx")
 {
-	
+
 	#initial checkings
 	numTables=length(tablesList)
 	if(length(x)!=numTables) stop("Error! Initial ages vector length does not match with number of lives")
@@ -203,7 +203,7 @@ rLifexyz=function(n,tablesList,x,k=1, type="Tx")
 #APV
 #
 
-.faxn<-function(T,y,n, i, m, k=1)
+.faxn<-function(T,y,n, i, m, k=1, payment="advance")
 {
 	out=numeric(1)
 	K=T-y #number of years to live
@@ -211,6 +211,7 @@ rLifexyz=function(n,tablesList,x,k=1, type="Tx")
 			out=0 #no payment is due
 		} else {
 		  times=seq(from=m, to=min(m+n-1/k,K),by=1/k) #else it pays from m to the min of m + n - 1/k
+      if (payment=="arrears") times = times + 1/k;
  		  out=presentValue(cashFlows=rep(1/k, length(times)), timeIds=times, interestRates=i)
 		}
 	return(out)
@@ -235,7 +236,7 @@ rLifexyz=function(n,tablesList,x,k=1, type="Tx")
 #it does not work
 
 
-.faxyzn<-function(T,y,n, i, m, k=1,status)
+.faxyzn<-function(T,y,n, i, m, k=1,status, payment="advance")
 {
 	out=numeric(1)
 	temp=T-y
@@ -244,6 +245,7 @@ rLifexyz=function(n,tablesList,x,k=1, type="Tx")
 				out=0 #no payment is due
 			} else {
 				times=seq(from=m, to=min(m+n-1/k,K),by=1/k) #else it pays from m to the min of m + n - 1/k
+				if (payment=="arrears") times = times + 1/k #copy from univariate
 				out=presentValue(cashFlows=rep(1/k, length(times)), timeIds=times, interestRates=i)
 			}	
 	return(out)
@@ -281,7 +283,7 @@ rLifexyz=function(n,tablesList,x,k=1, type="Tx")
 
 
 rLifeContingencies<-function (n, lifecontingency, object, x, t, i = object@interest, 
-		m = 0, k = 1, parallel = FALSE) 
+		m = 0, k = 1, parallel = FALSE, payment="advance") 
 {
 	deathsTimeX = numeric(n)
 	outs = numeric(n)
@@ -317,7 +319,7 @@ rLifeContingencies<-function (n, lifecontingency, object, x, t, i = object@inter
 			if (missing(t)) 
 				t = getOmega(object) - x - m
 			outs = parSapply(cl = cl, deathsTimeX, .faxn, y = x, 
-					n = t, i = i, m = m, k = k)
+					n = t, i = i, m = m, k = k, payment=payment)
 		}
 		stopCluster(cl)
 	}
@@ -340,11 +342,14 @@ rLifeContingencies<-function (n, lifecontingency, object, x, t, i = object@inter
 			if (missing(t)) 
 				t = getOmega(object) - x - m
 			outs = sapply(deathsTimeX, .faxn, y = x, n = t, i = i, 
-					m = m, k = k)
+					m = m, k = k, payment=payment)
 		}
 	}
 	return(outs)
 }
+
+
+
 
 
 
@@ -385,7 +390,7 @@ rLifeContingencies<-function (n, lifecontingency, object, x, t, i = object@inter
 #mean(ciao)
 
 rLifeContingenciesXyz<-function(n,lifecontingency, tablesList, x,t,i, 
-		m=0,k=1, status="joint", parallel=FALSE)
+		m=0,k=1, status="joint", parallel=FALSE, payment="advance")
 {
 	numTables=length(tablesList)
 	#gets the missing i
@@ -393,7 +398,7 @@ rLifeContingenciesXyz<-function(n,lifecontingency, tablesList, x,t,i,
 		temp=0
 		for(j in 1:numTables) temp=temp+tablesList[[j]]@interest
 		interest=temp/numTables
-	}
+	} else interest=i #fix giorgio 14-07-2013
 	#gets the missing t
 	if(missing(t)) {
 		t=0
@@ -402,7 +407,7 @@ rLifeContingenciesXyz<-function(n,lifecontingency, tablesList, x,t,i,
 		temp=omega-x-m
 		t=min(temp)
 	} 	
-	
+
 	temp=matrix(nrow=n, ncol=numTables)
 	outs=numeric(n)
 	#fractional payment are handled using countinuous lifetime simulation
@@ -420,10 +425,10 @@ rLifeContingenciesXyz<-function(n,lifecontingency, tablesList, x,t,i,
 			outs=parSapply(cl=cl, deathsTimeX,.fAxyzn,y=x,n=t, i=interest,m=m,k=k,status=status)
 		else if(lifecontingency=="axyz") 
 		{			
-			outs=parSapply(cl=cl,deathsTimeX,.faxyzn,y=x,n=t,i=interest,m=m,k=k,status=status)
+			outs=parSapply(cl=cl,deathsTimeX,.faxyzn,y=x,n=t,i=interest,m=m,k=k,status=status,payment=payment)
 		}
 		#stops the cluster
-		
+
 		stopCluster(cl)
 	} else {
 		#serial version
@@ -431,7 +436,7 @@ rLifeContingenciesXyz<-function(n,lifecontingency, tablesList, x,t,i,
 			outs=sapply( deathsTimeX, .fAxyzn,y=x,n=t, i=interest,m=m,k=k,status=status)
 		else if(lifecontingency=="axyz") 
 		{
-			outs=sapply(deathsTimeX, .faxyzn,y=x,n=t, i=interest,m=m,k=k,status=status)
+			outs=sapply(deathsTimeX, .faxyzn,y=x,n=t, i=interest,m=m,k=k,status=status,payment=payment)
 		}
 	}
 	return(outs)
@@ -439,3 +444,79 @@ rLifeContingenciesXyz<-function(n,lifecontingency, tablesList, x,t,i,
 
 
 
+
+#functio to obtain the present value of a life contingency function given that the death time of the 
+#subject is deathsTimeX (measured from the birth).
+
+getLifecontingencyPv<-function (deathsTimeX, lifecontingency, object, x, t, i = object@interest, 
+		m = 0, k = 1,  payment="advance") 
+{
+	outs = numeric(length(deathsTimeX))
+	if (lifecontingency == "Axn") 
+		outs = sapply(deathsTimeX, .fAxn, y = x, n = t, i = i, 
+				m = m, k = k)
+	else if (lifecontingency == "Exn") 
+		outs = sapply(deathsTimeX, .fExn, y = x, n = t, i = i)
+	else if (lifecontingency == "IAxn") 
+		outs = sapply(deathsTimeX, .fIAxn, y = x, n = t, 
+				i = i, m = m, k = k)
+	else if (lifecontingency == "DAxn") 
+		outs = sapply(deathsTimeX, .fDAxn, y = x, n = t, 
+				i = i, m = m, k = k)
+	else if (lifecontingency == "AExn") 
+		outs = sapply(deathsTimeX, .fAExn, y = x, n = t, 
+				i = i, k = k)
+	else if (lifecontingency == "axn") {
+		if (missing(t)) 
+			t = getOmega(object) - x - m
+		outs = sapply(deathsTimeX, .faxn, y = x, n = t, i = i, 
+				m = m, k = k, payment=payment)
+		
+	}
+	return(outs)
+}
+
+
+
+getLifecontingencyPvXyz<-function(deathsTimeXyz,lifecontingency, tablesList, x,t,i, 
+		m=0,k=1, status="joint",  payment="advance")
+{
+	numTables=length(tablesList)
+	if(ncol(deathsTimeXyz)!=numTables) stop("Error! deathTimeXyz columns should match the number of life tables!")
+	#gets the missing i
+	if(missing(i)) {
+		temp=0
+		for(j in 1:numTables) temp=temp+tablesList[[j]]@interest
+		interest=temp/numTables
+	} else interest=i
+	#gets the missing t
+	if(missing(t)) {
+		t=0
+		omega=numeric(numTables)
+		for(j in 1:numTables) omega[j]=getOmega(tablesList[[j]])
+		temp=omega-x-m
+		t=min(temp)
+	} 	
+	
+#	temp=matrix(nrow=n, ncol=numTables)
+	outs=numeric(nrow(deathsTimeXyz))
+		#serial version
+		if(lifecontingency=="Axyz") 
+			outs=sapply( deathsTimeXyz, .fAxyzn,y=x,n=t, i=interest,m=m,k=k,status=status)
+		else if(lifecontingency=="axyz") 
+		{
+			outs=sapply(deathsTimeXyz, .faxyzn,y=x,n=t, i=interest,m=m,k=k,status=status,payment=payment)
+		}
+	return(outs)
+}
+
+
+#testgetLifecontingencyPvXyzAxyz<-getLifecontingencyPvXyz(deathsTimeXyz=matrix(c(50,50,51,43,44,22,12,56,20,24,53,12), ncol=2),
+#		lifecontingency = "Axyz",tablesList = list(soa08Act, soa08Act), i = 0.03, t=30,x=c(40,50),m=0, k=1,status="last")
+#
+
+#testgetLifecontingencyPvAxn<-getLifecontingencyPV(deathsTimeX = seq(0, 110, by=1), lifecontingency = "Axn", object=soa08Act, 
+#		x=40,t=20, m=0, k=1)
+#
+#testgetLifecontingencyPvaxn<-getLifecontingencyPV(deathsTimeX = seq(0, 110, by=1), lifecontingency = "axn", object=soa08Act, 
+#		x=40,t=20, m=0, k=1)
