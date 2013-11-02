@@ -1,53 +1,47 @@
 %\documentclass{jss}
 \documentclass[nojss]{jss}
 \usepackage[OT1]{fontenc}
-%\usepackage[latin1]{inputenc}
-\usepackage{graphicx}
-\usepackage{amsmath}
-\usepackage{lifecon}
-%\usepackage{cite}
-%\usepackage{draftwatermark}
-%\SetWatermarkText{Draft}
-%\SetWatermarkScale{1.5}
-
+\usepackage{amsmath,lifecon,thumbpdf}
 %\usepackage{myVignette}
-
 %\VignetteIndexEntry{An introduction to lifecontingencies package}
 %\VignetteKeywords{vig1}
 %\VignettePackage{lifecontingencies}
 % need no \usepackage{Sweave.sty}
-
 %\SweaveOpts{prefix.string=Figures/fig}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% declarations for jss.cls %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\author{Giorgio Alfredo Spedicato\\StatisticalAdvisor}
+\Plainauthor{Giorgio Alfredo Spedicato}
 
-%% almost as usual
-\author{Giorgio Alfredo Spedicato, Ph.D C.Stat ACAS}
-\title{The \pkg{lifecontingencies} Package: A Package for Performing Financial 
-and Actuarial Mathematics Calculations in \proglang{R}}
+\title{The \pkg{lifecontingencies} Package: Performing Financial and Actuarial Mathematics Calculations in \proglang{R}}
+\Plaintitle{The lifecontingencies Package: Performing Financial and Actuarial Mathematics Calculations in R}
+\Shorttitle{\pkg{lifecontingencies}: Financial and Actuarial Mathematics Calculations in \proglang{R}}
 
-%% for pretty printing and a nice hypersummary also set:
-\Plainauthor{Giorgio Alfredo Spedicato, Ph.D C.Stat ACAS} %% comma-separated
-\Plaintitle{The lifecontingencies Package: A Package for Performing Financial 
-and Actuarial Mathematics Calculations in R} %% without formatting
-\Shorttitle{The lifecontingencies package} %% a short title (if necessary)
-%% an abstract and keywords
-\Abstract{It is possible to model life contingency insurances with the \pkg{lifecontingencies} \proglang{R} package, which is capable of performing financial and actuarial mathematics calculations. 
-Its functions permit one to determine both the expected value and the stochastic distribution of insured benefits. Therefore, life insurance coverage can be priced and portfolios risk-based capital requirements can be assessed. This paper briefly summarizes the theory regarding life contingencies that is based on financial mathematics and demographic concepts. Then, with the aid of applied examples, it shows how the \pkg{lifecontingencies} package can be a useful tool for executing routine, deterministic, or stochastic calculations for life-contingencies actuarial mathematics.
+
+\Abstract{
+  It is possible to model life contingency insurances with the
+  \pkg{lifecontingencies} \proglang{R} package, which is capable of
+  performing financial and actuarial mathematics calculations.  Its
+  functions permit one to determine both the expected value and the
+  stochastic distribution of insured benefits. Therefore, life
+  insurance coverage can be priced and portfolios risk-based capital
+  requirements can be assessed. This paper briefly summarizes the
+  theory regarding life contingencies that is based on financial
+  mathematics and demographic concepts. Then, with the aid of applied
+  examples, it shows how the \pkg{lifecontingencies} package can be a
+  useful tool for executing routine, deterministic, or stochastic
+  calculations for life-contingencies actuarial mathematics.
 }
+
+
 \Keywords{life tables, financial mathematics, actuarial mathematics, life insurance}
 \Plainkeywords{life tables, financial mathematics, actuarial mathematics, life insurance} %% without formatting
 %% at least one keyword must be supplied
 
-%% publication information
-%% NOTE: Typically, this can be left commented and will be filled out by the technical editor
-%% \Volume{13}
-%% \Issue{9}
-%% \Month{September}
-%% \Year{2004}
-%% \Submitdate{2004-09-29}
-%% \Acceptdate{2004-09-29}
+\Volume{55}
+\Issue{10}
+\Month{November}
+\Year{2013}
+\Submitdate{2012-04-10}
+\Acceptdate{2013-04-03}
 
 %% The address of (at least) one author should be given
 %% in the following format:
@@ -62,6 +56,7 @@ Its functions permit one to determine both the expected value and the stochastic
 }
 
 
+
 %% for those who use Sweave please include the following line (with % symbols):
 %% need no \usepackage{Sweave.sty}
 
@@ -71,7 +66,6 @@ Its functions permit one to determine both the expected value and the stochastic
 
 <<setup,echo=FALSE, results=hide>>=
 	options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
-
 	set.seed(123)
 	numSim=200
 @
@@ -79,248 +73,412 @@ Its functions permit one to determine both the expected value and the stochastic
 \maketitle
 
 \section{Introduction}
-As of May 2013, the \pkg{lifecontingencies} package, \citep{spedLifeCon}, appears as the first \proglang{R} package that  deals with  life contingent  actuarial mathematics. The \proglang{R} statistical programming environment \citep{rSoftware} has become the primary reference software for academics. Even in a business context, \proglang{R} is now considered a valid alternative to affirmed proprietary packages for statistics and data analysis, namely \proglang{SAS} \citep{SAS}, \proglang{MATLAB} \citep{MATLAB} and \proglang{SPSS} \citep{SPSS}. Some packages for actuarial applications have already been developed within R. However, most of them mainly focus on non-life insurance. In fact, non-life insurance modelling involves more data analysis and applied statistical modeling than that of life insurance. Functions allowing one to fit loss distributions and perform credibility analysis are provided within the package \pkg{actuar} \citep{Dutang2008}. This package represents the computational side of the classical actuarial textbook Loss Distribution \citep{klugman2009loss}. The package \pkg{ChainLadder} \citep{chainLadder} provides functions that are capable of estimating  loss reserves for non-life insurance. Generalized Linear Models (GLMs), widely used in non-life insurance rate-making, can be fit by functions bundled within base \proglang{R} distributions. (Zhang 2011). The Generalized Additive Models for Location, Shape and Scale (GAMLSS) and Tweedie Regression, which are both more advanced predictive models used by actuaries, are handled by specifically developed  packages such as \pkg{gamlss} \citep{gamlssPkg} and \pkg{cplm} \citep{cplmPkg}.\\
-Life insurance actuarial work deals mainly with demographic and financial data.  The  Finance view on the CRAN site lists several packages tailored specifically for financial analysis. Packages\pkg{YieldCurve} \citep{YieldCurveR} and \pkg{termstrc} \citep{termstrcR} are capable of financial modelling for interest rates. Among the few packages that handle demographic data, \pkg{demography} \citep{demographyR} and \pkg{LifeTables} \citep{LifeTableR} can be used to manage demographic projections and life tables.\\
-On the other hand, many commercial softwares tailored specifically for the actuarial analysis of life insurance are already available. \proglang{Moses} and \proglang{Prophet} are currently the leading actuarial software packages for life insurance modelling. The \pkg{lifecontingencies} package  aims to represent  the computational \proglang{R} companion of the theoretical concepts exposed in textbooks like the classical \cite{bowers1997actuarial} and \cite{dickson2009actuarial} for actuarial mathematics and \cite{broverman2008mathematics} for financial mathematics. The examples used throughout this paper have been taken from \cite{mathFinAct} and \cite{finanMLC}, both freely available financial and actuarial mathematics textbooks. The paper is structured as  follows:  Section~\ref{sec:statistics} outlines the statistical and financial mathematical theory regarding life contingencies, Section~\ref{sec:structure} overviews the structure of the \pkg{lifecontingencies} package, Section~\ref{sec:examples} gives a wide choice of applied \pkg{lifecontingencies} examples,  and finally, Section~\ref{sec:discussion}  discusses the packages  current and future development as well as its known limitations.
 
-\section{The statistical and financial foundations of Life Contingencies}\label{sec:statistics}
+As of May 2013, the \pkg{lifecontingencies} package
+\citep{spedLifeCon} appears as the first \proglang{R} package that
+deals with life contingent actuarial mathematics. The \proglang{R}
+statistical programming environment \citep{rSoftware} has become the
+primary reference software for academics. Even in a business context,
+\proglang{R} is now considered a valid alternative to affirmed
+proprietary packages for statistics and data analysis, namely
+\proglang{SAS} \citep{SAS}, \proglang{MATLAB} \citep{MATLAB} and
+\proglang{SPSS} \citep{SPSS}. Some packages for actuarial applications
+have already been developed within \proglang{R}. However, most of them
+mainly focus on non-life insurance. In fact, non-life insurance
+modeling involves more data analysis and applied statistical modeling
+than that of life insurance. Functions allowing one to fit loss
+distributions and perform credibility analysis are provided within the
+package \pkg{actuar} \citep{Dutang2008}. This package represents the
+computational side of the classical actuarial textbook on loss
+distribution \citep{klugman2009loss}. The package \pkg{ChainLadder}
+\citep{chainLadder} provides functions that are capable of estimating
+loss reserves for non-life insurance. Generalized linear models
+(GLMs), widely used in non-life insurance rate-making, can be fit by
+functions bundled within base \proglang{R} distributions. The
+generalized additive models for location, shape and scale (GAMLSS) and
+tweedie regression, which are both more advanced predictive models
+used by actuaries, are handled by specifically developed packages such
+as \pkg{gamlss} \citep{gamlssPkg,gamlsspkg2} and \pkg{cplm} \citep{cplmPkg}.
 
-The actuarial pricing and reserving of life contingent insurances involves the calculation of statistics regarding occurrences and amounts of future cash flows. For example, the insurance pure premium (also known as benefit premium) can be regarded as the  expected value of theprospective benefits cash flow distribution,  valued at time zero for a given interest rate structure. The probabilities of the prospective benefits cash flow are based on the occurrence of the policyholder's life events (life contingencies). In addition, the theory of interest is used to find the present value of these amounts that will occur in the future. Therefore, life insurance actuarial mathematics is based on concepts derived from demography and theory of interest.\\
+Life insurance actuarial work deals mainly with demographic and
+financial data.  The CRAN task view ``Empirical Finance''
+\citep{taskview} lists several packages tailored specifically for
+financial analysis. Packages \pkg{YieldCurve} \citep{YieldCurveR} and
+\pkg{termstrc} \citep{termstrcR} are capable of financial modeling for
+interest rates. Among the few packages that handle demographic data,
+\pkg{demography} \citep{demographyR} and \pkg{LifeTables}
+\citep{LifeTableR} can be used to manage demographic projections and
+life tables.
 
-A life table (also called a mortality table or actuarial table) is a table that shows how mortality affects subjects of a cohort across different ages. For each age $x$, it reports the number of $l_x$ individuals living at the beginning of age $x$. It is a sequence of $l_0, l_1, \ldots, l_{\omega}$, where $l_{\omega}$, the terminal age, represents the latest age that a subject of the cohort can survive until. Life tables are typically distinguished according to gender, year of birth and nationality, with different categories being used depending the type of life contingency (i.e assurance or annuity). As another example, businesses may have different customers with different underlying mortalities, so they will be in need of different life tables.\\
+On the other hand, many commercial software packages tailored
+specifically for the actuarial analysis of life insurance are already
+available. \pkg{MoSes} \citep{moses} and \pkg{Prophet}
+\citep{prophet} are currently the leading actuarial software packages
+for life insurance modeling. The \pkg{lifecontingencies} package aims
+to represent the computational \proglang{R} companion of the
+theoretical concepts exposed in textbooks like the classical
+\cite{bowers1997actuarial} and \cite{dickson2009actuarial} for
+actuarial mathematics and \cite{broverman2008mathematics} for
+financial mathematics. Package \pkg{lifecontingencies} is available from
+the Comprehensive \proglang{R} Archive Network at
+\url{http://CRAN.R-project.org/package=lifecontingencies}. The examples used throughout this
+paper have been taken from \cite{mathFinAct} and \cite{finanMLC}, both
+freely available financial and actuarial mathematics textbooks. The
+paper is structured as follows: Section~\ref{sec:statistics} outlines
+the statistical and financial mathematical theory regarding life
+contingencies, Section~\ref{sec:structure} overviews the structure of
+the \pkg{lifecontingencies} package, Section~\ref{sec:examples} gives
+a wide choice of applied \pkg{lifecontingencies} examples, and
+finally, Section~\ref{sec:discussion} discusses the packages current
+and future development as well as its known limitations.
 
-From a statistical point of view, a life table allows one to deduce the probability
-distribution of the future lifetime for a policyholder aged $x$. In particular, a life table also permits one to derive two key probability
-distributions: $\tilde T_x$, the complete future lifetime for a policyholder
-aged $x$, and its curtate form, $\tilde K_x$, the number of
-future years completed before death. Therefore, many demographic
-statistics can be derived from a life table, of which a non exhaustive list follows:
+
+\section[Statistical and financial foundations of life
+  contingencies]{Statistical and financial foundations of life
+  contingencies}\label{sec:statistics}
+
+The actuarial pricing and reserving of life contingent insurances
+involves the calculation of statistics regarding occurrences and
+amounts of future cash flows. For example, the insurance pure premium
+(also known as benefit premium) can be regarded as the expected value
+of the prospective benefits cash flow distribution, valued at time zero
+for a given interest rate structure. The probabilities of the
+prospective benefits cash flow are based on the occurrence of the
+policyholder's life events (life contingencies). In addition, the
+theory of interest is used to find the present value of these amounts
+that will occur in the future. Therefore, life insurance actuarial
+mathematics is based on concepts derived from demography and theory of
+interest.
+
+A life table (also called a mortality table or actuarial table) is a
+table that shows how mortality affects subjects of a cohort across
+different ages. For each age $x$, it reports the number of $l_x$
+individuals living at the beginning of age $x$. It is a sequence of
+$l_0, l_1, \ldots, l_{\omega}$, where $l_{\omega}$, the terminal age,
+represents the latest age that a subject of the cohort can survive
+until. Life tables are typically distinguished according to gender,
+year of birth and nationality, with different categories being used
+depending on the type of life contingency (i.e., assurance or
+annuity). As another example, businesses may have different customers
+with different underlying mortalities, so they will be in need of
+different life tables.
+
+From a statistical point of view, a life table allows one to deduce
+the probability distribution of the future lifetime for a policyholder
+aged $x$. In particular, a life table also permits one to derive two
+key probability distributions: $\tilde T_x$, the complete future
+lifetime for a policyholder aged $x$, and its curtate form, $\tilde
+K_x$, the number of future years completed before death. Therefore,
+many demographic statistics can be derived from a life table, of which
+a non-exhaustive list follows:
 \begin{itemize}
-	\item $_t{p_x} = \frac{l_{x + t}}{l_x}$, the probability that a policyholder
-	alive at age $x$ will reach age $x+t$.
-	\item $_t{q_x}$, the complementary probability of $_t{p_x}$.
-	\item $_t{d_x}$, the number of deaths between age $x$ and $x+t$.
-	\item $_t{L_x} = \int_0^t {l_{x + y}}dy$, the expected number of years lived by the cohort between ages $x$ and  $x+t$.  
-	\item $_t{m_x} = \frac{{_t{d_x}}}{{_t{L_x}}}$, the central mortality rate between ages $x$ and  $x+t$.
-	\item $e_x$, the curtate expectation of life for a 
-    subject aged $x$, $e_x = E\left[ \tilde K_x \right] = \sum\limits_{k = 1}^\infty  {_k{p_x}} $.
+\item $_t{p_x} = \frac{l_{x + t}}{l_x}$, the probability that a policyholder
+  alive at age $x$ will reach age $x+t$.
+\item $_t{q_x}$, the complementary probability of $_t{p_x}$.
+\item $_t{d_x}$, the number of deaths between age $x$ and $x+t$.
+\item $_t{L_x} = \int_0^t {l_{x + y}}dy$, the expected number of years
+  lived by the cohort between ages $x$ and $x+t$.
+\item $_t{m_x} = \frac{{_t{d_x}}}{{_t{L_x}}}$, the central mortality
+  rate between ages $x$ and $x+t$.
+\item $e_x$, the curtate expectation of life for a subject aged $x$,
+  $e_x = \E[ \tilde K_x] = \sum\limits_{k = 1}^\infty
+  {_k{p_x}} $.
 \end{itemize}
 
-The Keyfitz textbook \citep{keyfitz2005applied} provides an exhaustive coverage of 
-life table theory and practice. Life tables are usually published by institutions that have access to large amounts of reliable historical data, like social security bureaus. It is common practice for actuaries to start from these life tables and adapt them to the insurer's portfolio actual experience.\\
+The Keyfitz textbook \citep{keyfitz2005applied} provides an exhaustive
+coverage of life table theory and practice. Life tables are usually
+published by institutions that have access to large amounts of
+reliable historical data, like social security bureaus. It is common
+practice for actuaries to start from these life tables and adapt them
+to the insurer's portfolio actual experience.
 
-Classical financial mathematics deals with monetary amounts that can be available at different times. The present value of a series of cash flows, expressed by Equation~\ref{eq:CF}, is probably the most important concept. The present value can be considered  as the value - in current money - of a series of financial cash flows, $\text{CF}_t$, that are available at different periods of time.\\
-
-
+Classical financial mathematics deals with monetary amounts that can
+be available at different times. The present value of a series of cash
+flows, expressed by Equation~\ref{eq:CF}, is probably the most
+important concept. The present value (PV) can be considered as the
+value -- in current money -- of a series of financial cash flows,
+$\text{CF}_t$, that are available at different periods of time.
+%
 \begin{equation}
-	\text{PV} = \sum\limits_{t \in T}^{} \text{CF}_{t} {\left( 1 + i_t \right)^{-t}}
-	\label{eq:CF}
+  \text{PV} = \sum\limits_{t \in T}^{} \text{CF}_{t} {\left( 1 + i_t \right)^{-t}}
+  \label{eq:CF}
 \end{equation}
+%
+The interest rate, $i$, represents the measure of the price of money
+available in future times. Like the interest rate, the time value of
+money can be expressed by the discount rate $d = \frac{i}{1 +
+  i}$. This paper will use the $i$ symbol to express effective
+compound interest, with money invested once per period. In the case
+where money is invested more frequently, say $m$ times per period,
+each fractional period is named the interest conversion period. During
+each interest conversion period, the real interest rate
+$\frac{i^{\left( m \right)}}{m}$ is earned, where the $i^{\left( m
+  \right)}$ expression defines the convertible (also known as
+``nominal'') rate of interest payable $m$ times per period.
 
-The interest rate, $i$, represents the measure of the price of money available in future times. Like the interest rate, the time value of money can be expressed by the discount rate $d = \frac{i}{1 + i}$. This paper will use the $i$ symbol to express effective compound interest, with money invested once per period. In the case where money is invested more frequently, say $m$ times per period, each fractional period is named the interest conversion period. During each interest conversion period, the real interest rate $\frac{i^{\left( m \right)}}{m}$ is earned, where the $i^{\left( m \right)}$ expression defines the convertible (also known as "nominal") rate of interest payable $m$ times per period.
-
-Equation~\ref{eq:interest} combines the various notations for interest and
-discount rates, both on an effective and convertible basis, to express what an
-amount of \$1 invested now will grow to at time $t$.
-
+Equation~\ref{eq:interest} combines the various notations for interest
+and discount rates, both on an effective and convertible basis, to
+express what an amount of \$1 invested now will grow to at time $t$.
+%
 \begin{equation}
-A \left( t \right)=\left( 1 + i \right)^{t}=\left( 1 - d \right )^{-t} = v^{-t} = \left( 1 + \frac{i^{m}}{m} \right)^{t * m} = \left( 1 - \frac{d^m}{m} \right)^{-t * m}
+  A \left( t \right) =\left( 1 + i \right)^{t}=\left( 1 - d \right )^{-t} = v^{-t} = \left( 1 + \frac{i^{m}}{m} \right)^{tm} = \left( 1 - \frac{d^m}{m} \right)^{-tm}
 \label{eq:interest}
 \end{equation}
-
+%
 All financial mathematics functions (like annuities, $a_{\lcroof{n}}$, or 
 accumulated values, $s_{\lcroof{n}}$) can be rewritten as particular expressions
-of Equation~\ref{eq:CF}, as shown in classical actuarial mathematics textbooks.\\
+of Equation~\ref{eq:CF}, as shown in classical actuarial mathematics textbooks.
 
 Actuaries use the probabilities inherent in life tables to price life
-contingent insurances. In fact, life contingencies are stochastic variables themselves. A
-life contingent insurance can be represented by a sequence of one or more
-payments whose occurrence, timing, and consequent present value are not certain.
-In fact, their eventual occurrence and timing depend on events in the life of the policyholder; for this reason, they are named "life contingencies". Since the actuary focuses on the present value of such
-uncertain payments, future payments of life contingent insurances need to be discounted using interest rates that may also be considered stochastic. The \pkg{lifecontingencies} package provides functions
-that model most of the standard life contingent random variables, $\tilde{Z}$, and in particular their expected value, the Actuarial Present Value (APV). Of all the statistics used by actuaries, the APV is certainly the most important. In fact, it represents the average cost of the benefits guaranteed to the policyholder by the insurer. In a non-life insurance context, it would be named pure premium. The policyholder pays out the gross premium, $G$, which is a sum of benefit premiums, loading for expense, profits and taxes. Life contingencies can be either continuous or discrete, as cited actuarial mathematics textbooks explain. Directly, the \pkg{lifecontingencies} package can only model  discrete life contingencies with a non-stochastic interest rate. Nevertheless, most continuous time life contingent insurances can be easily derived from their discrete form under broad assumptions that can be found in the cited textbooks.
+contingent insurances. In fact, life contingencies are stochastic
+variables themselves. A life contingent insurance can be represented
+by a sequence of one or more payments whose occurrence, timing, and
+consequent present value are not certain.  In fact, their eventual
+occurrence and timing depend on events in the life of the
+policyholder; for this reason, they are named ``life
+contingencies''. Since the actuary focuses on the present value of such
+uncertain payments, future payments of life contingent insurances need
+to be discounted using interest rates that may also be considered
+stochastic. The \pkg{lifecontingencies} package provides functions
+that model most of the standard life contingent random variables,
+$\tilde{Z}$, and in particular their expected value, the actuarial
+present value (APV). Of all the statistics used by actuaries, the APV
+is certainly the most important. In fact, it represents the average
+cost of the benefits guaranteed to the policyholder by the insurer. In
+a non-life insurance context, it would be named pure premium. The
+policyholder pays out the gross premium, $G$, which is a sum of
+benefit premiums, loading for expense, profits and taxes. Life
+contingencies can be either continuous or discrete, as the cited actuarial
+mathematics textbooks explain. Directly, the \pkg{lifecontingencies}
+package can only model discrete life contingencies with a
+non-stochastic interest rate. Nevertheless, most continuous time life
+contingent insurances can be easily derived from their discrete form
+under broad assumptions that can be found in the cited textbooks.
 
 A few examples of life contingent insurances follow: 
 
 \begin{enumerate}
 
-	\item An $n$-year term life insurance provides a payment of \$ $b$, if the insured
-	dies within n years from issue. If the payment is performed at the end of the year
-	of death, $\tilde Z$ can be written as $\tilde Z = \left\{ \begin{array}{l}
-	v^{K + 1},\,\tilde K_x = 0,1, \ldots ,n - 1\\
-0,\,\tilde K_x \ge n
-\end{array} \right.$ Its APV expression is $\termins{x}{n}$. 
-	
-	\item A life annuity consists of a sequence of benefits paid out as long as the
-	insured life survives. In particular, a temporary life annuity due pays a
-	benefit at the beginning of each period as long as the annuitant aged $x$ survives, for up to a total of $n$ years, or $n$ payments. $\tilde Z$ can be written as $\tilde Z
-    = \left\{ \begin{array}{l} {\ddot a_{\left. {\overline {\, 
- {K + 1} \,}}\! \right| }},\,\tilde K_x < n\\
-{\ddot a_{\left. {\overline {\, 
- n \,}}\! \right| }},\,\tilde K_x \ge n
-\end{array} \right.$. Its APV expression is $\anndue{x}{n}$.
+\item An $n$-year term life insurance provides a payment, if the
+  insured dies within $n$ years from issue. If the payment is performed
+  at the end of the year of death, $\tilde Z$ can be written
+  as
+  $$\tilde Z = \left\{ \begin{array}{ll}
+      v^{K + 1},\,&\tilde K_x = 0,1, \ldots ,n - 1,\\
+      0,\,&\tilde K_x \ge n.
+\end{array} \right.$$ Its APV expression is $\termins{x}{n}$. 
+  
+\item A life annuity consists of a sequence of benefits paid out as
+  long as the insured life survives. In particular, a temporary life
+  annuity due pays a benefit at the beginning of each period as long
+  as the annuitant aged $x$ survives, for up to a total of $n$ years,
+  or $n$ payments. $\tilde Z$ can be written as $$\tilde Z =
+  \left\{ \begin{array}{ll} {\ddot a_{\left. {\overline {\,
+                {K + 1} \,}}\! \right| }},\,&\tilde K_x < n,\\
+      {\ddot a_{\left. {\overline {\, n \,}}\! \right| }},\,&\tilde K_x
+      \ge n.
+\end{array} \right.$$ Its APV expression is $\anndue{x}{n}$.
 
- 	\item An $n$-year pure endowment insurance grants a benefit payable at the
-end of $n$ years if the insured survives at least $n$ years from issue. $\tilde
-Z$ can be written as $\tilde Z
-    = \left\{ \begin{array}{l} {0},\,\tilde K_x < n\\
-{v^n},\,\tilde K_x \ge n
-\end{array} \right.$. Its APV expression is $\pureend{x}{n}$ (or
+\item An $n$-year pure endowment insurance grants a benefit payable at
+  the end of $n$ years if the insured survives at least $n$ years from
+  issue. $\tilde Z$ can be written as $$\tilde Z
+  = \left\{ \begin{array}{ll} {0},\,&\tilde K_x < n,\\
+      {v^n},\,&\tilde K_x \ge n.
+\end{array} \right.$$ Its APV expression is $\pureend{x}{n}$ (or
 $\pureendc{x}{n}$).
-	\item An $n$-year endowment insurance will pay a benefit  at the the year of death or 
-	the end of the $n$-th year, whichever occurs earlier. $\tilde Z$ can be written
-	as $\tilde Z = \left\{ \begin{array}{l} v^{K + 1},\,\tilde K_x = 0,1, \ldots ,n - 1\\
-{v^n},\,\tilde K_x \ge n
-\end{array} \right.$. Its APV expression is $\insend{x}{n}$.
+
+\item An $n$-year endowment insurance will pay a benefit at the
+  year of death or at the end of the $n$-th year, whichever occurs
+  earlier. $\tilde Z$ can be written
+  as $$\tilde Z = \left\{ \begin{array}{ll} v^{K + 1},\,&\tilde K_x = 0,1, \ldots ,n - 1,\\
+      {v^n},\,&\tilde K_x \ge n.
+\end{array} \right.$$ Its APV expression is $\insend{x}{n}$.
 \end{enumerate}
 
-
-Interested readers could see cited references for formulas regarding other life
-contingent insurances like $\lcterm{(DA)}{x}{n}$, the decreasing term life insurance, $\lcterm{(IA)}{x}{n}$ or the increasing term life insurance. There are also common variations of payments that form arrangements like
-deferment or fractional payments. Similarly, it is possible to define insurances and annuities depending on the survival status of two or more lives. For example, $A_{xy}$
-and $a_{\overline{xy}}$ represent, respectively, the APV symbols for the two lives joint-live insurance and the two lives last-survivor annuity immediate.\\
+Interested readers could see the cited references for formulas regarding
+other life contingent insurances like $\lcterm{(DA)}{x}{n}$, the
+decreasing term life insurance, or $\lcterm{(IA)}{x}{n}$, the
+increasing term life insurance. There are also common variations of
+payments that form arrangements like deferment or fractional
+payments. Similarly, it is possible to define insurances and annuities
+depending on the survival status of two or more lives. For example,
+$A_{xy}$ and $a_{\overline{xy}}$ represent, respectively, the APV
+symbols for the two lives joint-live insurance and the two lives
+last-survivor annuity immediate.
 
 The \pkg{lifecontingencies} package provides functions that allow an actuary
 to perform classical financial and actuarial mathematics calculations. In
-addition to standard deterministic modelling, a peculiar feature of
+addition to standard deterministic modeling, a peculiar feature of
 \pkg{lifecontingencies} is that it allows one to generate variates from the
 stochastic distribution of the present value of future benefits, $\tilde Z$, for most life contingent 
 insurances. This feature allows for a deeper assessment of the insurance
 liabilities variability.
 
+
 \section{The structure of the package}\label{sec:structure}
 
-The package \pkg{lifecontingencies} contains classes and methods that handle 
-life tables and actuarial tables in a convenient manner.\\
+The package \pkg{lifecontingencies} contains classes and methods that
+handle life tables and actuarial tables in a convenient manner.
 
-
-The package is loaded within the \proglang{R} command line as follows:
+The package is loaded within the \proglang{R} command line interace as follows:
 
 <<load,keep.source=TRUE>>=
 library("lifecontingencies")
 @
 
-Two main S4 classes have been defined within the \pkg{lifecontingencies} package: 
-the \code{lifetable} class and the \code{actuarialtable} class. The lifetable class is defined as follows
+Two main \proglang{S}4 classes have been defined within the
+\pkg{lifecontingencies} package: the `\code{lifetable}' class and the
+`\code{actuarialtable}' class. The `\code{lifetable}' class is defined
+as follows:
+
 
 <<structure1,keep.source=TRUE>>=
 showClass("lifetable")
 @
 
-Class \code{actuarialtable} inherits from \code{lifetable} class; it is
-different from the \code{lifetable} class because it has one more slot accounting for the interest rate.
+Class `\code{actuarialtable}' inherits from the `\code{lifetable}' class; it
+is different from the `\code{lifetable}' class because it has one more
+slot accounting for the interest rate.
 
 <<structure2,keep.source=TRUE>>=
 showClass("actuarialtable")
 @
 
-A list of methods has been defined for \code{lifetable} and
-\code{actuarialtable} classes.
+The following methods have been defined for the `\code{lifetable}' and
+`\code{actuarialtable}' classes.
 
 <<structure3, keep.source=TRUE>>=
 showMethods(classes=c("actuarialtable","lifetable"))
 @
 
+The computation of financial, demographic and actuarial quantities is
+based on dedicated functions that use objects of classes
+`\code{lifetable}' and `\code{actuarialtable}' when
+required. Table~\ref{tab:pars} shows the naming convention for common
+input parameters used within the package.  The sections that follow
+briefly present such functions with the aid of examples.
 
-The computation of financial, demographic and actuarial quantities is based on
-dedicated functions that use \code{lifetable} and \code{actuarialtable} objects
-when required. Table~\ref{tab:pars} shows the naming convention for
-common input parameters used within the package.
-The sections that follow briefly present such functions with the aid of examples. 
-
-\begin{table}[h]
+\begin{table}[t!]
   \centering
   \begin{tabular}{lll}
     \hline
   Parameter & Significance \\
-    \hline  \hline
-  \code{x} & the policyholder's age.\\
-  \code{n} & the coverage duration or payment duration.\\
-  \code{i} & interest rate (could be varying).\\
-  \code{k} & the frequency of payments.\\
+    \hline 
+  \code{x} & the policyholder's age\\
+  \code{n} & the coverage duration or payment duration\\
+  \code{i} & interest rate (could be varying)\\
+  \code{k} & the frequency of payments\\
     \hline
 \end{tabular}
-\caption{\pkg{lifecontingencies} functions parameters naming conventions.}
-\label{tab:pars}
+\caption{\pkg{lifecontingencies} functions parameters naming conventions.
+\label{tab:pars}}
 \end{table}  
 
-Finally, the \pkg{lifecontingencies} package depends on the \pkg{methods} package, which defines its classes, and the \pkg{parallel} package, which is used to speed up
-computations. As detailed in the 'Discussion' section, implementation of \proglang{C} or \proglang{C++} code snippets is expected to shorten computational times in the future versions of the package.
+Finally, the \pkg{lifecontingencies} package depends on the
+\pkg{methods} package, which defines its classes, and the
+\pkg{parallel} package, which is used to speed up computations. As
+detailed in Section~\ref{sec:discussion}, implementation of
+\proglang{C} or \proglang{C++} code snippets is expected to shorten
+computational times in the future versions of the package.
 
 \section{Code and examples}\label{sec:examples}
-This section is structured as follows: Section~\ref{ss:mathFin} 
-shows classical financial mathematics examples, Section~\ref{ss:lfActT} deals
-with life tables and actuarial table management, Section~\ref{ss:actMath}
-shows classical actuarial mathematics examples, and Section~\ref{ss:stochastic}
-presents functions in the \pkg{lifecontingencies} package that perform simulation analysis.
+
+This section is structured as follows: Section~\ref{ss:mathFin} shows
+classical financial mathematics examples, Section~\ref{ss:lfActT}
+deals with life tables and actuarial table management,
+Section~\ref{ss:actMath} shows classical actuarial mathematics
+examples, and Section~\ref{ss:stochastic} presents functions in the
+\pkg{lifecontingencies} package that perform simulation analysis.
 
 \subsection{Classical financial mathematics example}\label{ss:mathFin}
 
-\begin{table}[h]
+\begin{table}[b!]
 \centering
 \begin{tabular}{ll}
   \hline
-	Function & Purpose\\
-      \hline  \hline
-	\code{presentValue} &   present value of a series of cash flows.\\
-	\code{annuity} &  present value of an annuity-certain, $a_{\lcroof{n}}$.\\
-	\code{accumulatedValue} & future value of a series of cash flows, $s_{\lcroof{n}}$.\\
-	\code{increasingAnnuity} & present value of an increasing annuity-certain, $IA_{n}$.\\
-	\code{decreasingAnnuity} & present value of a decreasing annuity - certain,
-	$DA_{\lcroof{n}}$.\\
-	\code{convertible2Effective} & conversion from convertible to effective
-	interest (discount) rates.\\
-	\code{effective2Convertible} & \code{convertible2Effective} inverse.\\
-	\code{intensity2Interest} & conversion from force of interest to the
-	interest rate.\\
-	\code{interest2Intensity} & \code{intensity2Interest} inverse.\\
-	\code{duration} & dollar / Macaulay duration of a series of cash flows.\\
-	\code{convexity} & convexity of a series of cash flows.\\
-      \hline
-	\end{tabular}
-\caption{\pkg{lifecontingencies} functions for financial mathematics.}
-\label{tab:finfun}
+  Function & Purpose\\
+  \hline 
+  \code{presentValue} &   present value of a series of cash flows\\
+  \code{annuity} &  present value of an annuity-certain, $a_{\lcroof{n}}$\\
+  \code{accumulatedValue} & future value of a series of cash flows, $s_{\lcroof{n}}$\\
+  \code{increasingAnnuity} & present value of an increasing annuity -- certain, $IA_{n}$\\
+  \code{decreasingAnnuity} & present value of a decreasing annuity -- certain,
+  $DA_{\lcroof{n}}$\\
+  \code{convertible2Effective} & conversion from convertible to effective
+  interest (discount) rates\\
+  \code{effective2Convertible} & \code{convertible2Effective} inverse\\
+  \code{intensity2Interest} & conversion from force of interest to the
+  interest rate\\
+  \code{interest2Intensity} & \code{intensity2Interest} inverse\\
+  \code{duration} & dollar / Macaulay duration of a series of cash flows\\
+  \code{convexity} & convexity of a series of cash flows\\
+  \hline
+\end{tabular}
+\caption{\pkg{lifecontingencies} functions for financial mathematics.
+\label{tab:finfun}}
 \end{table}
 
 
-The \pkg{lifecontingencies} package provides functions that perform classical
-financial mathematics calculations listed in Table~\ref{tab:finfun} list.\\ Some of these implement closed form formulas and their inverses; this is also shown in financial mathematics textbooks. A broader discussion, however, shall be  dedicated to the \code{presentValue} function. In fact, the \code{presentValue} function is internally called by most other financial and actuarial functions within the \pkg{lifecontingencies} package. This function calculates present values or APVs by computing Equation~\ref{eq:pv}.
+The \pkg{lifecontingencies} package provides functions that perform
+classical financial mathematics calculations listed in
+Table~\ref{tab:finfun}.
 
+Some of these implement closed form formulas and their inverses; this
+is also shown in financial mathematics textbooks. A broader
+discussion, however, shall be dedicated to the \code{presentValue}
+function. In fact, the \code{presentValue} function is internally
+called by most other financial and actuarial functions within the
+\pkg{lifecontingencies} package. This function calculates present
+values or APVs by computing Equation~\ref{eq:pv}.
+%
 \begin{equation}
-\text{PV}=\sum\limits_{i = 1}^n {c_i*v^{t_i}*p_i} 
+\text{PV}=\sum\limits_{i = 1}^n {c_i\cdot v^{t_i}\cdot p_i} 
 \label{eq:pv}
 \end{equation}
+%
+The terms in Equation~\ref{eq:pv} are the cash flows vector, $c_i$,
+the corresponding discount factors vector, $v^{t_i}$, and the
+occurrence probabilities vector, $p_i$, respectively. Many
+\pkg{lifecontingencies} package functions, like \code{axn} or
+\code{annuity}, work by first defining the pattern vectors of cash
+flows, interest rate and probabilities (in case of actuarial
+functions), which are then passed as arguments to the
+\code{presentValue} function.
 
-The terms in Equation~\ref{eq:pv} are the cash flows vector, $c_i$, the corresponding discount factors vector, $v^{t_i}$ and the occurrence probabilities vector, $p_i$ respectively. Many \pkg{lifecontingencies} package functions, like \code{axn} of an \code{annuity}, work by first defining the pattern vectors of cash flows, interest rate and probabilities (in case of actuarial functions), which are then
-passed as arguments to the \code{presentValue} function.\\
+Examples that follow show how to handle interest and discount rates
+with different compounding frequencies, how to perform present value,
+annuity, and future value analysis, and how to deal with loan
+amortization and bond pricing.
 
-Examples that follow show how to handle interest and
-discount rates with different compounding frequencies, how to perform present
-value, annuity, and future value analysis, and how to deal with loan amortization and bond pricing.
+
 
 \subsubsection{Interest rate functions}\label{sss:subsubInterest}
-
-Interest rates represent the time - value of money. Different
+Interest rates represent the time-value of money. Different
 types of rates can be found in literature. As a remark,
 Equation~\ref{eq:intdisc} displays the relationship between the effective interest
 rate, the convertible interest rate, the discount factor, the force of interest, the effective
 discount rate and the convertible discount rate.
-
+%
 \begin{equation}
 \left( 1 + i \right)^t = \left( 1 + \frac{i^{\left( m \right)}}{m} \right)^t = v^{-t} =
 \exp \left( \delta t \right) = \left( 1 - d \right)^{ - t} = 
 \left( 1 - \frac{d^{\left( m \right)}}{m} \right)^{ - t}
 \label{eq:intdisc}
 \end{equation}
-
+%
 The functions \code{interest2Discount}, \code{discount2Interest},
-\code{convertible2Effective}, \\
-\code{effective2Convertible}, \code{interest2Intensity}, 
-\code{intensity2Interest} have all been based on Equation~\ref{eq:intdisc}; their
-inverse formulas are implied therein. Throughout the paper, an effective interest rate is used unless otherwise stated.\\
+\code{convertible2Effective}, \linebreak
+\code{effective2Convertible}, \code{interest2Intensity},
+\code{intensity2Interest} have all been based on
+Equation~\ref{eq:intdisc}; their inverse formulas are implied
+therein. Throughout the paper, an effective interest rate is used
+unless otherwise stated.
 
-As examples, functions \code{interest2Discount} and \code{discount2Interest}
-represent a convenient way to switch from interest to discount rates and vice-versa.
+As examples, functions \code{interest2Discount} and
+\code{discount2Interest} represent a convenient way to switch from
+interest to discount rates and vice versa.
+
+
 
 <<ir1, keep.source=TRUE>>=
 interest2Discount(0.03)
@@ -334,29 +492,22 @@ convertible (nominal) interest rate with quarterly compounding.
 <<ir1, keep.source=TRUE>>=
 convertible2Effective(i=0.10,k=4)
 @
-
-
 \subsubsection{Analysis of present value and internal rate of return}\label{sss:pva}
-
 Performing a project appraisal means evaluating the net present value (NPV) of all projected cash flows.
 The code below shows an example of NPV analysis.
-
 <<npv1, keep.source=TRUE>>=
 capitals <- c(-1000,200,500,700)
 times <- c(0,1,2,5)
 presentValue(cashFlows=capitals, timeIds=times, interestRates=0.03)
 @
-
 When interest rates vary and cash flows are uncertain, the
 \code{probabilities} parameter can be
 properly set as the following code shows:
-
 <<npv3, keep.source=TRUE>>=
 presentValue(cashFlows=capitals, timeIds=times, 
 interestRates=c( 0.04, 0.02, 0.03, 0.05), 
 probabilities=c(1,1,1,0.5))
 @
-
 The internal rate of return (IRR) is defined as the interest rate that makes the
 NPV zero. It is an alternative NPV that allows financial investment projects to be ranked
 by the timing and amount of their cash flows.
@@ -469,9 +620,10 @@ Equation~\ref{eq:bond} expresses the present value of a bond with $n$ remaining
 coupons.
 
 \begin{equation}
-B_t = {c}*{a}_{\left. {\overline {\, n \,}}\! \right| } + {C}*{v^{T}}
+B = {c}*{a}_{\left. {\overline {\, n \,}}\! \right| } + {C}*{v^{T}}
 	\label{eq:bond}
 \end{equation}
+
 
 Perpetuities are financial contracts that offer an indefinite sequence of
 payments either at the end (perpetuity-immediate) or at the beginning of each
@@ -696,6 +848,7 @@ and convexity will change as time goes on.
 \end{table}
 
 
+
 \code{lifetable} and \code{actuarialtable} classes are designed to handle demographic 
 and actuarial mathematics calculations. An \code{actuarialtable} class inherits
 from \code{lifetable} class; it adds one more slot for the rate
@@ -738,6 +891,7 @@ exampleLt <- new("lifetable", x=x_example, lx=lx_example,
 \code{print} and \code{show}  methods tabulate 
 the $x$, $l_x$, ${}_{t}p_{x}$ and $e_x$ values for a given life table.
 
+
 <<printShow, keep.source=TRUE>>=
 print(exampleLt)
 @
@@ -770,6 +924,7 @@ Table~\ref{tab:lifeTables} displays.
     \code{demoJapan} & Japan mortality rates from SOA website.\\
     \code{demoUsa} & US Social Security life tables.\\
     \code{demoFrance} & 1990 and 2002 French life tables.\\
+    \code{demoCanada} & UP94 (standard, 2015, 2020) mortality rates for males and females.\\
     \code{soa08} & SOA illustrative life table.\\
     \code{soa08Act} & SOA illustrative actuarial table at
     6\%.\\    
@@ -779,6 +934,9 @@ Table~\ref{tab:lifeTables} displays.
 within \pkg{lifecontingencies}.}
 \label{tab:lifeTables}
 \end{table}
+
+
+
 
 
 The following example shows how US Social Security life tables are loaded
@@ -904,6 +1062,7 @@ plot(soa08Act, type="l",col="steelblue")
 Basic demography calculations can be performed on 
 valid \code{lifetable} or \code{actuariatable} objects. The functions discussed in this section calculate proper ratios or sums on $l_x$ or $d_x$ values using functions that access to the lifetable object slots. This is all done in accordance with the demographic formula definitions.\\
 
+
 The code below shows how ${}_{1}p_{20}$, ${}_{2}q_{30}$ and $\mathring{e}_{50:\lcroof{20}}$
 are calculated respectively on the IPS55 male population table 
 
@@ -942,6 +1101,7 @@ respectively.
 \end{gathered}
 \label{eq:2headssurv}
 \end{equation}
+
 
 The following code shows how the joint survival probability, last survival probability, and 
 expected joint lifetime can be evaluated using functions in  \pkg{lifecontingencies}.
@@ -1100,6 +1260,7 @@ IAxn(actuarialtable = soa08Act, x=25, n=10)
 Life contingent annuities form sequences of payments whose occurrence 
 and duration depend the policyholder's future lifetime. The few examples that follow demonstrate how the \pkg{lifecontingencies} package can directly compute the APV for typical life contingencies using either bundled functions or classical commutation tables.\\
 
+
 Equation~\ref{eq:ann1} expresses the full premium of a ten-year deferred
 annuity-due for a policyholder aged 75 by means of commutation functions.
 
@@ -1134,6 +1295,9 @@ PComm
 If amounts of $\frac{1}{m}$ were paid at the beginning of each month,  the
 APV of the annuty would be $U={}_{10|}\ddot{a}_{75}^{(12)}$.
 
+
+
+
 <<annuity3, keep.source=TRUE>>=
 U <- axn(actuarialtable=soa08Act, x=75, m=10, k=12)
 P <- axn(actuarialtable=soa08Act, x=75, m=10, k=12) / 
@@ -1166,6 +1330,7 @@ displayed by Equation~\ref{eq:benResExample1}.
 \end{gathered}
 \label{eq:benResExample1}
 \end{equation}
+
 
 <<lifeInsuranceBenefitReserve, keep.source=TRUE>>=
 P=100000 * Axn(soa08Act,x=25,n=40)/axn(soa08Act,x=25,n=40)
@@ -1256,6 +1421,10 @@ expressed by Equation~\ref{eq:annJoinLast}.
   a_{\overline{xy}}= a_{x} + a_{y} - a_{xy}
 \label{eq:annJoinLast}
 \end{equation}
+
+
+
+
 
 
 <<twoHeadsAnnuitImmediate, keep.source=TRUE>>=
@@ -1349,6 +1518,9 @@ Finally, Figure~\ref{fig:widowanceFig} shows the distribution of widowance years
 as determined in the previous example.
 
 
+
+
+
 \subsubsection{Actuarial mathematics examples}\label{sss:actmath}
 
 The present value of the future benefits cash flows distribution, $\tilde Z$,
@@ -1391,6 +1563,8 @@ the fractional payment frequency respectively.
 	return(out)
 }
 \end{Code}
+
+
 
 
 Life contingency insurance functions return the APV, $E \left[ \tilde
@@ -1469,6 +1643,9 @@ APV
 while the benefit premium at the 90th percentile, that is, the premium that would
 make the insurer incurr an underwriting loss with 10\% probability,
 would be
+
+
+
 
 <<benefitPremium2, keep.source=TRUE>>=
 samples <- rLifeContingencies(n=numSim, lifecontingency = "Axn", 
@@ -1569,36 +1746,62 @@ totalBookedCost
 
 
 \section{Discussion}\label{sec:discussion}
-
 \subsection{Advantages, limitations, and future perspectives}
 
-The \pkg{lifecontingencies} package allows actuaries to perform demographic, financial and actuarial mathematics calculations 
-within \proglang{R}; in particular, life
-contingent insurance contracts can be priced and reserved. In addition, a peculiar feature of \pkg{lifecontingencies} is its ability to generate variates from the future life
-time and the underlying stochastic distributions of life contingent insurances .\\
+The \pkg{lifecontingencies} package allows actuaries to perform
+demographic, financial and actuarial mathematics calculations within
+\proglang{R}; in particular, life contingent insurance contracts can
+be priced and reserved. In addition, a peculiar feature of
+\pkg{lifecontingencies} is its ability to generate variates from the
+future life time and the underlying stochastic distributions of life
+contingent insurances.
 
-One of the most significant limitations of the most recent (0.9.8) \pkg{lifecontingenciess} package release is that only single decrements tables can be handled.
-In addition, continuous-time life contingent models are currently not handled explicitly.\\
+One of the most significant limitations of the most recent
+(version~1.0) \pkg{lifecontingenciess} package release is that only
+single decrements tables can be handled.  In addition, continuous-time
+life contingent models are currently not handled explicitly.
 
-We expect to remove such limitations in the future. In addition, we expect to
-provide coerce methods for packages that specialize in demographic analysis, like \pkg{demography} and \pkg{LifeTables}. Furthermore, we wish to allow easier sharing of analyses with interest rate modelling packages like  \pkg{termstrcR}.\\
-Finally, code optimization and improvement is carried out continuously. The extension of parallel computation features, memory usage profiling, and the use of \proglang{C} or \proglang{C++} code fragments in select parts of the code have been planned for the near future.
+We expect to remove such limitations in the future. In addition, we
+expect to provide coerce methods for packages that specialize in
+demographic analysis, like \pkg{demography} and
+\pkg{LifeTables}. Furthermore, we wish to allow easier sharing of
+analyses with interest rate modeling packages like \pkg{termstrc}.
+
+Finally, code optimization and improvement is carried out
+continuously. The extension of parallel computation features, memory
+usage profiling, and the use of \proglang{C} or \proglang{C++} code
+fragments in select parts of the code have been planned for the near
+future.
 
 \subsection{Accuracy}\label{sec:disclaimer}
 
-The accuracy of the calculations has been verified by checking numerical examples reported in \cite{bowers1997actuarial} textbook and 
-in the lecture notes of Actuarial Mathematics taken by the author years ago at The Catholic University of Milan \citep{mazzoleni2000appunti}. 
-The numerical results are identical to those reported in the cited references for most functions, with the exception of fractional payment annuities; for these, the answer is only reported up to the fifth decimal. The reason for such inaccuracy is that the package calculates the APV using the direct sum of fractional survival probabilities, while the results reported in the cited references are obtained by closed formulas.\\
+The accuracy of the calculations has been verified by checking
+numerical examples reported in \cite{bowers1997actuarial} and in the
+lecture notes of ``Actuarial Mathematics'' taken by the author years
+ago at The Catholic University of Milan \citep{mazzoleni2000appunti}.
+The numerical results are identical to those reported in the cited
+references for most functions, with the exception of fractional
+payment annuities; for these, the answer is only reported up to the
+fifth decimal. The reason for such inaccuracy is that the package
+calculates the APV using the direct sum of fractional survival
+probabilities, while the results reported in the cited references are
+obtained by closed formulas.
 
-Finally, it is worth noting that the package and functions herein are provided as is 
-without any guarantee regarding the accuracy of calculations. The author disclaims any liability arising from potential losses due to direct or indirect use of this package.\\
+Finally, it is worth noting that the package and functions herein are
+provided as is without any guarantee regarding the accuracy of
+calculations. The author disclaims any liability arising from
+potential losses due to direct or indirect use of this package.
 
 
 \section*{Acknowledgments}\label{sec:acknowledgments}
 
-The author wishes to thank all those whose suggestions contributed 
-to the package's enhancements. In particular, he would like to thank Christophe Dutang, Tim Riffle and Reinhold for their suggestions on code and vignettes. A special thank also to Anton Sylchenko for the copyediting. Also, many thanks go out to the anonymous Journal of Statistical Software referees that helped improve the
-quality of the package and underlying vignettes.\\
+The author wishes to thank all those whose suggestions contributed to
+the package's enhancements. In particular, he would like to thank
+Christophe Dutang, Tim Riffle and Reinhold Kainhofer for their suggestions on
+code and vignettes. A special thank also to Anton Sylchenko for the
+copy-editing. Also, many thanks go out to the anonymous Journal of
+Statistical Software referees that helped improve the quality of the
+package and underlying vignettes.
 
 %\bibliographystyle{jss}
 \bibliography{lifecontingenciesBiblio}

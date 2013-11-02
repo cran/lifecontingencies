@@ -3,8 +3,7 @@
 \docType{class}
 \alias{actuarialtable-class}
 \alias{summary,actuarialtable-method}
-
-
+\alias{print,actuarialtable-method}
 \title{Class \code{"actuarialtable"}}
 \description{
 Objects of class \code{"actuarialtable"} inherit the structure of class \code{"lifetable"} adding just the slot for interest rate, \code{interest}.
@@ -26,8 +25,9 @@ Class \code{"\linkS4class{lifetable}"}, directly.
 }
 \section{Methods}{
   \describe{
-    \item{coerce}{\code{signature(from = "actuarialtable", to = "data.frame")}: ... }
-    \item{show}{\code{signature(object = "actuarialtable")}: ... }
+    \item{coerce}{\code{signature(from = "actuarialtable", to = "data.frame")}: it converts toa  \code{data.frame} object }
+    \item{show}{\code{signature(object = "actuarialtable")}: it shows classical commutation functions  }
+    \item{print}{\code{signature(x = "actuarialtable")}: as \code{show} }
     \item{summary}{\code{signature(object = "actuarialtable")}: it returns summary information about the object }
 	 }
 }

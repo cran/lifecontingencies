@@ -1,7 +1,8 @@
 ### R code from vignette source 'mortality_projection.Rnw'
+### Encoding: ISO8859-1
 
 ###################################################
-### code chunk number 1: mortality_projection.Rnw:47-48
+### code chunk number 1: mortality_projection.Rnw:65-66
 ###################################################
 options(width=80, prompt='R> ')
 
@@ -12,94 +13,158 @@ options(width=80, prompt='R> ')
 library(demography)
 library(forecast)
 library(lifecontingencies)
-load(file="mortalityDatasets.RData")
 
 
 ###################################################
 ### code chunk number 3: createDemogData
 ###################################################
-italyDemo<-demogdata(data=italyMx$rate$total,
-		pop=italyMx$pop$total, 
-		name="total",
-		ages=italyMx$age, 
-		years=italyMx$year, 
-		type="mortality",
-		label="Italy",lambda=1)
+#italyDemo<-hmd.mx(country="ITA", username="username@email.domain", 
+#password="password", label="Italy")
+load(file="mortalityDatasets.RData")
 
 
 ###################################################
 ### code chunk number 4: italyDemoFig
 ###################################################
-	plot(italyDemo)
+par(mfrow=c(1,3))
+plot(italyDemo,series="male",datatype="rate", main="Male rates")
+plot(italyDemo,series="female",datatype="rate", main="Female rates")
+plot(italyDemo,"total",datatype="rate", main="Total rates")
 
 
 ###################################################
-### code chunk number 5: fitLeeCarter
+### code chunk number 5: italyDemoFigTime
 ###################################################
-italyLca<-lca(italyDemo)
+par(mfrow=c(1,3))
+plot(italyDemo,series="male",datatype="rate",
+     plot.type="time", main="Male rates",xlab="Years")
+plot(italyDemo,series="female",datatype="rate",
+     plot.type="time", main="Female rates",xlab="Years")
+plot(italyDemo,series="total",datatype="rate",
+     plot.type="time", main="Total rates",xlab="Years")
 
 
 ###################################################
-### code chunk number 6: leeCarterResultsFig
+### code chunk number 6: fitLeeCarter
 ###################################################
-	par(mfrow=c(1,3))
-	plot(x=italyLca$age, y=italyLca$ax, main="ax")
-	plot(x=italyLca$age, y=italyLca$bx, main="bx")
-	plot(x=italyLca$year, y=italyLca$kt, main="kt")
+italyLcaM<-lca(italyDemo,series="male",max.age=100)
+italyLcaF<-lca(italyDemo,series="female",max.age=100)
+italyLcaT<-lca(italyDemo,series="total",max.age=100)
 
 
 ###################################################
-### code chunk number 7: ktProjections
+### code chunk number 7: leeCarterResultsFig
 ###################################################
-ktSeries<-italyLca$kt
-ktArima<-auto.arima(ktSeries,allowdrift=TRUE,max.order=20)
-ktArimaForecasts<-forecast(ktArima, h=110)
-fullKt<-ts(c(ktArimaForecasts$fitted, ktArimaForecasts$mean),start=1872)	
+  par(mfrow=c(1,3))
+  plot(italyLcaT$ax, main="ax", xlab="Age",ylab="ax",type="l")
+  lines(x=italyLcaF$age, y=italyLcaF$ax, main="ax", col="red")
+  lines(x=italyLcaM$age, y=italyLcaM$ax, main="ax", col="blue")
+  legend("topleft" , c("Male","Female","Total"),
+  cex=0.8,col=c("blue","red","black"),lty=1);
+  plot(italyLcaT$bx, main="bx", xlab="Age",ylab="bx",type="l")
+  lines(x=italyLcaF$age, y=italyLcaF$bx, main="bx", col="red")
+  lines(x=italyLcaM$age, y=italyLcaM$bx, main="bx", col="blue")
+  legend("topright" , c("Male","Female","Total"),
+  cex=0.8,col=c("blue","red","black"),lty=1);
+  plot(italyLcaT$kt, main="kt", xlab="Year",ylab="kt",type="l")
+  lines(x=italyLcaF$year, y=italyLcaF$kt, main="kt", col="red")
+  lines(x=italyLcaM$year, y=italyLcaM$kt, main="kt", col="blue")
+  legend("topright" , c("Male","Female","Total"),
+  cex=0.8,col=c("blue","red","black"),lty=1);
 
 
 ###################################################
-### code chunk number 8: ktProjectionFig
+### code chunk number 8: ktProjections
 ###################################################
-plot(fullKt)
+fM<-forecast(italyLcaM,h=110)
+fF<-forecast(italyLcaF,h=110)
+fT<-forecast(italyLcaT,h=110)
 
 
 ###################################################
-### code chunk number 9: lifeTableProject
+### code chunk number 9: ktProjectionFig
+###################################################
+par(mfrow=c(1,3))
+plot(fM$kt.f,main="Male")
+plot(fF$kt.f,main="Female",)
+plot(fT$kt.f,main="Total")
+
+
+###################################################
+### code chunk number 10: ktrates
+###################################################
+ratesM<-cbind(italyDemo$rate$male[1:100,],fM$rate$male[1:100,])
+ratesF<-cbind(italyDemo$rate$female[1:100,],fF$rate$female[1:100,])
+ratesT<-cbind(italyDemo$rate$total[1:100,],fT$rate$total[1:100,])
+
+
+###################################################
+### code chunk number 11: ktratesFig
+###################################################
+par(mfrow=c(1,1))
+plot(seq(min(italyDemo$year),max(italyDemo$year)+110),ratesF[65,],
+     col="red",xlab="Years",ylab="Death Rates",type="l")
+lines(seq(min(italyDemo$year),max(italyDemo$year)+110),ratesM[65,],
+      col="blue",xlab="Years",ylab="Death Rates")
+lines(seq(min(italyDemo$year),max(italyDemo$year)+110),ratesT[65,],
+      col="black",xlab="Years",ylab="Death Rates")
+legend("topright" , c("Male","Female","Total"),
+       cex=0.8,col=c("blue","red","black"),lty=1);
+
+
+###################################################
+### code chunk number 12: lifeTableProject
 ###################################################
 
-createActuarialTable<-function(yearOfBirth){
-	#get projected Px
-	ktSubset<-window(fullKt, start=yearOfBirth)
-	predictionTable<-data.frame(age=italyLca$age,ax=italyLca$ax,bx=italyLca$bx)
-	predictionTable$kt=ktSubset[1:nrow(predictionTable)] 
-	predictionTable$mux=with(predictionTable,exp(ax+bx*kt)) #fit mux
-	predictionTable$px=with(predictionTable,exp(-mux)) #get px
-	fittedPx=predictionTable$px #add px to table
-	px4Completion=seq(from=predictionTable$px[length(fittedPx)], to=0, length=20)
+createActuarialTable<-function(yearOfBirth,rate){
+
+  mxcoh <- rate[1:nrow(rate),(yearOfBirth-min(italyDemo$year)+1):ncol(rate)]
+  cohort.mx <- diag(mxcoh)
+  cohort.px=exp(-cohort.mx)
+  #get projected Px
+  fittedPx=cohort.px #add px to table
+	px4Completion=seq(from=cohort.px[length(fittedPx)], to=0, length=20)
 	totalPx=c(fittedPx,px4Completion[2:length(px4Completion)])
 	#create life table
 	irate=1.04/1.02-1
 
-	cohortLt=probs2lifetable(probs=totalPx, radix=100000,type="px", name=paste("Cohort",yearOfBirth))
+	cohortLt=probs2lifetable(probs=totalPx, radix=100000,type="px", 
+  name=paste("Cohort",yearOfBirth))
 	cohortAct=new("actuarialtable",x=cohortLt@x, lx=cohortLt@lx, 
-			interest=irate, name=cohortLt@name)
+	interest=irate, name=cohortLt@name)
 	return(cohortAct)
 	}
 
 
 
+
 ###################################################
-### code chunk number 10: annuityAPV
+### code chunk number 13: annuityAPV
 ###################################################
-	getAnnuityAPV<-function(yearOfBirth) {
-		actuarialTable<-createActuarialTable(yearOfBirth)
+	getAnnuityAPV<-function(yearOfBirth,rate) {
+		actuarialTable<-createActuarialTable(yearOfBirth,rate)
 		out=axn(actuarialTable,x=65,m=12)
 		return(out)
 	}
-	for(i in seq(1920,2000,by=10)) {
-		cat("For cohort ",i, " the expected lifetime at birth is",
-				round(exn(createActuarialTable(i)),2),
-				" and the APV is :",round(getAnnuityAPV(i),2),"\n")
+rate<-ratesM
+for(i in seq(1920,2000,by=10)) {
+		cat("For cohort ",i, "of males the e0 is",
+		round(exn(createActuarialTable(i,rate)),2),
+		" and the APV is :",round(getAnnuityAPV(i,rate),2),"\n")
+		
+	}
+rate<-ratesF
+for(i in seq(1920,2000,by=10)) {
+  	cat("For cohort ",i, "of females the e0 at birth is",
+	round(exn(createActuarialTable(i,rate)),2),
+	" and the APV is :",round(getAnnuityAPV(i,rate),2),"\n")
+		
+	}
+rate<-ratesT
+for(i in seq(1920,2000,by=10)) {
+    cat("For cohort ",i, "of total population the e0 is",
+		round(exn(createActuarialTable(i,rate)),2),
+		" and the APV is :",round(getAnnuityAPV(i,rate),2),"\n")
 		
 	}
 

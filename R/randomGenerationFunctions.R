@@ -293,7 +293,7 @@ rLifeContingencies<-function (n, lifecontingency, object, x, t, i = object@inter
 	else deathsTimeX = x + rLife(n = n, object = object, x = x, 
 				k = k, type = "Tx")
 	if (parallel == TRUE) {
-		require(parallel)
+		#require(parallel)
 		type <- if (exists("mcfork", mode = "function")) 
 					"FORK"
 				else "PSOCK"
@@ -416,7 +416,7 @@ rLifeContingenciesXyz<-function(n,lifecontingency, tablesList, x,t,i,
 	deathsTimeX=temp	
 	if(parallel==TRUE) {
 		#set up parallel library
-		require(parallel)
+		#require(parallel)
 		type <- if (exists("mcfork", mode="function")) "FORK" else "PSOCK"
 		cores <- getOption("mc.cores", detectCores())
 		cl <- makeCluster(cores, type=type)

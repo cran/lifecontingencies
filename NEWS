@@ -1,3 +1,4 @@
-	20-07-2013
-	Add annuities paid in advance / deferred option
-	Add functions getLifecontingencyPV and getLifecontingencyXyzPV to obtain Present Value given the age of death.
+02-12-2013
+Fix an issue with print method on actuarialtable
+Added reference to JSS Published Paper
+Deeply improved mortality vignette (thanks to Gian Paolo Clemente, co-author)

@@ -4,7 +4,6 @@
 ### code chunk number 1: setup
 ###################################################
 	options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
-
 	set.seed(123)
 	numSim=200
 

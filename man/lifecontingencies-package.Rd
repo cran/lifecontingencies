@@ -13,8 +13,8 @@ Package to perform actuarial mathematics on life contingencies and classical fin
 \tabular{ll}{
 Package: \tab lifecontingencies\cr
 Type: \tab Package\cr
-Version: \tab 0.9.8.6\cr
-Date: \tab 2013-07-20\cr
+Version: \tab 1.0\cr
+Date: \tab 2013-11-02\cr
 License: \tab GPL-2.0\cr
 LazyLoad: \tab yes\cr
 }
@@ -24,24 +24,13 @@ LazyLoad: \tab yes\cr
 Giorgio A. Spedicato
 Maintainer: <lifecontingencies@statisticaladvisor.com>
 }
-\references{
-Actuarial Mathematics (Second Edition), 1997, by Bowers, N.L., Gerber, H.U., Hickman, J.C., Jones, D.A. and Nesbitt, C.J.
-Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition), 2008, ACTEX Publications.
-}
-
-\note{
-Work in progress.
-}
-
+\references{The lifecontingencies Package: Performing Financial and Actuarial Mathematics Calculations in R, Giorgio Alfredo Spedicato, Journal of Statistical Software, 2013,55 , 10, 1-36}
+\note{Work in progress.}
 \seealso{
 	\code{\link{accumulatedValue}}, \code{\link{annuity}}
 }
-
 \section{Warning }{
-	This package and functions herein are provided as is, without any guarantee regarding the 
-	accuracy of calculations. The author disclaims any liability arising by  
-	eventual losses due to direct or indirect use of this package. 
-}
+	This package and functions herein are provided as is, without any guarantee regarding the	accuracy of calculations. The author disclaims any liability arising by any losses due to direct or indirect use of this package. }
 
 \examples{
 

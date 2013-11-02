@@ -153,7 +153,23 @@ setMethod("show","actuarialtable", #metodo show
 					cat("\n")
 				}
 		)
-		
+
+#print method: show clone
+
+setMethod("print","actuarialtable", #metodo show
+          function(x){
+            out<-NULL
+            cat(paste("Actuarial table ",x@name, "interest rate ", 
+                      x@interest*100,"%"),"\n")
+            cat("\n")
+            #create the actuarial table object
+            out<-.createActuarialTableCols(object=x)
+            print(out)
+            cat("\n")
+          }
+)
+
+
 setMethod("plot","lifetable",
 		function(x,y,...){
 			plot(x=x@x, y=x@lx, xlab="x values", 
