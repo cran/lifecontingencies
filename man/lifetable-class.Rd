@@ -3,6 +3,7 @@
 \docType{class}
 \alias{lifetable-class}
 \alias{summary,lifetable-method}
+\alias{coerce,lifetable,markovchainList-method}
 \title{Class \code{"lifetable"}}
 \description{
 	\code{lifetable} objects allow to define and use life tables with the aim to evaluate 
@@ -26,6 +27,7 @@ Two vectors are needed. The age vector and the population at risk vector.
     \item{coerce}{\code{signature(from = "lifetable", to = "data.frame")}: method to create a data - frame from a lifetable object }
     \item{plot}{\code{signature(x = "lifetable")}: method to plot the survival probability implied in the table }
     \item{show}{\code{signature(object = "lifetable")}: identical to \code{plot} method }
+     \item{coerce}{\code{signature(from = "lifetable", to = "markovchainList")}: coerce method from \code{lifetable} to \code{markovchainList} }
     \item{summary}{\code{signature(object = "lifetable")}: it returns summary information about the object }
 	 }
 }
@@ -50,5 +52,7 @@ Two vectors are needed. The age vector and the population at risk vector.
 }
 \examples{
 showClass("lifetable")
+data(soa08)
+summary(soa08)
 }
 \keyword{classes}

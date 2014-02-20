@@ -1,7 +1,8 @@
 # TODO: Add comment
 # 
-# Author: Packard Bell
+# Author: Giorgio Alfredo Spedicato
 ###############################################################################
+
 
 setClass("lifetable", #classe lifetable
 		representation(x="numeric",lx="numeric",name="character"),

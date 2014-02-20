@@ -576,14 +576,38 @@ c(tt1, tt2,tt3, tt4)
 
 
 ###################################################
-### code chunk number 60: benefitPremium1
+### code chunk number 60: randomMultipleLifeCon
+###################################################
+tablesList=list(soa08Act,soa08Act);x=c(60,60);m=0;status="first";t=30;k=1
+APVAxyz<-Axyzn(tablesList=tablesList,x=x,n=t,status=status,type="EV")
+samplesAxyz<-rLifeContingenciesXyz(n=numSim,lifecontingency = "Axyz",
+		tablesList = tablesList,x=x,t=t,m=m,k=k,status=status,
+		parallel=TRUE)
+tt5<-t.test(x=samplesAxyz, mu=APVAxyz)$p.value
+APVaxyz<-axyzn(tablesList=tablesList,x=x,n=t,m=m,k=k,status=status,type="EV")
+samplesaxyz<-rLifeContingenciesXyz(n=numSim,lifecontingency = "axyz",
+		tablesList = tablesList,x=x,t=t,m=m,k=k,status=status,
+		parallel=TRUE)
+tt6<-t.test(x=samplesaxyz, mu=APVaxyz)$p.value
+c(tt5,tt6)
+
+
+###################################################
+### code chunk number 61: variance
+###################################################
+var(sampleAxn)
+Axn(soa08Act, x=25,n=40, power=2)-Axn(soa08Act, x=25,n=40, power=1)^2
+
+
+###################################################
+### code chunk number 62: benefitPremium1
 ###################################################
 APV <- Axn(actuarialtable = soa08Act, x=25, n=40)
 APV
 
 
 ###################################################
-### code chunk number 61: benefitPremium2
+### code chunk number 63: benefitPremium2
 ###################################################
 samples <- rLifeContingencies(n=numSim, lifecontingency = "Axn", 
 		object= soa08Act, x=25,t=40,paralle=TRUE)
@@ -592,14 +616,14 @@ pct90Pr
 
 
 ###################################################
-### code chunk number 62: benefitPremium3
+### code chunk number 64: benefitPremium3
 ###################################################
 pct90Pr2 <- qnorm(p=0.90,mean=APV, sd=sd(samples)/sqrt(1000))
 pct90Pr2
 
 
 ###################################################
-### code chunk number 63: stochasticExampleFull1
+### code chunk number 65: stochasticExampleFull1
 ###################################################
 nsim <- 50
 employees <- 100
@@ -631,7 +655,7 @@ clusterExport(cl, varlist=c("employees","getEmployeeBenefit",
 
 
 ###################################################
-### code chunk number 64: stochasticExampleFull2
+### code chunk number 66: stochasticExampleFull2
 ###################################################
 employeeBenefits <- numeric(employees)
 employeeBenefits <- parSapply(cl, 1:employees,getEmployeeBenefit, type="EV")

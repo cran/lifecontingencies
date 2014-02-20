@@ -47,8 +47,8 @@ Payment type: "advance" default is the annuity due, otherwise annuity due.
 }
 }
 \details{
-In theory, these functions apply the sames concept of life insurances 
-on one head on multiple heads. Test have been performed on two heads only.
+In theory, these functions apply the same concept of life insurances 
+on one head on multiple heads.
 }
 \value{
 The insurance value is returned.
@@ -58,7 +58,7 @@ Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition),
 	2008, ACTEX Publications.
 }
 \author{
-Giorgio Alfredo Spedicato
+Giorgio Alfredo Spedicato, Kevin J. Owens.
 }
 \note{
 These functions are the more general version of \code{\link{axyn}} and 

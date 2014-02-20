@@ -1,6 +1,5 @@
 \name{annuity}
 \alias{annuity}
-
 \title{
 Annuity function
 }

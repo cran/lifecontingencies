@@ -15,7 +15,7 @@ exyt(objectx, objecty, x, y, t, status = "joint")
 
 pxyt(objectx, objecty, x, y, t, status = "joint")
 
-qxyt(objectx, objecty, x, y, t, status = "joint")
+qxyt(objectx, objecty, x, y, t,  status = "joint")
 }
 \arguments{
   \item{objectx}{
@@ -33,6 +33,7 @@ Age of life Y.
   \item{t}{
 Time until survival has to be evaluated.
 }
+
   \item{status}{
 Either "joint" or "last".
 }
@@ -46,11 +47,10 @@ A numeric value representing joint survival probability.
 	Jones, D.A. and Nesbitt, C.J.
 }
 \author{
-Giorgio A. Spedicato
+Giorgio A. Spedicato, Kevin J. Owens.
 }
 \note{
-These functions are used to evaluate two heads life contingencies. Arbitrary number of heads has not been
-jet implemented.
+These functions are used to evaluate two or more life contingencies.
 }
 
 \section{Warning }{

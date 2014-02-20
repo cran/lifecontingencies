@@ -39,21 +39,21 @@ pxt<-function(object, x, t, fractional="linear")
 	if((x+t)>omega) out=0 else  #fractional ages
 	{ if((t%%1)==0) out=object@lx[which(object@x==t+x)]/object@lx[which(object@x==x)] else {
 			z=t%%1 #the fraction of year
-
 			#linearly interpolates if fractional age
-		if(fractional=="linear"){
-			ph=object@lx[which(object@x==ceiling(t+x))]/object@lx[which(object@x==x)]
-			pl=object@lx[which(object@x==floor(t+x))]/object@lx[which(object@x==x)]		
-			out=z*ph+(1-z)*pl
+			pl=object@lx[which(object@x==floor(t+x))]/object@lx[which(object@x==x)] # Kevin Owens: fix on this line, moving it out of the linear if statement so it can be used in other assumptions
+			if(fractional=="linear"){
+				ph=object@lx[which(object@x==ceiling(t+x))]/object@lx[which(object@x==x)]
+				out=z*ph+(1-z)*pl
 			} else if(fractional=="constant force") {
-				out=pxt(object=object, x=x,t=1)^z
+				out=pl*pxt(object=object, x=(x+floor(t)),t=1)^z # fix on this line
 			} else if(fractional=="hyperbolic") {
-				out=pxt(object=object, x=x,t=1)/(1-(1-z)*qxt(object=object, x=x,t=1))
+				out=pl*pxt(object=object, x=(x+floor(t)),t=1)/(1-(1-z)*qxt(object=object, x=(x+floor(t)),t=1)) # Kevin Owens: fix on this line
 			}
 		}			
 	}
 	return(out)
 }
+
 
 .forceOfMortality<-function(object,x)
 {
@@ -220,10 +220,13 @@ probs2lifetable<-function(probs, radix=10000, type="px", name="ungiven")
 }
 
 #multiple life new function
-pxyzt<-function(tablesList,x,t, status="joint",...)
+pxyzt<-function(tablesList,x,t, status="joint",fractional=rep("linear",length(tablesList)),...)
 {
 	out=1
+	#fractional list can be either missing or a string length of character one
+	if(length(fractional)==1) {temp<-fractional;fractional=rep(temp,length(tablesList))}
 	#initial checkings
+	
 	numTables=length(tablesList)
 	if(length(x)!=numTables) stop("Error! Initial ages vector length does not match with number of lives")
 	for(i in 1:numTables) {
@@ -232,17 +235,17 @@ pxyzt<-function(tablesList,x,t, status="joint",...)
 	#the survival probability is the cumproduct of the single survival probabilities
 	if(status=="joint")
 	{
-		for(i in 1:numTables) out=out*pxt(object=tablesList[[i]],x=x[i],t=t,...)
+		for(i in 1:numTables) out=out*pxt(object=tablesList[[i]],x=x[i],t=t,fractional=fractional[i],...)
 	} else { #last survivor status
 		#calculate first qx the return the difference
 		temp=1
-		for(i in 1:numTables) temp=temp*qxt(object=tablesList[[i]],x=x[i],t=t,...)
+		for(i in 1:numTables) temp=temp*qxt(object=tablesList[[i]],x=x[i],t=t,fractional=fractional[i],...)
 		out=1-temp
 	}
 	return(out)
 }
 #the death probability
-qxyzt<-function(tablesList,x,t, status="joint",...)
+qxyzt<-function(tablesList,x,t, status="joint",fractional=rep("linear",length(tablesList)),...)
 {
 	out=numeric(1)
 	out=1-pxyzt(tablesList=tablesList,x=x,t=t, status=status,...)

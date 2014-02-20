@@ -1,4 +1,6 @@
-02-12-2013
-Fix an issue with print method on actuarialtable
-Added reference to JSS Published Paper
-Deeply improved mortality vignette (thanks to Gian Paolo Clemente, co-author)
+16-02-2014
+ Fix an issue with fractional probabilities
+ Fix an issue with multiple lives random generation functions.
+ Improved mortality vignettes
+ Add startup message
+ Add export to markovchain package

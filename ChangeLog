@@ -1,4 +1,9 @@
 ChangeLog
+-Version 1.05
+ Fix an issue with fractional probabilities (Kevin J. Owens)
+ Fix an issue with multiple lives random generation functions (Kevin J. Owens).
+ Improved mortality vignettes
+ life tables can now be exported as markovchainList objects
 -Version 1.0
   Fix an issue with print method on actuarialtable
   Added reference to JSS Published Paper

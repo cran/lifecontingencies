@@ -2,21 +2,20 @@ Package: lifecontingencies
 Type: Package
 Title: A package to perform actuarial mathematics for life
         contingencies insurances
-Version: 1.0
-Date: 2013-11-02
-Author: Giorgio A. Spedicato with contributions from Reinhold Kainhofer
-Maintainer: Giorgio A. Spedicato
-        <lifecontingencies@statisticaladvisor.com>
+Version: 1.0.5
+Date: 2014-02-20
+Author: Giorgio Alfredo Spedicato with contributions from Reinhold Kainhofer and Kevin J. Owens
+Maintainer: Giorgio Alfredo Spedicato <spedicato_giorgio@yahoo.it>
 Description: Financial and actuarial functions to evaluate life contingencies.
 Depends: R (>= 2.14), methods
-Imports: parallel
+Imports: parallel, utils
 Suggests: demography, forecast
 License: GPL-2
 LazyLoad: yes
 BugReports: Giorgio A. Spedicato
         <lifecontingencies@statisticaladvisor.com>
 BuildVignettes: yes
-Packaged: 2013-11-02 00:58:09 UTC; Giorgio Copia
+Packaged: 2014-02-21 23:03:18 UTC; Packard Bell
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2013-11-02 08:12:35
+Date/Publication: 2014-02-22 00:54:06

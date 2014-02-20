@@ -13,16 +13,16 @@ Package to perform actuarial mathematics on life contingencies and classical fin
 \tabular{ll}{
 Package: \tab lifecontingencies\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2013-11-02\cr
+Version: \tab 1.0.5\cr
+Date: \tab 2014-02-20\cr
 License: \tab GPL-2.0\cr
 LazyLoad: \tab yes\cr
 }
 
 }
 \author{
-Giorgio A. Spedicato
-Maintainer: <lifecontingencies@statisticaladvisor.com>
+Giorgio Alfredo Spedicato with contributions from Reinhold Kainhofer and Kevin J. Owens
+Maintainer: <spedicato_giorgio@yahoo.it>
 }
 \references{The lifecontingencies Package: Performing Financial and Actuarial Mathematics Calculations in R, Giorgio Alfredo Spedicato, Journal of Statistical Software, 2013,55 , 10, 1-36}
 \note{Work in progress.}

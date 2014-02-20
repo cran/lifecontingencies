@@ -31,7 +31,7 @@ k = 1, status = "joint", parallel = FALSE,payment = "advance")
 	Jones, D.A. and Nesbitt, C.J.
 }
 \author{
-Giorgio Alfredo Spedicato.
+Giorgio Alfredo Spedicato, Kevin J. Owens.
 }
 \note{
 A matrix is returned.

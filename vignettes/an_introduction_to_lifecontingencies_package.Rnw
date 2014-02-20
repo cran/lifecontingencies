@@ -15,7 +15,6 @@
 \Plaintitle{The lifecontingencies Package: Performing Financial and Actuarial Mathematics Calculations in R}
 \Shorttitle{\pkg{lifecontingencies}: Financial and Actuarial Mathematics Calculations in \proglang{R}}
 
-
 \Abstract{
   It is possible to model life contingency insurances with the
   \pkg{lifecontingencies} \proglang{R} package, which is capable of
@@ -73,9 +72,10 @@
 \maketitle
 
 \section{Introduction}
-
-As of May 2013, the \pkg{lifecontingencies} package
-\citep{spedLifeCon} appears as the first \proglang{R} package that
+This vignette is based on the package's paper published in JSS,
+\cite{spedLifecon}.
+As of January 2014, the \pkg{lifecontingencies} package
+\citep{spedLifecon} appears as the first \proglang{R} package that
 deals with life contingent actuarial mathematics. The \proglang{R}
 statistical programming environment \citep{rSoftware} has become the
 primary reference software for academics. Even in a business context,
@@ -1627,6 +1627,40 @@ c(tt1, tt2,tt3, tt4)
 \end{center}
 \end{figure}
 
+The same analysis can be performen on life contingencies insurance on two (or more lives)
+as listings exemplify below.
+
+<<randomMultipleLifeCon,keep.source=TRUE>>=
+tablesList=list(soa08Act,soa08Act);x=c(60,60);m=0;status="first";t=30;k=1
+APVAxyz<-Axyzn(tablesList=tablesList,x=x,n=t,status=status,type="EV")
+samplesAxyz<-rLifeContingenciesXyz(n=numSim,lifecontingency = "Axyz",
+		tablesList = tablesList,x=x,t=t,m=m,k=k,status=status,
+		parallel=TRUE)
+tt5<-t.test(x=samplesAxyz, mu=APVAxyz)$p.value
+APVaxyz<-axyzn(tablesList=tablesList,x=x,n=t,m=m,k=k,status=status,type="EV")
+samplesaxyz<-rLifeContingenciesXyz(n=numSim,lifecontingency = "axyz",
+		tablesList = tablesList,x=x,t=t,m=m,k=k,status=status,
+		parallel=TRUE)
+tt6<-t.test(x=samplesaxyz, mu=APVaxyz)$p.value
+c(tt5,tt6)
+@
+
+
+
+All contingency functions have been provided an argument \code{power}, whose
+default value is set to one, that becomes useful when moments higher than one
+(the expected) of the life contingency random variable are needed. 
+
+<<variance, keep.source=TRUE>>=
+var(sampleAxn)
+Axn(soa08Act, x=25,n=40, power=2)-Axn(soa08Act, x=25,n=40, power=1)^2
+@
+
+The example that follows verifies that the variance an endowment insurance, 
+calculated by the rule of moments, matches with the variance of the simulated
+distribution.
+
+
 The full distribution of a life contingent insurance variable $\tilde Z$, can be
 used to compute premiums using the percentile premium principle. Under this
 approach, the premium is set to ensure that the insurer will suffer financial loss
@@ -1797,8 +1831,8 @@ potential losses due to direct or indirect use of this package.
 
 The author wishes to thank all those whose suggestions contributed to
 the package's enhancements. In particular, he would like to thank
-Christophe Dutang, Tim Riffle and Reinhold Kainhofer for their suggestions on
-code and vignettes. A special thank also to Anton Sylchenko for the
+Christophe Dutang, Tim Riffle, Reinhold Kainhofer and Kevin J. Owens for their
+suggestions on code and vignettes. A special thank also to Anton Sylchenko for the
 copy-editing. Also, many thanks go out to the anonymous Journal of
 Statistical Software referees that helped improve the quality of the
 package and underlying vignettes.

@@ -72,12 +72,29 @@ Axn(soa08Act, x=30, n=10, i=0.04,power=2)-Axn(soa08Act, x=30, n=10, i=0.04,power
 1000*Axn(soa08Act, x=30,i=0.06)
 @
 
-\cite[p 437]{mlc}, $\anndue{50}{20}$
+\cite[p 339]{mlc}, ${A_{30}}^{4}$
 
 <<act4, keep.source=TRUE>>=
+#should be 0.1048
+Axn(soa08Act, x=30,k=4)
+@
+
+
+\cite[p 437]{mlc}, $\anndue{50}{20}$
+
+<<act5, keep.source=TRUE>>=
 #should be 0.01155
 Axn(soa08Act, 50,20)/axn(soa08Act, 50,20)
 @
+
+\cite[p 393]{mlc}, $\ddot{a}_{60}^{(12)}$ -
+
+<<act6, keep.source=TRUE>>=
+#should be 0.1068
+axn(soa08Act, x=60,k=12)
+@
+
+
 
 \bibliography{lifecontingenciesBiblio}
 

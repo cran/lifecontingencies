@@ -12,38 +12,24 @@ These functions evaluate multiple life survival probabilities, either for joint 
 be generated as well as random samples of lifes.
 }
 \usage{
-exyzt(tablesList, x, t = Inf, status = "joint", type = "Kx", ...)
-pxyzt(tablesList, x, t, status = "joint", ...)
-qxyzt(tablesList, x, t, status = "joint", ...)
+exyzt(tablesList, x, t = Inf, status = "joint",  type = "Kx", ...)
+pxyzt(tablesList, x, t, status = "joint", fractional=rep("linear",
+length(tablesList)), ...)
+qxyzt(tablesList, x, t, status = "joint", 
+fractional=rep("linear",length(tablesList)), ...)
 rLifexyz(n, tablesList, x, k = 1, type = "Tx")
 }
 
 \arguments{
-
-  \item{tablesList}{
-A list whose elements are either lifetable or actuarialtable class objects.
-}
-  \item{x}{
-A vector of the same size of tableList that contains the initial ages.
-}
-  \item{t}{
-The duration.
-}
-  \item{n}{
-The size of sampled life duration matrix.
-}
-  \item{status}{
-Either "joint" (for the joint-life status model) or "last".
-}
-  \item{type}{
-"Tx" for continuous, "Kx" for curtate.
-}
-  \item{\dots}{
-Options to be passed to \code{pxt}.
-}
-  \item{k}{
-Fractional frequency option.
-}
+  \item{tablesList}{A list whose elements are either \code{lifetable} or \code{actuarialtable} class objects.}
+\item{x}{A vector of the same size of tableList that contains the initial ages.}
+\item{t}{The duration.}
+\item{n}{The size of sampled life duration matrix.}
+\item{status}{Either "joint" (for the joint-life status model) or "last".}
+\item{type}{"Tx" for continuous, "Kx" for curtate.}
+\item{fractional}{Fractional lives assumption.}
+\item{\dots}{Options to be passed to \code{pxt}.}
+\item{k}{Fractional frequency option.}
 }
 \details{
 These functions extends \code{\link{pxyt}} family to an arbitrary number of life contingencies.

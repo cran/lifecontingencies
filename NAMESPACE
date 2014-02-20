@@ -1,7 +1,8 @@
 import(methods)
-importFrom(graphics, plot)
-importFrom("utils", head, tail)
-import(parallel)
+#import(markovchain)
+importFrom("graphics", plot)
+#importFrom("utils", head, tail)
+import(parallel, utils)
 
 
 #useDynLib(lifecontingencies)

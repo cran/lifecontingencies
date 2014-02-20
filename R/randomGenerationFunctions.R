@@ -58,7 +58,7 @@ rLife=function(n,object, x=0,k=1, type="Tx")
 
 rLifexyz=function(n,tablesList,x,k=1, type="Tx")
 {
-
+	
 	#initial checkings
 	numTables=length(tablesList)
 	if(length(x)!=numTables) stop("Error! Initial ages vector length does not match with number of lives")
@@ -136,7 +136,7 @@ rLifexyz=function(n,tablesList,x,k=1, type="Tx")
 # t=100
 # n=50000
 # object=soa08Act
-# lifecontingency="Axn"
+# lifecontingency="axn"
 # i=0.06
 # m=30
 # k=12
@@ -159,6 +159,8 @@ rLifexyz=function(n,tablesList,x,k=1, type="Tx")
 	out=ifelse(((T>=m) && (T<=m+n-1/k)),(1+i)^-(T+1/k),0)
 	return(out)
 }
+
+
 
 
 #increasing life insurance function
@@ -348,11 +350,6 @@ rLifeContingencies<-function (n, lifecontingency, object, x, t, i = object@inter
 	return(outs)
 }
 
-
-
-
-
-
 # x=40
 # t=20
 # n=500000
@@ -361,16 +358,16 @@ rLifeContingencies<-function (n, lifecontingency, object, x, t, i = object@inter
 # i=0.06
 # m=10
 # k=12
-#
+# 
 # outs<-rLifeContingencies(n=n,lifecontingency=lifecontingency, object=object, x=x,t=t,i=i, 
-#		m=m,k=k, parallel=TRUE)
-#APV=axn(object, x=x,n=t, k=k,m=m)
+# 		m=m,k=k, parallel=TRUE)
+# APV=axn(object, x=x,n=t, k=k,m=m)
 # mean(outs)
 # APV
 # t.test(x=outs, mu=APV)
-
-#system.time(rLifeContingencies(n,lifecontingency, object, x,t,i=i, m=m,k=k, parallel=TRUE))
-#system.time(rLifeContingencies(n,lifecontingency, object, x,t,i=i, m=m,k=k, parallel=FALSE))
+# 
+# system.time(rLifeContingencies(n,lifecontingency, object, x,t,i=i, m=m,k=k, parallel=TRUE))
+# system.time(rLifeContingencies(n,lifecontingency, object, x,t,i=i, m=m,k=k, parallel=FALSE))
 
 
 #n=10000
@@ -405,7 +402,8 @@ rLifeContingenciesXyz<-function(n,lifecontingency, tablesList, x,t,i,
 		omega=numeric(numTables)
 		for(j in 1:numTables) omega[j]=getOmega(tablesList[[j]])
 		temp=omega-x-m
-		t=min(temp)
+		#t=min(temp) #see below correction 5th Jan 2014
+		t <- ifelse(status=="joint",min(temp),max(temp)) #FIX by Kevin Owens
 	} 	
 
 	temp=matrix(nrow=n, ncol=numTables)
@@ -413,7 +411,7 @@ rLifeContingenciesXyz<-function(n,lifecontingency, tablesList, x,t,i,
 	#fractional payment are handled using countinuous lifetime simulation
 	if(k==1) temp=x+rLifexyz(n=n,tablesList=tablesList,x=x, k=k,type="Kx") else temp=x+rLifexyz(n=n,tablesList=tablesList,x=x,k=k,type="Tx") #this to handle fractional payments (assume continuous...)
 
-	deathsTimeX=temp	
+	deathsTimeX<-temp	
 	if(parallel==TRUE) {
 		#set up parallel library
 		#require(parallel)
@@ -422,10 +420,10 @@ rLifeContingenciesXyz<-function(n,lifecontingency, tablesList, x,t,i,
 		cl <- makeCluster(cores, type=type)
 		clusterExport(cl, varlist=c("presentValue","annuity")) #richiesto da axn
 		if(lifecontingency=="Axyz") 
-			outs=parSapply(cl=cl, deathsTimeX,.fAxyzn,y=x,n=t, i=interest,m=m,k=k,status=status)
+			outs<-parApply(cl=cl, deathsTimeX, 1,.fAxyzn,y=x,n=t, i=interest,m=m,k=k,status=status)
 		else if(lifecontingency=="axyz") 
 		{			
-			outs=parSapply(cl=cl,deathsTimeX,.faxyzn,y=x,n=t,i=interest,m=m,k=k,status=status,payment=payment)
+			outs<-parApply(cl=cl,deathsTimeX, 1,.faxyzn,y=x,n=t,i=interest,m=m,k=k,status=status,payment=payment)
 		}
 		#stops the cluster
 
@@ -433,10 +431,10 @@ rLifeContingenciesXyz<-function(n,lifecontingency, tablesList, x,t,i,
 	} else {
 		#serial version
 		if(lifecontingency=="Axyz") 
-			outs=sapply( deathsTimeX, .fAxyzn,y=x,n=t, i=interest,m=m,k=k,status=status)
+			outs<-apply( deathsTimeX, 1, .fAxyzn,y=x,n=t, i=interest,m=m,k=k,status=status)
 		else if(lifecontingency=="axyz") 
 		{
-			outs=sapply(deathsTimeX, .faxyzn,y=x,n=t, i=interest,m=m,k=k,status=status,payment=payment)
+			outs<-apply(deathsTimeX, 1, .faxyzn,y=x,n=t, i=interest,m=m,k=k,status=status,payment=payment)
 		}
 	}
 	return(outs)
