@@ -1,13 +1,8 @@
 \name{rLifeContingencies}
 \alias{rLifeContingencies}
-
-\title{
-Function to generate samples from the life contingencies stochastic variables.
-}
-\description{
-This function returns a n-size sample from the underlying present value of benefits 
-stochastic variable defined by a specific life contingencies insurance form.
-}
+\title{Function to generate samples from the life contingencies stochastic variables.}
+\description{This function returns a n-size sample from the underlying present value of benefits 
+stochastic variable defined by a specific life contingencies insurance form.}
 \usage{
 rLifeContingencies(n, lifecontingency, object, x, t, 
 i = object@interest, m=0, k = 1 , parallel=FALSE, payment="advance")
@@ -30,19 +25,15 @@ value of benefits definition.}
 This function is a wrapper for internal function that returns the present value of insured 
 benefits.
 }
-\value{
-A numeric vector.
-}
+\value{A numeric vector.}
 \references{
 	Actuarial Mathematics (Second Edition), 1997, by Bowers, N.L., Gerber, H.U., Hickman, J.C., 
 	Jones, D.A. and Nesbitt, C.J.
 }
-\author{
-Giorgio Alfredo Spedicato.
-}
+\author{Giorgio Alfredo Spedicato.}
 \note{
 This function is a wrapper for many internal functions. It is called by all actuarial mathematics functions when value "ST" is provided to 
-\code{type} parameter. Two heads life contingencies do not have this function implemented yet.
+\code{type} parameter.
 }
 
 \section{Warning }{

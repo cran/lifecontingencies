@@ -66,17 +66,18 @@
 <<setup,echo=FALSE, results=hide>>=
 	options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
 	set.seed(123)
-	numSim=200
+	numSim=100
 @
 
 \maketitle
 
 \section{Introduction}
 This vignette is based on the package's paper published in JSS,
-\cite{spedLifecon}.
-As of January 2014, the \pkg{lifecontingencies} package
-\citep{spedLifecon} appears as the first \proglang{R} package that
-deals with life contingent actuarial mathematics. The \proglang{R}
+\cite{spedLifecon}. Apart of keeping track of package's updates, a major
+difference with respect to JSS publication is that parallel features are turned
+off to cope with CRAN packages' submission policies. As of March 2014, the
+\pkg{lifecontingencies} package
+\citep{spedLifecon} appears as the first \proglang{R} package that deals with life contingent actuarial mathematics. The \proglang{R}
 statistical programming environment \citep{rSoftware} has become the
 primary reference software for academics. Even in a business context,
 \proglang{R} is now considered a valid alternative to affirmed
@@ -1032,6 +1033,16 @@ It is possible to convert the \code{actuarialtable} object into a
 exampleActDf <- as(exampleAct, "data.frame")
 @
 
+A recent \pkg{lifecontingencies} package enhancement allows to export a life
+table as non - homogeneous discrete Markov chain by means of
+\code{markovchainList} S4 class object as defined in \pkg{markovchain}
+\citep{markovchainR} \proglang{R} package.
+
+<<toMarkovChain, keep.source=TRUE>>=
+data(soa08)
+require(markovchain)
+soa08Mc<-as(soa08,"markovchainList")
+@
 
 Finally, a \code{plot} method can be applied to either\code{lifetable} or
 \code{actuarialtable} objects. The underlying survival function (which is the plot of $x$ vs $l_x$) is displayed in both cases. 
@@ -1589,25 +1600,25 @@ Figure~\ref{fig:Zdistrs} shows the resulting $\tilde Z$ distributions.
 APVAxn <- Axn(soa08Act,x=25,n=40,type="EV")
 APVAxn
 sampleAxn <- rLifeContingencies(n=numSim, lifecontingency="Axn",
-		object=soa08Act,x=25,t=40,parallel=TRUE)
+		object=soa08Act,x=25,t=40,parallel=FALSE)
 tt1 <-t.test(x=sampleAxn,mu=APVAxn)$p.value
 
 APVIAxn <- IAxn(soa08Act,x=25,n=40,type="EV")
 APVIAxn
 sampleIAxn <- rLifeContingencies(n=numSim, lifecontingency="IAxn",
-		object=soa08Act,x=25,t=40,parallel=TRUE)
+		object=soa08Act,x=25,t=40,parallel=FALSE)
 tt2 <-t.test(x=sampleIAxn,mu=APVIAxn)$p.value
 
 APVaxn <- axn(soa08Act,x=25,n=40,type="EV")
 APVaxn
 sampleaxn <- rLifeContingencies(n=numSim, lifecontingency="axn",
-		object=soa08Act,x=25,t=40,parallel=TRUE)
+		object=soa08Act,x=25,t=40,parallel=FALSE)
 tt3 <- t.test(x=sampleaxn,mu=APVaxn)$p.value
 
 APVAExn <- AExn(soa08Act,x=25,n=40,type="EV")
 APVAExn
 sampleAExn <- rLifeContingencies(n=numSim, lifecontingency="AExn",
-		object=soa08Act,x=25,t=40,parallel=TRUE)
+		object=soa08Act,x=25,t=40,parallel=FALSE)
 tt4 <-t.test(x=sampleAExn,mu=APVAExn)$p.value
 c(tt1, tt2,tt3, tt4)
 @
@@ -1635,12 +1646,12 @@ tablesList=list(soa08Act,soa08Act);x=c(60,60);m=0;status="first";t=30;k=1
 APVAxyz<-Axyzn(tablesList=tablesList,x=x,n=t,status=status,type="EV")
 samplesAxyz<-rLifeContingenciesXyz(n=numSim,lifecontingency = "Axyz",
 		tablesList = tablesList,x=x,t=t,m=m,k=k,status=status,
-		parallel=TRUE)
+		parallel=FALSE)
 tt5<-t.test(x=samplesAxyz, mu=APVAxyz)$p.value
 APVaxyz<-axyzn(tablesList=tablesList,x=x,n=t,m=m,k=k,status=status,type="EV")
 samplesaxyz<-rLifeContingenciesXyz(n=numSim,lifecontingency = "axyz",
 		tablesList = tablesList,x=x,t=t,m=m,k=k,status=status,
-		parallel=TRUE)
+		parallel=FALSE)
 tt6<-t.test(x=samplesaxyz, mu=APVaxyz)$p.value
 c(tt5,tt6)
 @
@@ -1649,7 +1660,8 @@ c(tt5,tt6)
 
 All contingency functions have been provided an argument \code{power}, whose
 default value is set to one, that becomes useful when moments higher than one
-(the expected) of the life contingency random variable are needed. 
+(the expected) of the life contingency random variable are needed. For example a
+direct computation of term insurance variance can be performed as follows.
 
 <<variance, keep.source=TRUE>>=
 var(sampleAxn)
@@ -1683,7 +1695,7 @@ would be
 
 <<benefitPremium2, keep.source=TRUE>>=
 samples <- rLifeContingencies(n=numSim, lifecontingency = "Axn", 
-		object= soa08Act, x=25,t=40,paralle=TRUE)
+		object= soa08Act, x=25,t=40,parallel=FALSE)
 pct90Pr <- as.numeric(quantile(samples,.90))
 pct90Pr
 @
@@ -1735,7 +1747,7 @@ getEmployeeBenefit<-function(index,type="EV") {
 }
 
 require(parallel)
-cl <- makeCluster(detectCores())
+cl <- makeCluster(1) 
 worker.init <- function(packages) {
 	for (p in packages) {
 		library(p, character.only=TRUE)

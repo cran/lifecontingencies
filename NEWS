@@ -1,6 +1,4 @@
-16-02-2014
- Fix an issue with fractional probabilities
- Fix an issue with multiple lives random generation functions.
- Improved mortality vignettes
- Add startup message
- Add export to markovchain package
+-Version 1.0.6
+ Changed vignettes removing parallel function to cope with CRAN policies
+ Added SoA illustrative service table in data
+ Introduced multiple decrements by the mdt class

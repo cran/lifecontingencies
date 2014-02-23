@@ -1,5 +1,9 @@
 ChangeLog
--Version 1.05
+-Version 1.0.6
+ Changed vignettes removing parallel function to cope with CRAN policies
+ Added SoA illustrative service table in data
+ Introduced multiple decrements by the mdt class
+-Version 1.0.5
  Fix an issue with fractional probabilities (Kevin J. Owens)
  Fix an issue with multiple lives random generation functions (Kevin J. Owens).
  Improved mortality vignettes

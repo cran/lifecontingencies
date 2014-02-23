@@ -1,7 +1,6 @@
 \name{axyn}
 \alias{axyn}
 \alias{Axyn}
-
 \title{
 Functions to evaluate life insurance and annuities on two heads.
 }

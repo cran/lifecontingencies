@@ -54,7 +54,6 @@ setMethod("show","lifetable", #metodo show
 		function(object){
 			cat(paste("Life table",object@name),"\n")
 			cat("\n")
-
 			out<-.createLifeTableCols(object)
 			print(out)
 			cat("\n")
