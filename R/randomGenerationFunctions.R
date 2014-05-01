@@ -24,8 +24,7 @@ out=ifelse((x>getOmega(object)),0,dxt(object = object,
 
 
 
-
-rLife=function(n,object, x=0,k=1, type="Tx")
+rLife<-function(n,object, x=0,k=1, type="Tx")
 {
 	if(missing(n)) stop("Error! Needing the n number of variates to return")
 	if((class(object) %in% c("lifetable", "actuarialtable"))==FALSE) stop("Error! Objectx needs be lifetable or actuarialtable objects")
@@ -518,3 +517,21 @@ getLifecontingencyPvXyz<-function(deathsTimeXyz,lifecontingency, tablesList, x,t
 #
 #testgetLifecontingencyPvaxn<-getLifecontingencyPV(deathsTimeX = seq(0, 110, by=1), lifecontingency = "axn", object=soa08Act, 
 #		x=40,t=20, m=0, k=1)
+
+
+######simulate from a MarkovChain
+
+#rmdt<-function(n,object, x=0,k=1,t0="alive", include.t0=TRUE) {
+#	#require(markovchain)
+#	mcList<-as(object, "markovchainList")
+#	if(include.t0==TRUE) out<-rep(t0,n)
+#	initialVal<-t0
+#	endSim<-min(k,getOmega(object)+1-x) #maximum length of simulations
+#	for(i in 1:endSim)
+#	{
+#		sim<-rmarkovchain(n=1,object=mcList[[x+i]],t0=initialVal)
+#		out<-rbind(out,rep(sim,n))
+#		initialVal<-sim
+#	}
+#	invisible(out)
+#}

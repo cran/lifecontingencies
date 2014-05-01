@@ -5,21 +5,23 @@
 \title{Functions to evaluate survival, death probabilities and deaths.}
 \description{These functions evaluate raw survival and death probabilities between age x and x+t}
 \usage{
-dxt(object, x, t)
-pxt(object, x, t, fractional = "linear")
-qxt(object, x, t, fractional = "linear")
+dxt(object, x, t, decrement)
+pxt(object, x, t, fractional = "linear", decrement)
+qxt(object, x, t, fractional = "linear", decrement)
 }
 \arguments{
 \item{object}{A \code{lifetable} object.}
   \item{x}{Age of life \code{x}.}
   \item{t}{Period until which the age shall be evaluated. Default value is 1.}
   \item{fractional}{Assumptions for fractional age. One of "linear", "hyperbolic", "constant force".}
+  \item{decrement}{The reason of decrement (only for \code{mdt} class objects). Can be either an ordinal number or the
+  name of decrement}
  }
 \details{
 	Fractional assumptions are:
 		-linear: linear interpolation between consecutive ages.
 		-constant force of mortality: constant force of mortality.
-		-hyperbolic: Balducci assumptions. See reference book for details.
+		-hyperbolic: Balducci assumptions. See references for details.
 }
 \value{A numeric value representing requested probability.}
 \references{
@@ -44,5 +46,6 @@ Giorgio A. Spedicato
 	qxt(object=soa08Act, x=90, t=2)
 	#pxt example
 	pxt(object=soa08Act, x=90, t=2, "constant force" )
+	#add another example for MDT
 }
 

@@ -13,9 +13,9 @@ used to create life table objects and actuarial tables object.
   A data frame with 121 observations on the following 9 variables.
   \describe{
     \item{\code{X}}{a numeric vector, representing ages from 0 to \eqn{\omega}.}
-    \item{\code{SIM92}}{a numeric vector, 1992 cross section general population females life table }
-    \item{\code{SIF92}}{a numeric vector, 1992 cross section general population males life table}
-    \item{\code{SIM00}}{a numeric vector, 2000 cross section general population females life table }
+    \item{\code{SIM92}}{a numeric vector, 1992 cross section general population males life table }
+    \item{\code{SIF92}}{a numeric vector, 1992 cross section general population females life table}
+    \item{\code{SIM00}}{a numeric vector, 2000 cross section general population males life table }
     \item{\code{SIF00}}{a numeric vector, 2000 cross section general population males life table}
     \item{\code{SIM02}}{a numeric vector, 2002 cross section general population females life table}
     \item{\code{SIF02}}{a numeric vector, 2002 cross section general population males life table}

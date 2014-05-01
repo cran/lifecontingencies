@@ -1,4 +1,3 @@
--Version 1.0.6
- Changed vignettes removing parallel function to cope with CRAN policies
- Added SoA illustrative service table in data
- Introduced multiple decrements by the mdt class
+-Version 1.1
+Multiple decrements officially introduced in the package
+An introductory vignette for multiple decrements

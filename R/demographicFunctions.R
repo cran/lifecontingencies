@@ -1,30 +1,41 @@
 #number of deaths between age x and x+t
-dxt<-function(object, x, t) {
+dxt<-function(object, x, t, decrement) {
 	#checks
 	out<-numeric(1)
-	if(!is(object, "lifetable")) stop("Error! Need lifetable or actuarialtable objects")
+	if (!(class(object) %in% c("lifetable","actuarialtable","mdt"))) stop("Error! Only lifetable, actuarialtable or mdt classes are accepted")
 	if(missing(x)) stop("Error! Missing x")
 	if(missing(t)) t=1
 	omega=getOmega(object) #prima object+1
-	#check if fractional
-	if ((t%%1)==0) {
-	lx=object@lx[which(object@x==x)]
-	if((x+t)>omega) out=lx else #before >=
-		out=lx-object@lx[which(object@x==t+x)]
+	if(class(object)=="mdt") { #call specific function for MDT class
+		if(!missing(decrement)) out<-.dxt.mdt(object=object, x=x, t=t, decrement=decrement) else out<-.dxt.mdt(object=object, x=x, t=t)
 	} else {
-		fracPart=(t%%1)
-		intPart=t-fracPart
-		out=dxt(object=object, x=x, t=intPart)+fracPart*dxt(object=object, x=x+intPart, t=1)
+#		if(missing(x)) stop("Error! Missing x")
+#		if(missing(t)) t=1
+#		omega=getOmega(object) #prima object+1
+		#check if fractional
+		if ((t%%1)==0) {
+		lx=object@lx[which(object@x==x)]
+		if((x+t)>omega) out=lx else #before >=
+			out=lx-object@lx[which(object@x==t+x)]
+		} else {
+			fracPart<-(t%%1)
+			intPart<-t-fracPart
+			out<-dxt(object=object, x=x, t=intPart)+fracPart*dxt(object=object, x=x+intPart, t=1)
+		}
 	}
 	return(out)
 }
 
 #survival probability between age x and x+t
-pxt<-function(object, x, t, fractional="linear")
+pxt<-function(object, x, t, fractional="linear", decrement)
 {
 	out<-NULL
 	#checks
-	if(!is(object, "lifetable")) stop("Error! Need lifetable or actuarialtable objects")
+	if (!(class(object) %in% c("lifetable","actuarialtable","mdt"))) stop("Error! Only lifetable, actuarialtable or mdt classes are accepted")
+	if (class(object)=="mdt") { #specific function for 
+		out<-ifelse(missing(decrement),1-.qxt.mdt(object=object,x=x,t=t),1-.qxt.mdt(object=object,x=x,t=t,decrement=decrement))
+		return(out)
+	}
 	if(missing(x)) stop("Missing x")
 	if(any(x<0,t<0)) stop("Check x or t domain")
 	if(missing(t)) t=1 #default 1
@@ -33,21 +44,21 @@ pxt<-function(object, x, t, fractional="linear")
 	if((x-floor(x))>0) {
 		integerAge=floor(x)
 		excess=x-floor(x)
-		out=pxt(object=object, x=integerAge,t=excess+t)/pxt(object=object, x=integerAge,t=excess)
+		out=pxt(object=object, x=integerAge, t=excess+t, decrement=decrement)/pxt(object=object, x=integerAge,t=excess, decrement=decrement)
 		return(out)
 	} #before x+t>=omega
-	if((x+t)>omega) out=0 else  #fractional ages
-	{ if((t%%1)==0) out=object@lx[which(object@x==t+x)]/object@lx[which(object@x==x)] else {
-			z=t%%1 #the fraction of year
+	if((x+t)>omega) out<-0 else  #fractional ages
+	{ if((t%%1)==0) out<-object@lx[which(object@x==t+x)]/object@lx[which(object@x==x)] else {
+			z<-t%%1 #the fraction of year
 			#linearly interpolates if fractional age
-			pl=object@lx[which(object@x==floor(t+x))]/object@lx[which(object@x==x)] # Kevin Owens: fix on this line, moving it out of the linear if statement so it can be used in other assumptions
+			pl<-object@lx[which(object@x==floor(t+x))]/object@lx[which(object@x==x)] # Kevin Owens: fix on this line, moving it out of the linear if statement so it can be used in other assumptions
 			if(fractional=="linear"){
-				ph=object@lx[which(object@x==ceiling(t+x))]/object@lx[which(object@x==x)]
-				out=z*ph+(1-z)*pl
+				ph<-object@lx[which(object@x==ceiling(t+x))]/object@lx[which(object@x==x)]
+				out<-z*ph+(1-z)*pl
 			} else if(fractional=="constant force") {
-				out=pl*pxt(object=object, x=(x+floor(t)),t=1)^z # fix on this line
+				out<-pl*pxt(object=object, x=(x+floor(t)),t=1)^z # fix on this line
 			} else if(fractional=="hyperbolic") {
-				out=pl*pxt(object=object, x=(x+floor(t)),t=1)/(1-(1-z)*qxt(object=object, x=(x+floor(t)),t=1)) # Kevin Owens: fix on this line
+				out<-pl*pxt(object=object, x=(x+floor(t)),t=1)/(1-(1-z)*qxt(object=object, x=(x+floor(t)),t=1)) # Kevin Owens: fix on this line
 			}
 		}			
 	}
@@ -103,7 +114,7 @@ mxt<-function(object,x,t)
 {
 	out<-NULL
 	#checks
-	if(missing(t)) t=1 #default 1
+	if(missing(t)) t<-1 #default 1
 	if(!is(object, "lifetable")) stop("Error! Need lifetable or actuarialtable objects")
 	if(missing(x)) stop("Missing x")
 	if(any(x<0,t<0)) stop("Check x or t domain")
@@ -115,16 +126,16 @@ mxt<-function(object,x,t)
 }
 
 #death probability
-qxt<-function(object, x, t, fractional="linear")
+qxt<-function(object, x, t, fractional="linear", decrement)
 {
 	out<-NULL
 	#checks
-	if(!is(object, "lifetable")) stop("Error! Need lifetable or actuarialtable objects")
+	if(!(class(object) %in% c("lifetable","actuarialtable","mdt"))) stop("Error! Only lifetable, actuarialtable or mdt classes are accepted")
 	if(missing(x)) stop("Missing x")
 	if(any(x<0,t<0)) stop("Check x or t domain")
-	if(missing(t)) t=1 #default 1
+	if(missing(t)) t<-1 #default 1
 	#complement of pxt
-	out<-1-pxt(object=object, x=x, t=t, fractional=fractional)
+	out<-1-pxt(object=object, x=x, t=t, fractional=fractional, decrement=decrement)
 	return(out)
 }
 

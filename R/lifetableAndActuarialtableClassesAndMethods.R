@@ -1,3 +1,28 @@
+# TODO: Add comment
+# 
+# Author: Giorgio Spedicato
+###############################################################################
+
+#CLASSES DEFINITIONS
+
+
+
+setClass("lifetable", #classe lifetable
+		representation(x="numeric",lx="numeric",name="character"),
+		prototype(x=c(0,1,2,3),
+				lx=c(100,90,50,10),
+				name="Generic life table"
+		)
+)
+#actuarial classes
+setClass("actuarialtable",
+		contains="lifetable",
+		representation=representation(
+				interest="numeric")
+)
+
+#METHODS DEFINITIONS
+
 #validity method for lifetable object
 setValidity("lifetable",
 		function(object) {
@@ -17,15 +42,9 @@ setValidity("lifetable",
 
 
 
-#set methods of getting omega
-setGeneric("getOmega", function(object) standardGeneric("getOmega"))
-setMethod("getOmega","lifetable", 
-		function(object) {
-		out=numeric(1)
-#		out=max(object@x)+1
-		out=max(object@x)
-		return(out)}
-				)
+
+
+
 #function to create lifetable cols
 .createLifeTableCols<-function(object)
 {
@@ -54,22 +73,23 @@ setMethod("show","lifetable", #metodo show
 		function(object){
 			cat(paste("Life table",object@name),"\n")
 			cat("\n")
+			
 			out<-.createLifeTableCols(object)
 			print(out)
 			cat("\n")
 		}
-		)
+)
 
 #show method 4 lifetable: prints x, lx, px, ex
 setMethod("print","lifetable", #metodo show
-          function(x){
-            cat(paste("Life table",x@name),"\n")
-            cat("\n")
-            
-            out<-.createLifeTableCols(x)
-            print(out)
-            cat("\n")
-          }
+		function(x){
+			cat(paste("Life table",x@name),"\n")
+			cat("\n")
+			
+			out<-.createLifeTableCols(x)
+			print(out)
+			cat("\n")
+		}
 )
 
 #head and tail methods
@@ -140,32 +160,32 @@ setMethod("tail",
 	return(out)
 	
 }
-		
+
 setMethod("show","actuarialtable", #metodo show
-				function(object){
-					out<-NULL
-					cat(paste("Actuarial table ",object@name, "interest rate ", object@interest*100,"%"),"\n")
-					cat("\n")
-					#create the actuarial table object
-					out<-.createActuarialTableCols(object=object)
-					print(out)
-					cat("\n")
-				}
-		)
+		function(object){
+			out<-NULL
+			cat(paste("Actuarial table ",object@name, "interest rate ", object@interest*100,"%"),"\n")
+			cat("\n")
+			#create the actuarial table object
+			out<-.createActuarialTableCols(object=object)
+			print(out)
+			cat("\n")
+		}
+)
 
 #print method: show clone
 
 setMethod("print","actuarialtable", #metodo show
-          function(x){
-            out<-NULL
-            cat(paste("Actuarial table ",x@name, "interest rate ", 
-                      x@interest*100,"%"),"\n")
-            cat("\n")
-            #create the actuarial table object
-            out<-.createActuarialTableCols(object=x)
-            print(out)
-            cat("\n")
-          }
+		function(x){
+			out<-NULL
+			cat(paste("Actuarial table ",x@name, "interest rate ", 
+							x@interest*100,"%"),"\n")
+			cat("\n")
+			#create the actuarial table object
+			out<-.createActuarialTableCols(object=x)
+			print(out)
+			cat("\n")
+		}
 )
 
 
@@ -175,7 +195,7 @@ setMethod("plot","lifetable",
 					ylab="population at risk", 
 					main=paste("life table",x@name),...)
 		}
-		)
+)
 #saves lifeTableObj as data frame
 setAs("lifetable","data.frame",
 		function(from){
@@ -205,11 +225,11 @@ setAs("actuarialtable","data.frame",
 #coerce methods to numeric
 
 setAs("lifetable","numeric",
-	function(from) {
-		out<-numeric(getOmega(from)+1)
-		for(i in 0:getOmega(from)) out[i+1]<-qxt(object=from,x=i,t=1)
-		return(out)
-	}
+		function(from) {
+			out<-numeric(getOmega(from)+1)
+			for(i in 0:getOmega(from)) out[i+1]<-qxt(object=from,x=i,t=1)
+			return(out)
+		}
 )
 
 setAs("actuarialtable","numeric",
@@ -219,3 +239,8 @@ setAs("actuarialtable","numeric",
 			return(out)
 		}
 )
+
+#demographic classes and methods
+
+#setGeneric("pxt", function(object) standardGeneric("pxt"))
+#setGeneric("qxt", function(object) standardGeneric("qxt"))
