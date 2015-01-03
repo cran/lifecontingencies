@@ -519,19 +519,72 @@ getLifecontingencyPvXyz<-function(deathsTimeXyz,lifecontingency, tablesList, x,t
 #		x=40,t=20, m=0, k=1)
 
 
-######simulate from a MarkovChain
+#' Simulate from a multiple decrement table
+#' 
+#' @param n Number of simulations.
+#' @param object The \code{mdt} object to simulate from.
+#' @param x the period to simulate from.
+#' @param t the period until to simulate.
+#' @param t0 initial status (default is "alive").
+#' @param include.t0 should initial status to be included (default is TRUE)?
+#' @return A matrix with n columns (the length of simulation) and either t (if initial status 
+#' is not included) or t+1 rows.
+#' @author Giorgio Spedicato
+#' 
+#' @section Details:
+#' The functin uses \code{rmarkovchain} function from markovchain package to simulate the chain
+#' 
+#' @seealso \code{\link{rLifeContingenciesXyz}},\code{\link{rLifeContingencies}}
+#' 
+#' @examples
+#' mdtDf<-data.frame(x=c(0,1,2,3),death=c(100,50,30,10),lapse=c(150,20,2,0))
+#' myMdt<-new("mdt",name="example Mdt",table=mdtDf)
+#' ciao<-rmdt(n=5,object = myMdt,x = 0,t = 4,include.t0=FALSE,t0="alive")
+#' 
 
-#rmdt<-function(n,object, x=0,k=1,t0="alive", include.t0=TRUE) {
-#	#require(markovchain)
-#	mcList<-as(object, "markovchainList")
-#	if(include.t0==TRUE) out<-rep(t0,n)
-#	initialVal<-t0
-#	endSim<-min(k,getOmega(object)+1-x) #maximum length of simulations
-#	for(i in 1:endSim)
-#	{
-#		sim<-rmarkovchain(n=1,object=mcList[[x+i]],t0=initialVal)
-#		out<-rbind(out,rep(sim,n))
-#		initialVal<-sim
-#	}
-#	invisible(out)
-#}
+rmdt<-function(n=1,object, x=0,t=1,t0="alive", include.t0=TRUE) {
+	#require(markovchain)
+	mcList<-as(object, "markovchainList")
+	initialVal<-rep(t0,n)
+	endSim<-min(t,getOmega(object)-x)
+	row.names<-character()
+  
+	if (include.t0==TRUE) {
+   
+    outMatr<-matrix("",nrow=endSim+1, ncol=n)
+    row.names<-c(row.names,x)
+    outMatr[1,]<-rep(t0,n)
+	} else {
+	  outMatr<-matrix("",nrow=endSim, ncol=n)
+	}
+	#define the maximum go - ahead depth
+	for(i in 1:endSim)
+	{
+    simulations<-character(n)
+    #the row names is the state at the beginning of period t+1
+		row.names <- c(row.names,mcList[[x+i+1]]@name)  
+    for(j in 1:n) {
+      #this simulate the transition between period t and period t+1
+      simJ <- rmarkovchain(n=1,object=mcList[[x+i]],t0=initialVal[j])
+      simulations[j] <- simJ
+		  
+    }
+    
+		initialVal <- simulations
+		if (include.t0==TRUE) outMatr[i+1,]<-simulations else outMatr[i,]<-simulations
+	}
+  
+  rownames(outMatr) <- row.names
+  colnames(outMatr) <- 1:n
+
+	return(outMatr)
+}
+
+
+# mdtDf<-data.frame(x=c(0,1,2,3),death=c(100,50,30,10),lapse=c(150,20,2,0))
+# 
+# myMdt<-new("mdt",name="example Mdt",table=mdtDf)
+# 
+# ciao<-rmdt(n=10,object = myMdt,x = 0,t = 10,include.t0=FALSE,t0="alive")
+
+#print(ciao)

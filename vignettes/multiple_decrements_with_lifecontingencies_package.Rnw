@@ -2,11 +2,11 @@
 \usepackage{lifecon}
 \usepackage{graphicx}
 \usepackage{amsmath}
-\usepackage{hyperref}
+%\usepackage{hyperref}
 \usepackage[utf8]{inputenc}
- \usepackage{draftwatermark}
- \SetWatermarkText{Draft}
- \SetWatermarkScale{1.5}
+\usepackage{draftwatermark}
+\SetWatermarkText{Draft}
+\SetWatermarkScale{1.5}
 
 %\usepackage{myVignette}
 %\VignetteIndexEntry{Multiple decrements tables with lifecontingencies package}
@@ -31,8 +31,7 @@
 
 \Abstract{
 This paper introduces the \code{mdt} class within \pkg{lifecontingencies}
-\proglang{R} package, that handles multiple decrements models. Applied examples
-will show how perform demographic and actuarial calculation with the package }
+\proglang{R} package, that handles multiple decrements models for actuarial applications. Applied examples will show how to perform demographic and actuarial calculation with the package.}
 
 \Keywords{actuarial mathematics, multiple decrement models,
 \pkg{lifecontingencies}} \Plainkeywords{actuarial mathematics, multiple
@@ -60,17 +59,25 @@ options(width=80, prompt='R> ')
 
 \section{Introduction}
 
+\subsection{Multiple Decrement Models within R}
+
 As of 2014 no \proglang{R} package provides easy tools to manage multiple
-decrement tables. Multiple decrement tables are the basis of many applications,
-for example in demography, medicine and actuarial science.\\
+decrement tables for actuarial appliocations. Multiple decrement tables are the basis of many applications, as demography, medicine and actuarial science.\\
 Until now no \proglang{R} package provides a good tool to manage multiple
 decrement tables, even if \cite{deshmukh2012multiple} provides an \proglang{R}
-based focus on multiple decrement tables with applications in R.\\
+based focus on multiple decrement tables with applications in R. The topic is deeply related to multistate analysis of life histories on which \cite{willekens2014multistate} provide a very good introduction.\\
 
 This paper introduces the \code{mdt} class that has been specifically engineered
 to manage multiple decrements models with R. Applied examples will follows.\\
 
-\section{The mdt class}
+\subsection{A review of Discrete Multiple Decrement Mathematics}
+
+Following notation in \cite{finanMLC}, we provide definitions of the key quantities that allow to understand the main concepts regarding Multiple Decrement (MD) theory. Be $l_x^{(\tau )} = \sum\limits_{j = 1 \ldots m} {l_x^{(j)}}$ survivors to age $x$ that will, at future ages, be fully depleted by $m$ causes of decrement. $d_{x}^{(j)}=l_{x}^{(j)}-l_{x+1}^{(j)}$ represents the expected number of lives exiting from the population between ages $x$ and $x + 1$ due to decrement $j$. Therefore it follows that $_nd_x^{(j)} = \sum\limits_{t = 0 \ldots n - 1} {d_{x + t}^{(j)}}$.\\
+The probability that a life $x$ will leave the group within one year as a result of decrement $j$ is $_nq_x^{(j)} = \frac{{_nd_x^{(j)}}}{{l_x^{(\tau )}}}$. It follows that $q_x^{(\tau )} = \sum\limits_{j = 1}^m {q_x^{(j)}}$ and that $_tq_x^{(\tau )} = 1{ - _t}p_x^{(\tau )} = \sum\limits_j {_tq_x^{(\tau )}}$.
+
+
+\section{Multiple Decrement Models within lifecontingencies Package}
+\subsection{The mdt class}
 
 Examples in this paper are worked on slides provided in \cite{valdezSlides}.
 First of all, we load the R package.
@@ -81,7 +88,6 @@ library(lifecontingencies)
 
 Then  we create a \code{mdt} class object. We can use the first example found on
 \cite[p. 4]{valdezSlide}.
-
 
 <<mdt1,  keep.source=TRUE>>=
 valdezDf<-data.frame(
@@ -103,8 +109,7 @@ comprised by a character slot \code{name} and a \code{data.frame} slot
   \item one or more colums for different causes of decrements.
  \end{enumerate}
  
- Values within \code{table} item represents absolute number of subjects at risk
- or dying.\\
+ Values within \code{table} item represents absolute number of subjects at risk at the beginning of age $x$ and dying for cause $j$ during period $x$ - $x+1$.\\
 
 Within the various methods defined within the \code{mdt} class,
 \code{setValidity} performs consistency checks to properly create the \code{mdt}
@@ -128,13 +133,12 @@ logs.
  An internal function, \code{.tableSanitizer} tries to fix the limitations on
  the input table in order it to meet the class definition requirements.
  
- Table can be viewed thanks to a \code{print} and \code{show} method. Similarly,
- it is possible to export a \code{mdt} to a \code{data.frame} or to a
- \code{markovchainList} object (from \pkg{markovchain} package).
-
-<<md3,keep.source=TRUE>>=
+ Table can be viewed thanks to a \code{print} and \code{show} method (output omitted for simplicity). Similarly, it is possible to export a \code{mdt} to a \code{data.frame} or to a \code{markovchainList} object (from \pkg{markovchain} package).
+ 
+<<md3a, keep.source=TRUE, eval=FALSE>>=
 print(valdezMdt)
 @
+
  
 <<md3b, keep.source=TRUE>>=
 valdezDf<-as(valdezMdt,"data.frame")
@@ -148,6 +152,7 @@ Two specific methods have been defined for \code{mdt} class objects:
 slot different from x and lx).
 
 <<mdt4, keep.source=TRUE>>=
+getOmega(valdezMdt)
 getDecrements(valdezMdt)
 @
 
@@ -157,7 +162,8 @@ A \code{summary} method is available as well.
 summary(valdezMdt)
 @
 
-\section{Decrement probabilities calculation}
+\subsection{Decrement probabilities calculation}
+
 
 The \pkg{lifecontingencies} package makes easy to compute $d_{x}^{(j)}$,
 ${}_{n}d_{x}^{(j)}$ as well as ${}_{n}d_{x}^{(\tau)}$ quantities thanks to
@@ -177,7 +183,11 @@ pxt(valdezMdt,x=50,t=3)
 qxt(valdezMdt,x=53,t=2,decrement=1)
 @
 
+It is possible to generate random traiectories of a life subject to multiple cause of decrements as the following code shows.
 
+<<randomSamples, keep.source=TRUE>>=
+rmdt(n = 2,object = valdezMdt,x = 50,t = 2)
+@
 
 \section{Actuarial Applications}
 

@@ -2,7 +2,7 @@
 ### Encoding: ISO8859-1
 
 ###################################################
-### code chunk number 1: multiple_decrements_with_lifecontingencies_package.Rnw:55-56
+### code chunk number 1: multiple_decrements_with_lifecontingencies_package.Rnw:54-55
 ###################################################
 options(width=80, prompt='R> ')
 
@@ -27,9 +27,9 @@ valdezMdt<-new("mdt",name="ValdezExample",table=valdezDf)
 
 
 ###################################################
-### code chunk number 4: md3
+### code chunk number 4: md3a (eval = FALSE)
 ###################################################
-print(valdezMdt)
+## print(valdezMdt)
 
 
 ###################################################
@@ -43,6 +43,7 @@ valdezMarkovChainList<-as(valdezMdt,"markovchainList")
 ###################################################
 ### code chunk number 6: mdt4
 ###################################################
+getOmega(valdezMdt)
 getDecrements(valdezMdt)
 
 
@@ -66,5 +67,11 @@ dxt(valdezMdt,x=51)
 dxt(valdezMdt,x=51,t=2, decrement="other")
 pxt(valdezMdt,x=50,t=3)
 qxt(valdezMdt,x=53,t=2,decrement=1)
+
+
+###################################################
+### code chunk number 10: randomSamples
+###################################################
+rmdt(n = 2,object = valdezMdt,x = 50,t = 2)
 
 

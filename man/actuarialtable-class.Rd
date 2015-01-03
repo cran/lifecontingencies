@@ -2,8 +2,12 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{actuarialtable-class}
-\alias{summary,actuarialtable-method}
+\alias{coerce,actuarialtable,data.frame-method}
+\alias{coerce,actuarialtable,numeric-method}
+\alias{getOmega,actuarialtable-method}
 \alias{print,actuarialtable-method}
+\alias{show,actuarialtable-method}
+\alias{summary,actuarialtable-method}
 \title{Class \code{"actuarialtable"}}
 \description{
 Objects of class \code{"actuarialtable"} inherit the structure of class \code{"lifetable"} adding just the slot for interest rate, \code{interest}.
@@ -25,10 +29,12 @@ Class \code{"\linkS4class{lifetable}"}, directly.
 }
 \section{Methods}{
   \describe{
-    \item{coerce}{\code{signature(from = "actuarialtable", to = "data.frame")}: it converts toa  \code{data.frame} object }
-    \item{show}{\code{signature(object = "actuarialtable")}: it shows classical commutation functions  }
-    \item{print}{\code{signature(x = "actuarialtable")}: as \code{show} }
-    \item{summary}{\code{signature(object = "actuarialtable")}: it returns summary information about the object }
+  \item{coerce}{\code{signature(from = "actuarialtable", to = "data.frame")}: moves from \code{actuarialtable} to \code{data.frame} }
+    \item{coerce}{\code{signature(from = "actuarialtable", to = "numeric")}: coerce from \code{actuarialtable} to a numeric }
+    \item{getOmega}{\code{signature(object = "actuarialtable")}: as for \code{lifetable} }
+    \item{print}{\code{signature(x = "actuarialtable")}: tabulates the actuarial commutation functions }
+    \item{show}{\code{signature(object = "actuarialtable")}: show method }
+    \item{summary}{\code{signature(object = "actuarialtable")}: prints brief summary }
 	 }
 }
 \references{
