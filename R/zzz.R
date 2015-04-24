@@ -10,6 +10,12 @@
 	packageStartupMessage(
 			'Version:  ', desc$Version, '\n', 
 			'Date:     ', desc$Date, '\n',
-			'Author:   ', 'Giorgio Alfredo Spedicato Ph.D, C.Stat ACAS \n With significant contributions of Reinhold Kainhofer and Kevin J. Owens'
+			'Author:   ', 'Giorgio Alfredo Spedicato Ph.D C.Stat ACAS \n with significant contributions from Reinhold Kainhofer and Kevin J. Owens'
 	)
 }
+
+# onload function: registering the vignette engine
+# .onLoad <- function(libname, pkgname) {
+#   tools::vignetteEngine("rmarkdown", weave = vweave, tangle = vtangle,
+#                         pattern = "[.]Rmd$", package = "knitr")
+# }
