@@ -7,22 +7,20 @@ output:
     incremental: yes
     keep_tex: yes
     toc: yes
-  ioslides_presentation:
-    incremental: yes
 header-includes:
 - \usepackage{lifecon}
 - \usepackage{url}
 bibliography: lifecontingenciesBiblio.bib
+vignette: |
+  %\VignetteIndexEntry{Intro to the lifecontingencies R package} 
+  %\VignetteEngine{knitr::rmarkdown}  
+  %\usepackage[utf8]{inputenc}
 ---
 
 ```{r setup, include=FALSE}
 library(knitr)
+rm(list=ls())
 ```
-
-<!--
-%\VignetteEngine{knitr::rmarkdown }
-%\VignetteIndexEntry{Intro to the lifecontingencies R package}
--->
 
 #Intro
 
@@ -259,14 +257,14 @@ hist(AEXnDistr, main="Endowment Actuarial Value Distribution",
 ```{r leecarter0, tidy=FALSE, warning=FALSE, message=FALSE}
 #load the package and the italian tables
 library(demography) 
-#italy.demo<-hmd.mx("ITA", username="yourUN", 
+#italyDemo<-hmd.mx("ITA", username="yourUN", 
 #password="yourPW")
 load(file="mortalityDatasets.RData") #load the dataset
 ```
 
 ---
 
-- Lee Carter model is calibrated using lca function.
+- Lee Carter model is calibrated using lca function of demography package.
 - Then an arima model is used to project (extrapolate) the underlying $k_t$ over the historical period.
 
 

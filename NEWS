@@ -1,5 +1,6 @@
--Version 1.1.6
-This is a mostly mainteance version:
-* Add GitHub repository.
-* first usage of Rcpp (byt its functionalities are hidden in this release). 
-* New vignette (beamer coming from rmarkdown) for a quick introduction to the package. 
+-Version 1.1.8
+* Christophe Dutang added to contributors
+* Full open to Rcpp
+* add functions to move from qx to mx and vice versa
+* augmented tests
+* Added function for multiple decrement life insurance

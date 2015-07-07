@@ -2,7 +2,7 @@
 ### Encoding: ISO8859-1
 
 ###################################################
-### code chunk number 1: multiple_decrements_with_lifecontingencies_package.Rnw:54-55
+### code chunk number 1: multiple_decrements_with_lifecontingencies_package.Rnw:53-54
 ###################################################
 options(width=80, prompt='R> ')
 
@@ -73,5 +73,22 @@ qxt(valdezMdt,x=53,t=2,decrement=1)
 ### code chunk number 10: randomSamples
 ###################################################
 rmdt(n = 2,object = valdezMdt,x = 50,t = 2)
+
+
+###################################################
+### code chunk number 11: act1
+###################################################
+myTable<-data.frame(x=c(16,17,18),
+  lx=c(20000,17600,14520),
+  da=c(1300,1870,2380),
+  doc=c(1100,1210,1331)
+)
+myMdt<-new("mdt",table=myTable,name="Sample")
+
+
+###################################################
+### code chunk number 12: act2
+###################################################
+Axn.mdt(object=myMdt,x=16,i=.1,decrement="da")
 
 

@@ -1,5 +1,6 @@
 ## ----setup, include=FALSE------------------------------------------------
 library(knitr)
+rm(list=ls())
 
 ## ----load, echo=TRUE, warning=FALSE, message=FALSE-----------------------
 library(lifecontingencies) #load the package
@@ -114,7 +115,7 @@ hist(AEXnDistr, main="Endowment Actuarial Value Distribution",
 ## ----leecarter0, tidy=FALSE, warning=FALSE, message=FALSE----------------
 #load the package and the italian tables
 library(demography) 
-#italy.demo<-hmd.mx("ITA", username="yourUN", 
+#italyDemo<-hmd.mx("ITA", username="yourUN", 
 #password="yourPW")
 load(file="mortalityDatasets.RData") #load the dataset
 
