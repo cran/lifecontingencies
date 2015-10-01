@@ -7,7 +7,7 @@ dxt<-function(object, x, t, decrement) {
 	if(missing(t)) t=1
 	omega=getOmega(object) #prima object+1
 	if(class(object)=="mdt") { #call specific function for MDT class
-		if(!missing(decrement)) out<-.dxt.mdt(object=object, x=x, t=t, decrement=decrement) else out<-.dxt.mdt(object=object, x=x, t=t)
+		if(!missing(decrement)) out<-.dxt.mdt(object=object, x=x, time = t, decrement=decrement) else out<-.dxt.mdt(object=object, x=x, time = t)
 	} else {
 #		if(missing(x)) stop("Error! Missing x")
 #		if(missing(t)) t=1
@@ -32,7 +32,7 @@ pxt<-function(object, x, t, fractional="linear", decrement)
 	out<-NULL
 	#checks
 	if (!(class(object) %in% c("lifetable","actuarialtable","mdt"))) stop("Error! Only lifetable, actuarialtable or mdt classes are accepted")
-	if (class(object)=="mdt") { #specific function for 
+	if (class(object)=="mdt") { #specific function for multiple decrements
 		out<-ifelse(missing(decrement),1-.qxt.mdt(object=object,x=x,t=t),1-.qxt.mdt(object=object,x=x,t=t,decrement=decrement))
 		return(out)
 	}
