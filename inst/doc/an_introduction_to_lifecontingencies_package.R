@@ -514,7 +514,7 @@ G
 ###################################################
 twoLifeTables <- list(maleTable=soa08Act, femaleTable=soa08Act)
 axn(soa08Act, x=65,m=1)+axn(soa08Act, x=70,m=1)-
-axyn(soa08Act,soa08Act,	x=65,y=70,status="joint",m=1) 
+axyzn(tablesList=twoLifeTables,	x=c(65,y=70),status="joint",m=1) 
 axyzn(tablesList=twoLifeTables, x=c(65,y=70), status="last",m=1)
 
 
