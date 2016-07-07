@@ -22,10 +22,10 @@ test_that("Single life annuities are calculated correctly", {
   lx <- seq(100, 10, by = -10)
   tbl <- new("actuarialtable", x = x, lx = lx, interest = 0.04, name = "Linear table")
   v <- (1 + 0.04)^(-1)
-  
+
   ans <- sum((lx[6:10] * v^(0:4))/lx[6])
   expect_equal(axn(tbl, x = 5), ans)
-  
+
   ans <- sum((lx[6:8] * v^(0:2))/lx[6])
   expect_equal(axn(tbl, x = 5, n = 3), ans)
 })
@@ -34,7 +34,7 @@ test_that("axn and axyzn return equal values for single mortality table", {
   x <- 0:9
   lx <- seq(100, 10, by = -10)
   tbl <- new("actuarialtable", x = x, lx = lx, interest = 0.04, name = "Linear table")
-  
+
   expect_equal(axn(tbl, x = 5, n = 1), axyzn(list(tbl), x = 5, n = 1))
   expect_equal(axn(tbl, x = 5, n = 2), axyzn(list(tbl), x = 5, n = 2))
   expect_equal(axn(tbl, x = 5, n = 3), axyzn(list(tbl), x = 5, n = 3))
@@ -42,10 +42,15 @@ test_that("axn and axyzn return equal values for single mortality table", {
   expect_equal(axn(tbl, x = 5, n = 5), axyzn(list(tbl), x = 5, n = 5))
   expect_equal(axn(tbl, x = 5, n = 6), axyzn(list(tbl), x = 5, n = 6))
   expect_equal(axn(tbl, x = 5), axyzn(list(tbl), x = 5))
-  
+
   expect_equal(axn(tbl, x = 0), axyzn(list(tbl), x = 0))
   expect_equal(axn(tbl, x = 1), axyzn(list(tbl), x = 1))
   expect_equal(axn(tbl, x = 2), axyzn(list(tbl), x = 2))
+
+  expect_equal(axn(tbl, x = 6.2, k = 4), axyzn(list(tbl), x = 6.2, k = 4))
+  expect_equal(axn(tbl, x = 6.9, k = 4), axyzn(list(tbl), x = 6.9, k = 4))
+  expect_equal(axn(tbl, x = 7.3, k = 2), axyzn(list(tbl), x = 7.3, k = 2))
+  expect_equal(axn(tbl, x = 8.7, k = 2), axyzn(list(tbl), x = 8.7, k = 2))
 })
 
 test_that("Example from Wolfgang Abele on April 27, 2015",{
@@ -74,9 +79,110 @@ test_that("Example from Wolfgang Abele on April 27, 2015",{
           33755.47658,26522.3193,20688.28429,16029.96538)
   male <- new("actuarialtable", x = 0:111, lx = lx, interest = 0.04, name = "Males")
   female <- new("actuarialtable", x = 0:111, lx = ly, interest = 0.04, name = "Females")
-  
+
   expect_equal(axn(male, x = 100) + axn(female, x = 102) - 
                  axyzn(list(male, female), x = c(100, 102), status = "joint"), 
                axyzn(list(male, female), x = c(100, 102), status = "last"))
-  
+})
+
+test_that("Life insurance with uniformly decreasing population at risk", {
+  x <- 0:9
+  lx <- seq(100, 10, by = -10)
+  tbl <- new("actuarialtable", x = x, lx = lx, interest = 0, name = "Uniformly decreasing lx")
+
+  expect_equal(Axn(tbl, x = 0), 1)
+  expect_equal(Axn(tbl, x = 1), 1)
+  expect_equal(Axn(tbl, x = 2), 1)
+  expect_equal(Axn(tbl, x = 3), 1)
+  expect_equal(Axn(tbl, x = 4), 1)
+  expect_equal(Axn(tbl, x = 5), 1)
+  expect_equal(Axn(tbl, x = 6), 1)
+  expect_equal(Axn(tbl, x = 7), 1)
+  expect_equal(Axn(tbl, x = 8), 1)
+  expect_equal(Axn(tbl, x = 9), 1)
+
+  expect_equal(Axn(tbl, x = 7.0, k = 2), 1)
+  expect_equal(Axn(tbl, x = 3.0, k = 2), 1)
+  expect_equal(Axn(tbl, x = 3.5, k = 2), 1)
+
+  pmts <- rep(1,6)
+  time <- seq(0.5, 3.0, by = 0.5)
+  prob <- rep(5/30, 6)
+  disc <- (1.06)^(-time)
+  ans  <- sum(pmts * disc * prob)
+  expect_equal(Axn(tbl, x = 7, k = 2, i = 0.06), ans)
+})
+
+test_that("Whole life insurance with fractional starting age", {
+  x <- 0:9
+  lx <- seq(100, 10, by = -10)
+  tbl <- new("actuarialtable", x = x, lx = lx, interest = 0, name = "Uniformly decreasing lx")
+
+  expect_equal(Axn(tbl, x = 8.3, k = 2), 1)
+  expect_equal(Axn(tbl, x = 8.7, k = 2), 1)
+
+  v <- 1.06^(-seq(0.5, 2.0, by = 0.5))
+  p <- c(rep(5/17,3), 2/17)
+  ans <- sum(p * v)
+  expect_equal(Axn(tbl, x = 8.3, k = 2, i = 0.06), ans)
+
+  v <- 1.06^(-seq(0.5, 1.5, by = 0.5))
+  p <- c(rep(5/13,2), 3/13)
+  ans <- sum(p * v)
+  expect_equal(Axn(tbl, x = 8.7, k = 2, i = 0.06), ans)
+})
+
+test_that("Annuities with fractional starting age and k > 1", {
+  x <- 0:9
+  lx <- seq(100, 10, by = -10)
+  tbl <- new("actuarialtable", x = x, lx = lx, interest = 0.04, name = "Uniformly decreasing lx")
+
+  v <- 1.04^(-seq(0, 3.75, by = 0.25))
+  p <- (100 - 10 * seq(6.2, 9.95, by = 0.25))/38
+  ans <- sum(v * p)/4
+  expect_equal(axn(tbl, x = 6.2, k = 4), ans)
+
+  v <- 1.04^(-seq(0, 2, by = 0.25))
+  p <- (100 - 10 * seq(7.9, 9.9, by = 0.25))/21
+  ans <- sum(v * p)/4
+  expect_equal(axn(tbl, x = 7.9, k = 4), ans)
+})
+
+test_that("Annuities with fractional age x, k > 1, and m > 0", {
+  x <- 0:9
+  lx <- seq(100, 10, by = -10)
+  tbl <- new("actuarialtable", x = x, lx = lx, interest = 0.04, name = "Uniformly decreasing lx")
+
+  v <- 1.04^(-(0.6+seq(0, by = 0.25, length = 13)))
+  p <- (100 - 10 * seq(6.8, 9.80, by = 0.25))/38
+  ans <- sum(v * p)/4
+  expect_equal(axn(tbl, x = 6.2, k = 4, m = 0.6), ans)
+
+  v <- 1.04^(-(1.4+seq(0, 0.5, by = 0.25)))
+  p <- (100 - 10 * seq(9.3, 9.8, by = 0.25))/21
+  ans <- sum(v * p)/4
+  expect_equal(axn(tbl, x = 7.9, k = 4, m = 1.4), ans)
+})
+
+test_that("SOA Illustrative Table", {
+  data("soa08Act")
+  f <- function(x) return(c(axn(soa08Act, x = x),
+                            Axn(soa08Act, x = x)*1000,
+                            Axn(soa08Act, x = x, power = 2)*1000))
+
+  expect_equal(f(  0), c(16.80096,  49.0025,  25.9210), tolerance = 0.00001)
+  expect_equal(f(  1), c(17.09819,  32.1781,   8.8845), tolerance = 0.00001)
+  expect_equal(f(  2), c(17.08703,  32.8097,   8.6512), tolerance = 0.00001)
+  expect_equal(f( 12), c(16.84807,  46.3359,  10.0460), tolerance = 0.00001)
+  expect_equal(f( 26), c(16.15740,  85.4300,  19.8657), tolerance = 0.00001)
+  expect_equal(f( 39), c(14.94161, 154.2484,  45.4833), tolerance = 0.00001)
+  expect_equal(f( 43), c(14.41022, 184.3271,  59.4833), tolerance = 0.00001)
+  expect_equal(f( 55), c(12.27581, 305.1431, 130.6687), tolerance = 0.00001)
+  expect_equal(f( 62), c(10.65836, 396.6965, 199.4077), tolerance = 0.00001)
+  expect_equal(f( 77), c( 6.68364, 621.6808, 421.0184), tolerance = 0.00001)
+  expect_equal(f( 83), c( 5.16446, 707.6723, 526.6012), tolerance = 0.00001)
+  expect_equal(f( 99), c( 2.24265, 873.0577, 768.1330), tolerance = 0.00001)
+  expect_equal(f(103), c( 1.81639, 897.1852, 808.4054), tolerance = 0.00001)
+  expect_equal(f(109), c( 1.37553, 922.1396, 851.6944), tolerance = 0.00001)
+  expect_equal(f(110), c( 1.32234, 925.1507, 857.0377), tolerance = 0.00001)
 })
