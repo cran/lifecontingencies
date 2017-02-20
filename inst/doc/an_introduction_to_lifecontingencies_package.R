@@ -700,3 +700,88 @@ riskMargin
 totalBookedCost
 
 
+###################################################
+### code chunk number 69: load.mdt
+###################################################
+library(lifecontingencies)
+
+
+###################################################
+### code chunk number 70: mdt1
+###################################################
+valdezDf<-data.frame(
+		x=c(50:54),
+		lx=c(4832555,4821937,4810206,4797185,4782737),
+		hearth=c(5168, 5363, 5618, 5929, 6277),
+		accidents=c(1157, 1206, 1443, 1679,2152),
+		other=c(4293,5162,5960,6840,7631)
+)
+valdezMdt<-new("mdt",name="ValdezExample",table=valdezDf)
+
+
+###################################################
+### code chunk number 71: md3a (eval = FALSE)
+###################################################
+## print(valdezMdt)
+
+
+###################################################
+### code chunk number 72: md3b
+###################################################
+valdezDf<-as(valdezMdt,"data.frame")
+require(markovchain)
+valdezMarkovChainList<-as(valdezMdt,"markovchainList")
+
+
+###################################################
+### code chunk number 73: mdt4
+###################################################
+getOmega(valdezMdt)
+getDecrements(valdezMdt)
+
+
+###################################################
+### code chunk number 74: summary.mdt
+###################################################
+summary(valdezMdt)
+
+
+###################################################
+### code chunk number 75: mdt.dx1
+###################################################
+dxt(valdezMdt,x=51,decrement="other")
+dxt(valdezMdt,x=51,t=2, decrement="other")
+dxt(valdezMdt,x=51)
+
+
+###################################################
+### code chunk number 76: mdt.dx2
+###################################################
+dxt(valdezMdt,x=51,t=2, decrement="other")
+pxt(valdezMdt,x=50,t=3)
+qxt(valdezMdt,x=53,t=2,decrement=1)
+
+
+###################################################
+### code chunk number 77: mdt.randomSamples
+###################################################
+rmdt(n = 2,object = valdezMdt,x = 50,t = 2)
+
+
+###################################################
+### code chunk number 78: mdt.act1
+###################################################
+myTable<-data.frame(x=c(16,17,18),
+  lx=c(20000,17600,14520),
+  da=c(1300,1870,2380),
+  doc=c(1100,1210,1331)
+)
+myMdt<-new("mdt",table=myTable,name="Sample")
+
+
+###################################################
+### code chunk number 79: mdt.act2
+###################################################
+Axn.mdt(object=myMdt,x=16,i=.1,decrement="da")
+
+

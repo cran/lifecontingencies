@@ -5,108 +5,55 @@ rm(list=ls())
 ## ----load, echo=TRUE, warning=FALSE, message=FALSE-----------------------
 library(lifecontingencies) #load the package
 
-## ----finmat1, echo=TRUE, warning=FALSE, message=FALSE--------------------
-capitals <- c(-1000,200,500,700)
-times <- c(0,1,2,5)
-#calculate a present value
-presentValue(cashFlows=capitals, timeIds=times, 
-             interestRates=0.03)
+## ----finmat.1------------------------------------------------------------
+#interest and discount rates
+interest2Discount(i=0.03)
+discount2Interest(interest2Discount(i=0.03))
+#convertible and effective interest rates
+convertible2Effective(i=0.10,k=4)
 
-## ----finmat2, echo=TRUE, warning=FALSE, message=FALSE--------------------
-ann1 <- annuity(i=0.03, n=5, k=1, type="immediate")
-ann2 <- annuity(i=0.03, n=5, k=12, type="due")
-c(ann1,ann2)
+## ----finmat.2------------------------------------------------------------
+annuity(i=0.05,n=5) #due
+annuity(i=0.05,n=5,m=1) #immediate
+annuity(i=0.05,n=5,k=12) #due, with 
+# fractional payemnts
 
-## ----finmat3, echo=TRUE, warning=FALSE, message=FALSE--------------------
-bondPrice<-5*annuity(i=0.03,n=10)+100*1.03^-10
-bondPrice
+## ----finmat.3------------------------------------------------------------
+irate=0.04; term=10
+increasingAnnuity(i=irate,n=term)+decreasingAnnuity(i=irate,
+n=term)-(term+1)*annuity(i=irate,n=term)
 
-## ----demo1---------------------------------------------------------------
-#create an demo lifetable
-xDemo<-seq(from=0,to=5,by=1)
-lxDemo<-c(100,95,90,60,30,5)
-lifetableDemo<-new("lifetable",x=xDemo,
-                   lx=lxDemo,name="Demo")
+## ----finma.3-------------------------------------------------------------
+#bond analysis
+irate=0.03
+cfs=c(10,10,10,100)
+times=1:4
+#compute PV, Duration and Convexity
+presentValue(cashFlows = cfs, 
+timeIds = times, 
+interestRates = irate)
+duration(cashFlows = cfs, 
+timeIds = times, i = irate)
+convexity(cashFlows = cfs,
+timeIds = times, i = irate)
 
-## ----demo2---------------------------------------------------------------
-data(demoIta) #using the internal Italian LT data set
-lxIPS55M <- with(demoIta, IPS55M)
-#performing some fixings
-pos2Remove <- which(lxIPS55M %in% c(0,NA))
-lxIPS55M <-lxIPS55M[-pos2Remove]
-xIPS55M <-seq(0,length(lxIPS55M)-1,1)
-#creating the table
-ips55M <- new("lifetable",x=xIPS55M, 
-lx=lxIPS55M,name="IPS 55 Males")
+## ----demo.1--------------------------------------------------------------
+data("demoIta")
+sim92<-new("lifetable",x=demoIta$X, 
+           lx=demoIta$SIM92, name='SIM92')
+getOmega(sim92)
+tail(sim92)
 
-## ----demo3, tidy=TRUE----------------------------------------------------
-#decrements between age 65 and 70
-dxt(ips55M, x=65, t = 5)
-#probabilities of death between age 80 and 85
-qxt(ips55M, x=80, t=2)
-#expected curtate lifetime
-exn(ips55M, x=65) 
+## ----demo.2--------------------------------------------------------------
+#two years death rate
+qxt(sim92, x=65,2)
+#expected residual lifetime between x and x+n
+exn(sim92, x=25,n = 40)
 
-## ----createacttable, tidy=FALSE------------------------------------------
-#creates a new actuarial table
-ips55Act<-new("actuarialtable",
-x=ips55M@x,lx=ips55M@lx,
-interest=0.02,name="IPS55M")
-
-## ----pureend, tidy=FALSE-------------------------------------------------
-#compute APV
-APV=50e3*Exn(actuarialtable = 
-ips55Act,x=30,n=35)
-#compute Premium
-P=APV/axn(actuarialtable =
-ips55Act,x=30,n=35)
-c(APV,P)
-
-## ----endowmentcalcs, tidy=FALSE------------------------------------------
-#defining the ranges
-interest.range<-seq(from=0.015, to=0.035,by=0.001)
-term.range<-seq(from=20, to=40,by=1)
-#computing APV sensitivities
-apv.interest.sensitivity<-sapply(interest.range,
-FUN = "AExn",actuarialtable=ips55Act,x=30,n=30)
-apv.term.sensitivity<-sapply(term.range,FUN = "AExn",
-                             actuarialtable=ips55Act,x=30)
-
-## ----endowmentplot, tidy=FALSE, echo=FALSE,fig.width=5, fig.height=5,fig.align='center'----
-par(mfrow=c(1,2))
-plot(x=interest.range, y=apv.interest.sensitivity,type="l",xlab="interest rate",ylab="APV",main="APV by Interest Rate")
-plot(x=term.range, y=apv.term.sensitivity,type="l",xlab="term",ylab="APV",main="APV by term")
-
-## ----reserves, tidy=FALSE------------------------------------------------
-#compute the APV and premium
-APV=100e3*Axn(actuarialtable = ips55Act,x=25,n=40) 
-P=APV/axn(actuarialtable = ips55Act,x=25,n=40)
-#define a reserve function
-reserveFunction<-function(t) 
-  100e3*Axn(actuarialtable = ips55Act,x=25+t,n=40-t) - 
-  P *axn(actuarialtable = ips55Act,x=25+t,n=40-t)
-reserve<-sapply(0:40,reserveFunction)
-
-## ----reserves2, tidy=FALSE, echo=FALSE, fig.align='center'---------------
-plot(x=0:40,y=reserve,main="Reserve",
-     xlab="Policy Age",ylab="Reserve outstanding",type="l")
-
-## ----AEXn1 , tidy=FALSE, size="small"------------------------------------
-#analyzing and Endowment of 100K on x=40, n=25
-#compute APV
-APV=AExn(actuarialtable = ips55Act,x=40,n=25) 
-#sampling
-AEXnDistr<-rLifeContingencies(n=10e3,
-lifecontingency = "AExn",x = 40,
-t=25,object = ips55Act)
-
-## ----AExn1, tidy=FALSE, size="small"-------------------------------------
-#assess if the expected value match the theoretical one
-t.test(x=AEXnDistr,mu = APV)
-
-## ----AEXn2, tidy=FALSE, echo=FALSE---------------------------------------
-hist(AEXnDistr, main="Endowment Actuarial Value Distribution",
-     probability = TRUE, col="steelblue")
+## ----demo.3--------------------------------------------------------------
+#simulate 1000 samples of residual life time
+res_lt<-rLife(n=1000,object = sim92,x=65)
+hist(res_lt,xlab="Residual Life Time")
 
 ## ----leecarter01, tidy=FALSE, include=FALSE, results='hide'--------------
 #library(demography)
@@ -188,4 +135,35 @@ cat("Results for 1950 cohort","\n")
 c(exn(at1950,x=65),axn(at1950,x=65))
 cat("Results for 1980 cohort","\n")
 c(exn(at1980,x=65),axn(at1980,x=65))
+
+## ----actmat.1------------------------------------------------------------
+data("demoIta")
+sim92Act<-new("actuarialtable",x=demoIta$X, 
+lx=demoIta$SIM92, name='SIM92')
+sif92Act<-new("actuarialtable",x=demoIta$X,
+lx=demoIta$SIF92, name='SIF92')
+head(sim92Act)
+
+## ----actmat.2, echo=TRUE-------------------------------------------------
+100000*Exn(sim92Act,x=25,n=40)
+100000*AExn(sim92Act,x=25,n=40)
+1000*12*axn(sim92Act,x=65,k=12)
+100000*Axn(sim92Act,x=25,n=40)
+
+## ----actmat.3, echo=TRUE-------------------------------------------------
+IAxn(sim92Act,x=40,n=10)+DAxn(sim92Act,x=40,n=10)
+(10+1)*Axn(sim92Act,x=40,n=10)
+
+## ----actmat.5, echo=TRUE-------------------------------------------------
+fr_pay=12
+1000*fr_pay*axyzn(tablesList = list(sim92Act,sif92Act),
+x = c(64,67),status="last",k=fr_pay)
+1000*fr_pay*(axn(sim92Act,x=64,k=fr_pay)+axn(sif92Act,
+x=67,k=fr_pay)-axyzn(tablesList = list(sim92Act,sif92Act),
+x = c(64,67),status="joint",k=fr_pay))
+
+## ----act.sim, echo=TRUE--------------------------------------------------
+hist(rLifeContingencies(n = 1000,lifecontingency = "Axn",
+x = 40,object = sim92Act,getOmega(sim92Act)-40),
+main="Life Insurance on 40 PV distribution")
 
