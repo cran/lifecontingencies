@@ -1,4 +1,5 @@
 ### R code from vignette source 'an_introduction_to_lifecontingencies_package.Rnw'
+### Encoding: ISO8859-1
 
 ###################################################
 ### code chunk number 1: setup
@@ -701,13 +702,7 @@ totalBookedCost
 
 
 ###################################################
-### code chunk number 69: load.mdt
-###################################################
-library(lifecontingencies)
-
-
-###################################################
-### code chunk number 70: mdt1
+### code chunk number 69: mdt1
 ###################################################
 valdezDf<-data.frame(
 		x=c(50:54),
@@ -720,13 +715,13 @@ valdezMdt<-new("mdt",name="ValdezExample",table=valdezDf)
 
 
 ###################################################
-### code chunk number 71: md3a (eval = FALSE)
+### code chunk number 70: md3a (eval = FALSE)
 ###################################################
 ## print(valdezMdt)
 
 
 ###################################################
-### code chunk number 72: md3b
+### code chunk number 71: md3b
 ###################################################
 valdezDf<-as(valdezMdt,"data.frame")
 require(markovchain)
@@ -734,20 +729,20 @@ valdezMarkovChainList<-as(valdezMdt,"markovchainList")
 
 
 ###################################################
-### code chunk number 73: mdt4
+### code chunk number 72: mdt4
 ###################################################
 getOmega(valdezMdt)
 getDecrements(valdezMdt)
 
 
 ###################################################
-### code chunk number 74: summary.mdt
+### code chunk number 73: summary.mdt
 ###################################################
 summary(valdezMdt)
 
 
 ###################################################
-### code chunk number 75: mdt.dx1
+### code chunk number 74: mdt.dx1
 ###################################################
 dxt(valdezMdt,x=51,decrement="other")
 dxt(valdezMdt,x=51,t=2, decrement="other")
@@ -755,7 +750,7 @@ dxt(valdezMdt,x=51)
 
 
 ###################################################
-### code chunk number 76: mdt.dx2
+### code chunk number 75: mdt.dx2
 ###################################################
 dxt(valdezMdt,x=51,t=2, decrement="other")
 pxt(valdezMdt,x=50,t=3)
@@ -763,9 +758,15 @@ qxt(valdezMdt,x=53,t=2,decrement=1)
 
 
 ###################################################
-### code chunk number 77: mdt.randomSamples
+### code chunk number 76: mdt.randomSamples
 ###################################################
 rmdt(n = 2,object = valdezMdt,x = 50,t = 2)
+
+
+###################################################
+### code chunk number 77: mdt.udd1
+###################################################
+qxt.prime.fromMdt(object = valdezMdt,x=53, decrement="accidents")
 
 
 ###################################################
@@ -783,5 +784,66 @@ myMdt<-new("mdt",table=myTable,name="Sample")
 ### code chunk number 79: mdt.act2
 ###################################################
 Axn.mdt(object=myMdt,x=16,i=.1,decrement="da")
+
+
+###################################################
+### code chunk number 80: deadifalco.1a
+###################################################
+axnmdt.firsttype<-function (object, x, n, i , payment="advance", delta=0) {
+  #delta is the annuity indexing
+    out <- numeric(1)
+    if (!(class(object) %in% c("lifetable", "actuarialtable", "mdt"))) 
+      stop("Error! Only lifetable, actuarialtable or mdt classes are accepted")
+    if (missing(object)) 
+      stop("Error! Need a Multiple decrement table")
+    if (missing(x)) 
+      stop("Error! Need age!")
+    if (x > getOmega(object)) {
+      stop("Age greater than Omega")
+    }
+    if(class(object)=="mdt"){
+    if (x < min(object@table$x)) {
+      stop("Age lower than minimum age")
+    }}
+    if(class(object)=="actuarialtable"){
+      if (x < min(object@x)) {
+        stop("Age lower than minimum age")
+      }}
+    if(!(missing(i))){
+      interest <- i
+    }else{
+      if(class(object)=="actuarialtable"){
+        interest=object@interest
+      }else{
+        stop("Needed Interest Rate ")
+      }
+    }
+    if (missing(n)) 
+      n <- (getOmega(object)  - x)
+    if (n == 0) {
+      stop("Contract duration equal to zero")
+    }
+    probs = numeric(n)
+    times = seq(from = 0, to = n-1, by = 1)
+    if (payment == "arrears") times = times + 1
+    for (j in 1:length(times)) probs[j] = pxt(object, x, times[j])
+    out <- sum(apply(cbind(probs,((1 + interest)/(1+delta))^-times),1,prod))
+  return(out)
+}
+
+
+###################################################
+### code chunk number 81: deadifalco.1b
+###################################################
+data("de_angelis_di_falco")
+HealthyMaleTable2013 <- de_angelis_di_falco$HealthyMaleTable2013
+DAT<-new("actuarialtable", x=de_angelis_di_falco$DisabledMaleLifeTable$age, lx=de_angelis_di_falco$DisabledMaleLifeTable$'2013',
+         name="DisabledTable",i=0.03)
+axnmdt.firsttype(DAT,x=65,n=10,i=0.03,payment="arrears",delta=0.02)
+axnmdt.firsttype(DAT,65,10,payment="arrears",delta=0.02)
+axnmdt.firsttype(DAT,65,10,payment="arrears",i=0.03,delta=0.02)
+#Last case equal to axn
+axnmdt.firsttype(DAT,65,10,payment="arrears",delta=0)
+axn(DAT,65,10,payment="arrears")
 
 
