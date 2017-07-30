@@ -37,13 +37,16 @@
 #' @param x age
 #' @param t period (default 1)
 #' @param decrement type (necessary)
+#' @param qx.prime single ASDT decrement of which corresponding decrement is desired
+#' @param other.qx.prime ASDT decrements other than \code{qx.prime}
+#' 
 #'
 #' @return a single value (AST)
 #' 
 #' @examples 
 #' #Creating the valdez mdf
 #' 
-#'  valdezDf<-data.frame(
+#' valdezDf<-data.frame(
 #' x=c(50:54),
 #' lx=c(4832555,4821937,4810206,4797185,4782737),
 #' hearth=c(5168, 5363, 5618, 5929, 6277),
@@ -53,6 +56,10 @@
 #' 
 #' qxt.prime.fromMdt(object=valdezMdt,x=53,decrement="other")
 #' 
+#' #Finan example 67.2
+#' 
+#' qxt.fromQxprime(qx.prime = 0.01,other.qx.prime = c(0.03,0.06))
+#' 
 qxt.prime.fromMdt<-function(object, x, t=1, decrement) {
   out <- NA
   if (missing(decrement)) stop("Error! decrement must be specified");
@@ -60,6 +67,8 @@ qxt.prime.fromMdt<-function(object, x, t=1, decrement) {
   out <- 1 - (1-qxt(object = object,x = x,t=t, fractional="linear"))^fraction
   return(out)
 }
+
+#closure needed to get the function to be integrate
 
 .getFunctionIns<-function(qxVector) {
   myFun<-function(s) {
@@ -70,11 +79,17 @@ qxt.prime.fromMdt<-function(object, x, t=1, decrement) {
   return(myFun)
 }
 
-.qxt.asd.2.ard <-function(qxDecrement, qxOtherAsds) {
-  function2Integrate<-.getFunctionIns(qxOtherAsds)
-  myOut<-seq(from=0, to=1, length.out = 1000)
-  temp<-sapply(myOut, function2Integrate)
-  out<-qxDecrement*sum(temp)
+#' @describeIn qxt.prime.fromMdt Obtain decrement from single decrements
+qxt.fromQxprime <-function(qx.prime, other.qx.prime, t=1) {
+  function2Integrate<-.getFunctionIns(qxVector=other.qx.prime)
+  #manually compute the integral
+  #subdivisions=1000L
+  #myOut<-seq(from=0, to=t, length.out = subdivisions)
+  #temp<-sapply(myOut, function2Integrate)/subdivisions
+  #integral<-sum(temp)
+  integral<-integrate(f = Vectorize(function2Integrate),lower = 0,upper = t)$value
+  out<-qx.prime*integral
+  return(out)
 }
 
 #MDT ACTUARIAL FUNCTIONS

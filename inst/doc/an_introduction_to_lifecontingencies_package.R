@@ -770,7 +770,13 @@ qxt.prime.fromMdt(object = valdezMdt,x=53, decrement="accidents")
 
 
 ###################################################
-### code chunk number 78: mdt.act1
+### code chunk number 78: mdt.udd2
+###################################################
+qxt.fromQxprime(qx.prime = 0.01,other.qx.prime = c(0.03,0.06))
+
+
+###################################################
+### code chunk number 79: mdt.act1
 ###################################################
 myTable<-data.frame(x=c(16,17,18),
   lx=c(20000,17600,14520),
@@ -781,13 +787,13 @@ myMdt<-new("mdt",table=myTable,name="Sample")
 
 
 ###################################################
-### code chunk number 79: mdt.act2
+### code chunk number 80: mdt.act2
 ###################################################
 Axn.mdt(object=myMdt,x=16,i=.1,decrement="da")
 
 
 ###################################################
-### code chunk number 80: deadifalco.1a
+### code chunk number 81: deadifalco.1a
 ###################################################
 axnmdt.firsttype<-function (object, x, n, i , payment="advance", delta=0) {
   #delta is the annuity indexing
@@ -833,7 +839,7 @@ axnmdt.firsttype<-function (object, x, n, i , payment="advance", delta=0) {
 
 
 ###################################################
-### code chunk number 81: deadifalco.1b
+### code chunk number 82: deadifalco.1b
 ###################################################
 data("de_angelis_di_falco")
 HealthyMaleTable2013 <- de_angelis_di_falco$HealthyMaleTable2013
