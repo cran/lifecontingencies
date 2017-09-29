@@ -28,7 +28,7 @@
 %% This work consists of actuarialsymbol.dtx and the derived files.
 %% 
 \NeedsTeXFormat{LaTeX2e}[2009/09/24]
-\ProvidesPackage{actuarialsymbol}[2017/04/11 v1.0 Actuarial symbols]
+\ProvidesPackage{actuarialsymbol}[2017/06/14 v1.0a Actuarial symbols]
 \RequirePackage{amsmath}
 \RequirePackage{actuarialangle}
 \newif\ifacts@alignpreced   \acts@alignprecedfalse
@@ -72,14 +72,14 @@
   \ifnum\ifdim \wd\tw@>\z@ 1\else\ifdim \wd4>\z@ 1\else 0\fi\fi
     =1
     \ifdim \dp\tw@>\dp4 \dp4=\dp\tw@\else \dp\tw@=\dp4\fi
-    \mathopen{\vphantom{#4}^{\box\tw@}\sb{\box\@ne}}%
+    \mathopen{\vphantom{\textstyle #4}^{\box\tw@}\sb{\box\@ne}}%
     \ifdim\wd\z@=\z@
       #4^{\box4}\sb{\box\thr@@}%
     \else
       #3^{\box4}\sb{\vphantom{\copy\thr@@}}(#4\sb{\box\thr@@})%
     \fi
   \else
-    \mathopen{\vphantom{#4}\sb{\box\@ne}}%
+    \mathopen{\vphantom{\textstyle #4}\sb{\box\@ne}}%
     \ifdim\wd\z@=\z@
       #4\sb{\box\thr@@}%
     \else

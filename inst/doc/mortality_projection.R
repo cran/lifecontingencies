@@ -2,7 +2,7 @@
 ### Encoding: ISO8859-1
 
 ###################################################
-### code chunk number 1: mortality_projection.Rnw:66-67
+### code chunk number 1: mortality_projection.Rnw:64-65
 ###################################################
 options(width=80, prompt='R> ')
 
