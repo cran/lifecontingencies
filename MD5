@@ -1,7 +1,7 @@
-d87a3ea16ffa8f12f4ad0704a289f53b *ChangeLog
-44b2961ef0b5f6aacc18af92d04d5dc3 *DESCRIPTION
+f3254f38ccaa6c5c7f19e0fc401aad1f *ChangeLog
+ee5d55268218114131a5353103a972ae *DESCRIPTION
 9ea24c85723a5b03e6e11a3bf72a5386 *NAMESPACE
-90cb409c65ea6f9ed1e47e08bb834d95 *NEWS
+183ab88710110f3bddb5ef55a732a61d *NEWS
 abe22be84b1abb9fe84b07cf8b4dc1cb *R/0_lifetableAndActuarialtableClassesAndMethods.R
 b118db45008717f1ffe4e7f6554fb12c *R/1_mdtClassesAndMethods.R
 79cb4731da311aa2483e56fc405d0a40 *R/2_commonMethods.R
@@ -15,7 +15,7 @@ ad030957edd822b8b5d863ec436e7d82 *R/RcppExports.R
 f24b9b5b54c8cc589511820735150827 *R/data.R
 44c13f31063fe93be99a09c68394e306 *R/zzz.R
 2803c7b9f09771cc4fec799a8200e96d *README.md
-d64248280ff0ee15f0b52422f8f4ecbe *build/vignette.rds
+9f3b6f77253801d7f354ed1bc1b766f3 *build/vignette.rds
 68257b06b5a3a66e791ed008ad6ea847 *data/AF92Lt.rda
 b5d9b5a2c1fd4b555320f4d79c3ceb6a *data/AM92Lt.rda
 767d08e125929a07f12ee1f467c51475 *data/SoAISTdata.rda
@@ -41,16 +41,13 @@ ba4dbc30f39f1ddaf1d8e92a7b25b482 *demo/pricing.R
 e3965cbdf6784e84d93206a71d4dd584 *inst/CITATION
 475781a231299f18d5ca5a4573248e1f *inst/doc/an_introduction_to_lifecontingencies_package.R
 f399e9e3970f524a6fb01ec995092f7f *inst/doc/an_introduction_to_lifecontingencies_package.Rnw
-2abd68c6cb321f846b8ec2ac370c45f8 *inst/doc/an_introduction_to_lifecontingencies_package.pdf
+862e2e6cd9512572cca9ba5d93632b19 *inst/doc/an_introduction_to_lifecontingencies_package.pdf
 d9a2d692dcf7c9d05adc1c6558901f2d *inst/doc/introToLifecontingencies.R
 294ea02b83661316201f1aaf457910db *inst/doc/introToLifecontingencies.Rmd
-f4eef5c110cc1307d9fd2cd43376c1c7 *inst/doc/introToLifecontingencies.pdf
+26c3583d2d227a7bb0c9ea7b45f9bc7f *inst/doc/introToLifecontingencies.pdf
 c01865d6789eebfa507340c25a0eeaaa *inst/doc/mortality_projection.R
 84ed0204a2b089dd028d6c0c73629e43 *inst/doc/mortality_projection.Rnw
-ff0af64a69eda1cee33d9223bc2e3757 *inst/doc/mortality_projection.pdf
-5b454e1066a48ce336c5f3e8110ea69f *inst/doc/pensionfunding.R
-162d9dcba358c092019c7cbaaaee1ef0 *inst/doc/pensionfunding.Rmd
-d18f532b5d4a16fe2bc15809d47455d5 *inst/doc/pensionfunding.pdf
+8522d3e505b177871dd4730d7d241adc *inst/doc/mortality_projection.pdf
 e54a783a3cfae7d62c98913e1ffc6003 *inst/extdata/A62.xlsx
 c663d0acb1855b34cf7bee38e70dfa0b *inst/extdata/italy2000.xlsx
 882170d2dc5e702dbf0e6d3146a04f4b *man/AExn.Rd
@@ -87,7 +84,7 @@ edf4c3b76323726a600e4077781886f0 *man/discount-interest.Rd
 a5ca6235030cd315a56a53ec98eaaae1 *man/getOmega.Rd
 0d48fb82e65228d086d8f3b086ea1044 *man/increasingAnnuity.Rd
 c011d3b70a3d6374516a3cccc5beb63d *man/intensity-interest.Rd
-06cb0480635bba6b75e7a50473f31af5 *man/lifecontingencies-package.Rd
+4901cfdd4cdf586250f4d51d3e2942be *man/lifecontingencies-package.Rd
 ed365f1393ab52b0098b8882f32260a1 *man/lifetable-class.Rd
 9abd43173ff94d7eb24ec338a7687b03 *man/mdt-class.Rd
 8fa42452b7dbdaafed8660d7a4228226 *man/multidecrins.Rd
@@ -129,5 +126,5 @@ f399e9e3970f524a6fb01ec995092f7f *vignettes/an_introduction_to_lifecontingencies
 84ed0204a2b089dd028d6c0c73629e43 *vignettes/mortality_projection.Rnw
 aaae91d772ccaebfcc2d9b62d8bf752e *vignettes/myVignette.sty
 05a373fa5f525a273f67e883b9ae3819 *vignettes/mystyles.sty
-162d9dcba358c092019c7cbaaaee1ef0 *vignettes/pensionfunding.Rmd
+667165f5e783b03fa0c3de74ace08762 *vignettes/pensionfunding.Rmd
 96d51abeda85673d2199314119289f6b *vignettes/pict2e.sty
