@@ -8,7 +8,8 @@
 	This function evaluates n - years term and whole life insurance.
 }
 \usage{
-	Axn(actuarialtable, x, n, i=actuarialtable@interest,m, k=1, type = "EV",power=1)
+Axn(actuarialtable, x, n, i=actuarialtable@interest, 
+	m, k=1, type = "EV", power=1, \dots)
 }
 
 \arguments{
@@ -17,26 +18,37 @@
 }
   \item{x}{
 	Age of the insured.
+	(can be a vector).
 }
   \item{n}{
-	Coverage period, if missing the insurance is considered whole life \eqn{n=\omega-x-m}
+	Coverage period, if missing the insurance is considered whole life \eqn{n=\omega-x-m}.
+	(can be a vector).
 }
   \item{i}{
 	Interest rate (overrides the interest rate slot in \code{actuarialtable}).
+	(should be a scalar).
 }
   \item{m}{
 	Deferring period, even fractional, if missing assumed to be 0.
+	(can be a vector).
 }
   \item{k}{
 	Number of periods per year at the end of which the capital is payable in case of 
 	insured event, default=1 (capital payable at the end of death year).
+	(should be a scalar).
 }
-  \item{type}{
-	A character value, either "EV" (default value) or "ST".
+    \item{type}{
+	A string, either \code{"EV"} for expected value of the actuarial present value (default) or 
+	\code{"ST"} for one stochastic realization of the underlying present value of benefits.
+	Alternatively, one can use \code{"expected"} or \code{"stochastic"}
+	respectively (can be abbreviated).
 }
   \item{power}{
 The power of the APV. Default is 1 (mean)
 }
+  \item{\dots}{
+  Arguments to be passed to \code{pxt()}.
+  }
 }
 \details{
 	The variance calculation has not been implemented yet.

@@ -1,12 +1,13 @@
 %\documentclass{jss}
 \documentclass[nojss]{jss}
 \usepackage[OT1]{fontenc}
+\usepackage[utf8]{inputenc}
 \usepackage{amsmath,lifecon,thumbpdf,actuarialsymbol}
 %\usepackage{myVignette}
 %\VignetteIndexEntry{An introduction to lifecontingencies package}
 %\VignetteKeywords{vig1}
 %\VignettePackage{lifecontingencies}
-% need no \usepackage{Sweave.sty}
+\usepackage{Sweave}
 %\SweaveOpts{prefix.string=Figures/fig}
 \author{Giorgio Alfredo Spedicato\\StatisticalAdvisor}
 \Plainauthor{Giorgio Alfredo Spedicato}
@@ -62,6 +63,7 @@
 %% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 
 
 <<setup,echo=FALSE, results=hide>>=
@@ -562,7 +564,9 @@ c(incrAnn, decrAnn)
 @
 
 The last example within this section displays the calculation of the present
-value of a geometrically increasing annuity. If payment amounts increase by
+value of a geometrically increasing annuity. As known by classical financial and actuarial mathematic, geometric 
+annuities are priced using a synthetic discount rate $j=i-g$ being $g$ the geometric growth rate and 
+$i$ the interest rate used to discount future payments. So, if payment amounts increase by
 3\%, the interest rate is 4\%, and its term is 10 years, the implied present
 value is:
 <<ann6, keep.source=TRUE>>=
@@ -1646,11 +1650,11 @@ c(tt1, tt2,tt3, tt4)
 \end{center}
 \end{figure}
 
-The same analysis can be performen on life contingencies insurance on two (or more lives)
+The same analysis can be performed on life contingencies insurance on two (or more lives)
 as listings exemplify below.
 
 <<randomMultipleLifeCon,keep.source=TRUE>>=
-tablesList=list(soa08Act,soa08Act);x=c(60,60);m=0;status="first";t=30;k=1
+tablesList=list(soa08Act,soa08Act);x=c(60,60);m=0;status="last";t=30;k=1
 APVAxyz<-Axyzn(tablesList=tablesList,x=x,n=t,status=status,type="EV")
 samplesAxyz<-rLifeContingenciesXyz(n=numSim,lifecontingency = "Axyz",
 		tablesList = tablesList,x=x,t=t,m=m,k=k,status=status,

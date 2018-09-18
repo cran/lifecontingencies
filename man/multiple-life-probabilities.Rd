@@ -2,8 +2,6 @@
 \alias{exyzt}
 \alias{pxyzt}
 \alias{qxyzt}
-\alias{rLifexyz}
-
 \title{
 Functions to deals with multiple life models
 }
@@ -12,24 +10,29 @@ These functions evaluate multiple life survival probabilities, either for joint 
 be generated as well as random samples of lifes.
 }
 \usage{
-exyzt(tablesList, x, t = Inf, status = "joint",  type = "Kx", ...)
-pxyzt(tablesList, x, t, status = "joint", fractional=rep("linear",
-length(tablesList)), ...)
-qxyzt(tablesList, x, t, status = "joint", 
-fractional=rep("linear",length(tablesList)), ...)
-rLifexyz(n, tablesList, x, k = 1, type = "Tx")
+exyzt(tablesList, x, t = Inf, status = "joint",  type = "Kx", \dots)
+
+pxyzt(tablesList, x, t, status = "joint", 
+fractional=rep("linear", length(tablesList)), \dots)
+
+qxyzt(tablesList, x, t, status = "joint",  
+fractional=rep("linear",length(tablesList)), \dots)
+
 }
 
 \arguments{
   \item{tablesList}{A list whose elements are either \code{lifetable} or \code{actuarialtable} class objects.}
-\item{x}{A vector of the same size of tableList that contains the initial ages.}
-\item{t}{The duration.}
-\item{n}{The size of sampled life duration matrix.}
-\item{status}{Either "joint" (for the joint-life status model) or "last".}
-\item{type}{"Tx" for continuous, "Kx" for curtate.}
-\item{fractional}{Fractional lives assumption.}
-\item{\dots}{Options to be passed to \code{pxt}.}
-\item{k}{Fractional frequency option.}
+  \item{x}{A vector of the same size of tableList that contains the initial ages.}
+  \item{t}{The duration.}
+  \item{status}{Either \code{"joint"} for the joint-life status model or \code{"last"}
+for the last-survivor status model (can be abbreviated).}
+  \item{type}{Either \code{"Tx"} for continuous future lifetime, \code{"Kx"} for 
+curtate furture lifetime (can be abbreviated).}
+\item{fractional}{Assumptions for fractional age. One of \code{"linear"}, 
+  \code{"hyperbolic"}, \code{"constant force"} (can be abbreviated).}
+
+\item{\dots}{Options to be passed to \code{\link{pxt}}.}
+
 }
 \details{
 These functions extends \code{\link{pxyt}} family to an arbitrary number of life contingencies.

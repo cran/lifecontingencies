@@ -595,7 +595,7 @@ c(tt1, tt2,tt3, tt4)
 ###################################################
 ### code chunk number 62: randomMultipleLifeCon
 ###################################################
-tablesList=list(soa08Act,soa08Act);x=c(60,60);m=0;status="first";t=30;k=1
+tablesList=list(soa08Act,soa08Act);x=c(60,60);m=0;status="last";t=30;k=1
 APVAxyz<-Axyzn(tablesList=tablesList,x=x,n=t,status=status,type="EV")
 samplesAxyz<-rLifeContingenciesXyz(n=numSim,lifecontingency = "Axyz",
 		tablesList = tablesList,x=x,t=t,m=m,k=k,status=status,

@@ -10,8 +10,8 @@ Annuity immediate and due function.
 	simulate the stochastic distribution of the annuity value.
 }
 \usage{
-	axn(actuarialtable, x, n, i = actuarialtable@interest, m,  k = 1, type = "EV",
-	power=1,payment = "advance")
+axn(actuarialtable, x, n, i = actuarialtable@interest, m,  k = 1, type = "EV",
+	power=1,payment = "advance", \dots)
 }
 	
 \arguments{
@@ -19,29 +19,42 @@ Annuity immediate and due function.
 	An actuarial table object.
 }
   \item{x}{
-	Age of the annuitant.
+	Age of the annuitant. (can be a vector).
 }
   \item{n}{
 	Number of terms of the annuity, if missing annuity is intended to be paid until death.
+	 (can be a vector).
 }
   \item{i}{
 	Interest rate (default value the interest of the life table).
+	(should be a scalar).
 }
   \item{m}{
 	Deferring period. Assumed to be 1 whether missing.
+	(can be a vector).
 }
   \item{k}{
 	Number of fractional payments per period. Assumed to be 1 whether missing.
+	(should be a scalar).
 }
   \item{type}{
-	A string, eithed "EV" (default value) or "ST" (stochastic realization).
+	A string, either \code{"EV"} for expected value of the actuarial present value (default) or 
+	\code{"ST"} for one stochastic realization of the underlying present value of benefits.
+	Alternatively, one can use \code{"expected"} or \code{"stochastic"}
+	respectively (can be abbreviated).
 }
   \item{power}{
 The power of the APV. Default is 1 (mean)
 }
   \item{payment}{
-Payment type: "advance" default is the annuity due, otherwise annuity immediate.
+The Payment type, either \code{"advance"} for the annuity due (default)
+or \code{"arrears"} for the annuity immediate.
+Alternatively, one can use \code{"due"} or \code{"immediate"}
+	respectively (can be abbreviated).
 }
+  \item{\dots}{
+  Arguments to be passed to \code{pxt()}.
+  }
 }
 \details{
 	When "ST" has been selected a stochastic value representing a number drawn from the domain of \deqn{

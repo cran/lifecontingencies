@@ -1,8 +1,32 @@
+#############################################################################
+#   Copyright (c) 2018 Giorgio A. Spedicato
+#
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the
+#   Free Software Foundation, Inc.,
+#   59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
+#
+#############################################################################
+###
+###         financial functions
+###
+
+
 #TO DO: check here http://www.mysmu.edu/faculty/yktse/FMA/S_FMA_1.pdf
 #TO DO: add k to increasing and decreasing annuities function
-#function to evaluate the present value of a series of cash flows
 
-presentValue<-function(cashFlows, timeIds,interestRates, probabilities, power=1)
+#function to evaluate the present value of a series of cash flows
+presentValue<-function(cashFlows, timeIds, interestRates, probabilities, power=1)
 {
 	out<-0
 	if(missing(timeIds)) #check coherence on time id vector
@@ -20,8 +44,10 @@ presentValue<-function(cashFlows, timeIds,interestRates, probabilities, power=1)
 	if((length(interestRates)>1)&(length(interestRates)!=length(timeIds))) warning("Interest rates incoherent with time ids") #check dimensioanlity of time ids
 	
 	interestRates <- rep(interestRates,length.out=length(timeIds))
-	v <- (1+interestRates)^-timeIds
-	out <- sum(((cashFlows^power)*(v^power))*probabilities) #power used for APV, usually=1
+	v <- (1+interestRates)^(-timeIds)
+	
+	#power used for APV, usually=1
+	out <- sum( ( (cashFlows^power) * (v^power) ) * probabilities) 
   #using Rcpp code seems inefficient
 # 	out<-switch(calculation,
 #               R=sum(((cashFlows^power)*(v^power))*probabilities),
@@ -35,26 +61,31 @@ presentValue<-function(cashFlows, timeIds,interestRates, probabilities, power=1)
 #m=tasso di interesse nominale capitalizzato m volte
 duration=function(cashFlows, timeIds,i, k=1,macaulay=TRUE)
 {
-	out=0
-	if(missing(timeIds)) #check coherence on time id vector
-	{	warning("Warning: missing time vector")
-		timeIds=1
-	}
-
-	if(!(length(cashFlows)==length(timeIds))) stop("Error! check dimensionality of cash flow and time ids vectors") #check dimensionality of cash flows
-	
-	interestRates=rep(i/k,length.out=length(timeIds))
-	#calcola il valora attuale
-	ts=timeIds*k
-	v=(1+interestRates)^-(ts)
-	pv=sum((cashFlows*v))
-	#pv=.C("add2", x=as.double(cashFlows), y=as.double(v),n=as.integer(length(cashFlows)),out=numeric(1))$out
-	#calcola il tempo medio ponderato
-	weightedTime=sum((cashFlows*v*ts))
-	#weightedTime=.C("add3", x=as.double(cashFlows), y=as.double(v),z=as.double(ts),n=as.integer(length(cashFlows)),out=numeric(1))$out
-	out=weightedTime/pv	
-	if(macaulay==FALSE) out=out else out=out/(1+i/k) 
-	return(out)
+  out=0
+  if(missing(timeIds)) #check coherence on time id vector
+  {	warning("Warning: missing time vector")
+    timeIds=1
+  }
+  
+  if(!(length(cashFlows)==length(timeIds))) stop("Error! check dimensionality of cash flow and time ids vectors") #check dimensionality of cash flows
+  
+  interestRates<-rep(i/k,length.out=length(timeIds))
+  #computing present value
+  ts=timeIds*k
+  v=(1+interestRates)^-(ts)
+  pv<-sum((cashFlows*v))
+  #pv=.C("add2", x=as.double(cashFlows), y=as.double(v),n=as.integer(length(cashFlows)),out=numeric(1))$out
+  #computing weighted time
+  weightedTime <- sum((cashFlows*v*ts))
+  #weightedTime=.C("add3", x=as.double(cashFlows), y=as.double(v),z=as.double(ts),n=as.integer(length(cashFlows)),out=numeric(1))$out
+  out <- weightedTime/pv	
+  # if(macaulay==FALSE) out=out else out=out/(1+i/k) 
+  # return(out)
+  if (macaulay == TRUE)
+    out <- out
+  else 
+    out <- out/(1 + i/k)
+  return(out)
 }
 
 
@@ -94,6 +125,7 @@ annuity=function(i, n,m=0,k=1, type="immediate")
 	if(missing(n)) stop("Error! Missing periods")
 	if(m<0) stop("Error! Negative deferring period") 
 	if(k<1) stop("Error! Payment frequency must be greater or equal than 1") 
+  type <- testpaymentarg(type)
 	
 	if(is.infinite(n)) {
 		out=ifelse(type=="immediate",1/i,1/interest2Discount(i))
@@ -104,6 +136,7 @@ annuity=function(i, n,m=0,k=1, type="immediate")
 	ieff=i #i ? il tasso effettivo
 	if(type=="immediate") timeIds=seq(from=1/k, to=n, by=1/k)+m
 	else timeIds=seq(from=0, to=n-1/k, by=1/k)+m #due
+	
 	iRate=rep(ieff,length.out=n*k)
 	out=presentValue(cashFlows=rep(1/k,length.out=n*k),interestRates = iRate, 
 			timeIds=timeIds)
@@ -116,7 +149,8 @@ decreasingAnnuity=function(i, n,type="immediate")
 	out=NULL
 	if(missing(n)) stop("Error! Need number of periods")
 	if(missing(i)) stop("Error! Need interest rate")
-	out=(n-annuity(i=i, n=n, type="immediate"))/n
+	type <- testpaymentarg(type)
+	
 	paymentsSeq=numeric(n)
 	timeIds=numeric(n)
 	paymentsSeq=seq(from=n, to=1,by=-1)
@@ -126,6 +160,7 @@ decreasingAnnuity=function(i, n,type="immediate")
 		timeIds=seq(from=0, to=n-1,by=1)
 	}
 	out=presentValue(cashFlows=paymentsSeq, timeIds=timeIds, interestRates=i)
+	
 	return(out)
 }
 #increasing annuity
@@ -134,6 +169,8 @@ increasingAnnuity=function(i, n,type="immediate")
 	out=NULL
 	if(missing(n)) stop("Error! Need periods")
 	if(missing(i)) stop("Error! Need interest rate")
+	type <- testpaymentarg(type)
+	
 	paymentsSeq=numeric(n)
 	paymentsSeq=seq(from=1, to=n,by=1)
 	timeIds=seq(from=1, to=n, by=1)
@@ -157,6 +194,8 @@ accumulatedValue=function(i, n, m=0,k=1, type="immediate")
 {
 	if(is.infinite(n)) return(1/i)
 	if(missing(i)) stop("Error! Missing interest rates")
+  type <- testpaymentarg(type)
+  
 #	if(type=="immediate") timeIds=seq(from=1, to=n, by=1)
 #	else timeIds=seq(from=0, to=n-1, by=1) #due
 #	timeIds=-timeIds
@@ -165,39 +204,87 @@ accumulatedValue=function(i, n, m=0,k=1, type="immediate")
 	out=(1+i)^n*annuity(i=i,n=n,k=k,m=m,type=type)
 	return(out)
 }
-#obtain the nominal interest rate
+
+#' @rdname nominal-real-convertible
+#' @aliases convertible2Effective
+#' @aliases real2Nominal
+#' @aliases nominal2Real
+#' @title Functions to switch from nominal / effective / convertible rates
+#'
+#' @param i The rate to be converted.
+#' @param k The original / target compounting frequency.
+#' @param type Either "interest" (default) or "nominal".
+#' 
+#' @details \code{effective2Convertible} and \code{convertible2Effective} wrap the other two functions.
+#'
+#' @return A numeric value.
+#' @references Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition), 2008, ACTEX Publications.
+#' @note Convertible rates are synonims of nominal rates
+#' @seealso \code{\link{real2Nominal}}
+#'
+#' @examples
+#' #a nominal rate of 0.12 equates an APR of
+#' nominal2Real(i=0.12, k = 12, "interest")
+#' @export
 nominal2Real=function(i, k=1, type="interest")
 {
-	out=NULL
-	if(type=="interest") out=(1+i/k)^k-1 else 
-		out=1-(1-i/k)^k
+	out <- NULL
+	if(type=="interest") 
+	  out <- (1+i/k)^k-1 
+	else 
+		out<- 1-(1-i/k)^k
 	return(out)
 }
-#or
+#' @rdname nominal-real-convertible
+#' @export
 convertible2Effective=function(i, k=1, type="interest")
 {
 	return(nominal2Real(i=i,k=k,type=type))
 }
-#obtain the real interest rate
+#' @rdname nominal-real-convertible
+#' @export
 real2Nominal=function(i, k=1, type="interest")
 {
 	if(type=="interest") out=((1+i)^(1/k)-1)*k else
 		out=k*(1-(1-i)^(1/k))
 	return(out)
 }
-#or
+#' @rdname nominal-real-convertible
+#' @export
 effective2Convertible=function(i, k=1, type="interest")
 {
 	return(real2Nominal(i=i,k=k,type=type))
 }
 
-#obtain the interest from intensity
+
+#' @title Functions to switch from interest to intensity and vice versa.
+#' @description There functions switch from interest to intensity and vice - versa.
+#' @rdname intensity-interest
+#' @aliases interest2Intensity
+#'
+#' @param intensity Intensity rate
+#' @details Simple financial mathematics formulas are applied.
+#' @references Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition), 2008, ACTEX Publications.
+#' @author Giorgio A. Spedicato
+#' @seealso \code{\link{real2Nominal}}, \code{\link{nominal2Real}} 
+#'
+#' @return A numeric value.
+#'
+#' @examples
+#' # a force of interest of 0.02 corresponds to an APR of 
+#' intensity2Interest(intensity=0.02)
+#' @export
 intensity2Interest=function(intensity)
 {
 	out=exp(intensity*1)-1
 	return(out)
 }
-#obtain the intensity rate from the interest rate
+#' @rdname intensity-interest
+#' @param i interest rate
+#' @examples
+#' #an interest rate equal to 0.02 corresponds to a force of interest of of 
+#' interest2Intensity(i=0.02)
+#' @export
 interest2Intensity=function(i)
 {
 	out=log(1+i)
