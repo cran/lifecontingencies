@@ -1,5 +1,4 @@
 ### R code from vignette source 'an_introduction_to_lifecontingencies_package.Rnw'
-### Encoding: ISO8859-1
 
 ###################################################
 ### code chunk number 1: setup

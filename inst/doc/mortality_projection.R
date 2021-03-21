@@ -1,5 +1,4 @@
 ### R code from vignette source 'mortality_projection.Rnw'
-### Encoding: ISO8859-1
 
 ###################################################
 ### code chunk number 1: mortality_projection.Rnw:66-67

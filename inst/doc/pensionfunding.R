@@ -1,4 +1,4 @@
-## ----setup, include=FALSE------------------------------------------------
+## ----setup, include=FALSE-----------------------------------------------------
 knitr::opts_chunk$set(echo = TRUE)
 #configure
 library(lifecontingencies)
@@ -9,7 +9,7 @@ xTAB<-seq(0,length(lxTAB)-1,1)
 #create the table
 lt=new("lifetable",x=xTAB,lx=lxTAB)
 
-## ----cumdef, echo=TRUE, tidy=TRUE----------------------------------------
+## ----cumdef, echo=TRUE, tidy=TRUE---------------------------------------------
 CUM<-function(acttableAccPeriod,x,beta,i = actuarialtable@interest,j,t,k=1,payment="advance",acttablePaymPeriod,i2,delta=0){
 
     out <- numeric(1)
@@ -37,7 +37,7 @@ CUM<-function(acttableAccPeriod,x,beta,i = actuarialtable@interest,j,t,k=1,payme
     return(out)
   }
 
-## ----cummr, echo=TRUE, tidy=TRUE-----------------------------------------
+## ----cummr, echo=TRUE, tidy=TRUE----------------------------------------------
 CUMmr<-function(acttableAccPeriod,x,beta,i = actuarialtable@interest,j,t,k=1,payment="advance",acttablePaymPeriod,i2,delta=0){
   
   out <- numeric(1)
@@ -65,7 +65,7 @@ CUMmr<-function(acttableAccPeriod,x,beta,i = actuarialtable@interest,j,t,k=1,pay
   return(out)
 }
 
-## ----pumdef, echo=TRUE, tidy=TRUE----------------------------------------
+## ----pumdef, echo=TRUE, tidy=TRUE---------------------------------------------
 #Projected Unit Method
 PUM<-function(acttableAccPeriod,x,beta,i = actuarialtable@interest,j,t,k=1,payment="advance",acttablePaymPeriod,i2,delta=0){
   
@@ -94,7 +94,7 @@ PUM<-function(acttableAccPeriod,x,beta,i = actuarialtable@interest,j,t,k=1,payme
   return(out)
 }
 
-## ----pummr, echo=TRUE, tidy=TRUE-----------------------------------------
+## ----pummr, echo=TRUE, tidy=TRUE----------------------------------------------
 PUMmr<-function(acttableAccPeriod,x,beta,i = actuarialtable@interest,j,t,k=1,payment="advance",acttablePaymPeriod,i2,delta=0){
   
   out <- numeric(1)
@@ -122,7 +122,7 @@ PUMmr<-function(acttableAccPeriod,x,beta,i = actuarialtable@interest,j,t,k=1,pay
   return(out)
 }
 
-## ----ieamdef, echo=TRUE, tidy=TRUE---------------------------------------
+## ----ieamdef, echo=TRUE, tidy=TRUE--------------------------------------------
 #Individual Entry-Age Unit Method
 #Type: 0 constant contribution rate, 1 # Constant Contribution amount (Default is 0)
 IEAM<-function(acttableAccPeriod,x,beta,i = actuarialtable@interest,j,t,k=1,payment="advance",acttablePaymPeriod,i2,delta=0,type=0){
@@ -157,7 +157,7 @@ IEAM<-function(acttableAccPeriod,x,beta,i = actuarialtable@interest,j,t,k=1,paym
   return(out)
 }
 
-## ----ieammr, echo=TRUE, tidy=TRUE----------------------------------------
+## ----ieammr, echo=TRUE, tidy=TRUE---------------------------------------------
 IEAMmr<-function(acttableAccPeriod,x,beta,i = actuarialtable@interest,j,t,k=1,payment="advance",acttablePaymPeriod,i2,delta=0,type=0){
   
   out <- numeric(1)
@@ -191,7 +191,7 @@ IEAMmr<-function(acttableAccPeriod,x,beta,i = actuarialtable@interest,j,t,k=1,pa
     return(out)
 }
 
-## ----assumptions---------------------------------------------------------
+## ----assumptions--------------------------------------------------------------
 #Current Unit Method
 beta=65 # Beta Retirement age
 x=25 #x Age of the insured.
@@ -200,7 +200,7 @@ t=60 #1/t is the % of the salary, recognized as retirement pension, for each yea
 j=0.06 #  average salary increases (for both growth in wages and promotional salary for seniority)
 delta=0.03 #Increase of retirement pension
 
-## ----calcandshow, tidy=TRUE----------------------------------------------
+## ----calcandshow, tidy=TRUE---------------------------------------------------
 CUM(lt,x,beta,i,j,t,k,delta=0.03)
 PUM(lt,x,beta,i,j,t,k,delta=0.03)
 IEAM(lt,x,beta,i,j,t,k,delta=0.03,type=0)
@@ -210,7 +210,7 @@ lines(seq(x,beta-1,1),rep(IEAM(lt,x,beta,i,j,t,k,delta=0.03),beta-x),type="p",co
 lines(seq(x,beta-1,1),IEAM(lt,x,beta,i,j,t,k,delta=0.03,type=1),type="p",col="green")
 legend("topleft",c("CUM","PUM","IEAM (constant rate)","IEAM (constant premium)"),col=c("black","red","blue","green"),pch=c(1,1,1,1),cex=0.6)
 
-## ----calc2andshow, tidy=TRUE---------------------------------------------
+## ----calc2andshow, tidy=TRUE--------------------------------------------------
 CUMmr(lt,x,beta,i,j,t,k,delta=0.03)
 PUMmr(lt,x,beta,i,j,t,k,delta=0.03)
 IEAMmr(lt,x,beta,i,j,t,k,delta=0.03,type=0)
