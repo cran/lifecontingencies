@@ -15,7 +15,19 @@
 
 <title>Pension Funding with lifecontingencies</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -25,6 +37,7 @@
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
     </style>
+
 
 
 <style type="text/css">
@@ -126,7 +139,187 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -140,39 +333,137 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Pension Funding with lifecontingencies</h1>
 <h4 class="author">Gian Paolo Clemente, Catholic University, Milan</h4>
-<h4 class="date">03 gennaio, 2022</h4>
+<h4 class="date">10 giugno, 2022</h4>
 
 
 
 <div id="introduction-and-some-general-settings" class="section level2">
 <h2>Introduction and some general settings</h2>
-This report focuses on several funding and actuarial costing methods in occupational pension funds where the benefits are defined. As well-known, a defined benefit (DB) pension plan is a type of pension plan in which an employer/sponsor promises a specified pension payment, lump-sum (or combination thereof) on retirement that is predetermined by a formula based on the employee’s history (earnings, tenure of service and age, etc.) rather than depending directly on individual investment returns. The first consideration is what constitutes the “retirement provision.” We could argue that provisions regard any savings or investments made by an individual for later life. For the sake of brevity, we only focus here on the actuarial involvement in the provision of retirement benefits by employers, groups of employers and professions for their members (i.e the so called “second pillar” of retirement provisions). This provision is usually designed to supplement and in some cases replace (“contracted out” pension schemes in the United Kingdom) the compulsory state pension arrangements. The main benefits are usually at least both a pension payable for life from the attainment of a specified retirement age and a pension payable to the widow/er on the death of the employee/member, according to the death of either the active member or the retired member. These core benefits are found in almost every pension funds, albeit in differing forms. Also additional benefits are usually provided in variable frameworks (e.g. disability for instance).<br />
-In the next, we focus on a specific defined benefit pension fund by considering only the retirement benefit for the sake of simplicity. We present some well-known funding methods and we show how to evaluate both premium rate and technical reserve via life contingencies package dedicated functions. To this aim we follow a cohort approach by considering a group of people who share the same characteristic in terms of age of affiliation <span class="math inline">\(\alpha\)</span> with the pension plan, sex, age of retirement <span class="math inline">\(\beta\)</span> and initial salary (<span class="math inline">\(s_\alpha\)</span>). We consider a DB scheme where the pension on retirement is fixed in advance as a proportion of the member’s salary in their last year of service. So the level of the pension at the time of benefit entitlement is based on a proportional-earnings related formula and benefit is expressed as a pension annuity <span class="math inline">\(b_{x}\)</span>, starting at age <span class="math inline">\(\beta\)</span>, increasing annualy at the revaualion rate <span class="math inline">\(\delta\)</span> and payable until death: <span class="math display">\[\begin{equation}
+This report focuses on several funding and actuarial costing methods in
+occupational pension funds where the benefits are defined. As
+well-known, a defined benefit (DB) pension plan is a type of pension
+plan in which an employer/sponsor promises a specified pension payment,
+lump-sum (or combination thereof) on retirement that is predetermined by
+a formula based on the employee’s history (earnings, tenure of service
+and age, etc.) rather than depending directly on individual investment
+returns. The first consideration is what constitutes the “retirement
+provision”. We could argue that provisions regard any savings or
+investments made by an individual for later life. For the sake of
+brevity, we only focus here on the actuarial involvement in the
+provision of retirement benefits by employers, groups of employers and
+professions for their members (i.e the so called “second pillar” of
+retirement provisions). This provision is usually designed to supplement
+and in some cases replace (“contracted out” pension schemes in the
+United Kingdom) the compulsory state pension arrangements. The main
+benefits are usually at least both a pension payable for life from the
+attainment of a specified retirement age and a pension payable to the
+widow/er on the death of the employee/member, according to the death of
+either the active member or the retired member. These core benefits are
+found in almost every pension funds, albeit in differing forms. Also
+additional benefits are usually provided in variable frameworks
+(e.g. disability for instance).<br />
+In the next, we focus on a specific defined benefit pension fund by
+considering only the retirement benefit for the sake of simplicity. We
+present some well-known funding methods and we show how to evaluate both
+premium rate and technical reserve via life contingencies package
+dedicated functions. To this aim we follow a cohort approach by
+considering a group of people who share the same characteristic in terms
+of age of affiliation <span class="math inline">\(\alpha\)</span> with
+the pension plan, sex, age of retirement <span class="math inline">\(\beta\)</span> and initial salary (<span class="math inline">\(s_\alpha\)</span>). We consider a DB scheme where
+the pension on retirement is fixed in advance as a proportion of the
+member’s salary in their last year of service. So the level of the
+pension at the time of benefit entitlement is based on a
+proportional-earnings related formula and benefit is expressed as a
+pension annuity <span class="math inline">\(b_{x}\)</span>, starting at
+age <span class="math inline">\(\beta\)</span>, increasing annualy at
+the revaualion rate <span class="math inline">\(\delta\)</span> and
+payable until death: <span class="math display">\[\begin{equation}
 b_{x}=(1+\delta)^{x-\beta}\left(\frac{\beta-\alpha}{t}\right)s_{\beta}
 \end{equation}\]</span> In particular, we are assuming that:
-<p>In other words, the pension plan guarantees a replacement ratio equal to: <span class="math display">\[\begin{equation}
+<p>In other words, the pension plan guarantees a replacement ratio equal
+to: <span class="math display">\[\begin{equation}
 RR_{\beta}=\frac{s_{\beta}}{b_{\beta}}=\left(\frac{\beta-\alpha}{t}\right)
 \end{equation}\]</span></p>
-Furthermore, we assume that annual earnings are increasing at a yearly flat rate <span class="math inline">\(i\)</span>: <span class="math display">\[\begin{equation}
+Furthermore, we assume that annual earnings are increasing at a yearly
+flat rate <span class="math inline">\(i\)</span>: <span class="math display">\[\begin{equation}
 s_{x}=s_{x-1}(1+j)
-\end{equation}\]</span> This evolution of earnings, desibed by the rate <span class="math inline">\(j\)</span>, is usually considered to include two components:
+\end{equation}\]</span> This evolution of earnings, desibed by the rate
+<span class="math inline">\(j\)</span>, is usually considered to include
+two components:
 </div>
 <div id="contribution-rate-and-technical-reserves" class="section level2">
 <h2>Contribution rate and technical reserves</h2>
-<p>Our first aim is to quantify the level of contribution to be set at a level to produce the targeted pension on retirement. In this framework, two general approaches can be pursued. On one hand, the accrued benefits cost method defines the annual normal cost on the basis of portion of pension benefit matured at the valuation date. Accrued Benefits Funding Methods are indeed a major category of funding methods in which the Actuarial Liability for active members is based on pensionable service accrued up to the valuation date or to the end of the Control Period, asappropriate. Differences between the various Accrued Benefits Funding Methods arise from the treatment of decrements in membership and increases in pensionable pay when calculating the Actuarial Liabilities for active members. This affects the value placed not only on the Actuarial Liability but also on the Standard Contribution Rate. Main examples treated in the next are Current Unit Method and Projected Unit Method. \ On the other hand the Projected Benefit Cost Methods, that include several methods (as Individual Entry-Age Method for instance), quantifies a normal cost that represents an amount that will provide for the estimated projected retirement benefits over the service lives of either the individual employees or the employee group. Pension costs computed under this approach tend to be stable or decline year by year, depending on the method selected.</p>
-<p>We begin by the Current Unit Method (CUM). The Actuarial Liability for active members is calculated taking into account all types of decrement (in our case only retirement). In calculating the Actuarial Liability as at the valuation date pensionable pay is not projected. It is now possible to define the following mathematical reserve V_{x} at age <span class="math inline">\(x\)</span> (<span class="math inline">\(\alpha \leq x &lt;\beta\)</span>): <span class="math display">\[\begin{equation}
+<p>Our first aim is to quantify the level of contribution to be set at a
+level to produce the targeted pension on retirement. In this framework,
+two general approaches can be pursued. On one hand, the accrued benefits
+cost method defines the annual normal cost on the basis of portion of
+pension benefit matured at the valuation date. Accrued Benefits Funding
+Methods are indeed a major category of funding methods in which the
+Actuarial Liability for active members is based on pensionable service
+accrued up to the valuation date or to the end of the Control Period,
+asappropriate. Differences between the various Accrued Benefits Funding
+Methods arise from the treatment of decrements in membership and
+increases in pensionable pay when calculating the Actuarial Liabilities
+for active members. This affects the value placed not only on the
+Actuarial Liability but also on the Standard Contribution Rate. Main
+examples treated in the next are Current Unit Method and Projected Unit
+Method. \ On the other hand the Projected Benefit Cost Methods, that
+include several methods (as Individual Entry-Age Method for instance),
+quantifies a normal cost that represents an amount that will provide for
+the estimated projected retirement benefits over the service lives of
+either the individual employees or the employee group. Pension costs
+computed under this approach tend to be stable or decline year by year,
+depending on the method selected.</p>
+<p>We begin by the Current Unit Method (CUM). The Actuarial Liability
+for active members is calculated taking into account all types of
+decrement (in our case only retirement). In calculating the Actuarial
+Liability as at the valuation date pensionable pay is not projected. It
+is now possible to define the following mathematical reserve V_{x} at
+age <span class="math inline">\(x\)</span> (<span class="math inline">\(\alpha \leq x &lt;\beta\)</span>): <span class="math display">\[\begin{equation}
 V_{x}={}_{\beta-x}E^{p^{ap},i^{ap}}_{x}\left(\frac{x-\alpha}{t}s_{x-1}\right)\ddot{a}^{p^{pp},u}_{\beta}
-\end{equation}\]</span> where <span class="math inline">\(p^{ap}\)</span> and <span class="math inline">\(p^{pp}\)</span> are the survival probabilities in accumulation and payment periods respectively, <span class="math inline">\(i^{ap}\)</span> is the technical financial rate in the accumulation period, <span class="math inline">\(u=\frac{1+i^{pp}}{1+\delta}-1\)</span> is a syntethic index function of the technical financial rate <span class="math inline">\(i^{pp}\)</span> in the payment period and the indexation of the pension amount. Notice that <span class="math inline">\(p^{pp}\)</span> and <span class="math inline">\(j^{pp}\)</span> may depend on premium rate requested by the insurer when an agreement is made between pension plan and insurer for the payments of annuity amounts. <span class="math inline">\({}_{\beta-x}E^{p^{ap},i^{ap}}_{x}=\frac{{}_{\beta-x}p^{ap}_{x}}{(1+i)^{\beta-x}}\)</span> is the actuarial present value of a life-contingent <span class="math inline">\(\beta-x\)</span>-year future payment of 1. While <span class="math inline">\(\ddot{a}^{p^{pp},u}_{\beta}\)</span> is the expected present value for the life-annuity due of infinite-duration. By applying Fouret’s formula, it is easily derive the contribution rate <span class="math inline">\(\gamma_{x}\)</span> as: <span class="math display">\[\begin{equation}
+\end{equation}\]</span> where <span class="math inline">\(p^{ap}\)</span> and <span class="math inline">\(p^{pp}\)</span> are the survival probabilities in
+accumulation and payment periods respectively, <span class="math inline">\(i^{ap}\)</span> is the technical financial rate in
+the accumulation period, <span class="math inline">\(u=\frac{1+i^{pp}}{1+\delta}-1\)</span> is a
+syntethic index function of the technical financial rate <span class="math inline">\(i^{pp}\)</span> in the payment period and the
+indexation of the pension amount. Notice that <span class="math inline">\(p^{pp}\)</span> and <span class="math inline">\(j^{pp}\)</span> may depend on premium rate
+requested by the insurer when an agreement is made between pension plan
+and insurer for the payments of annuity amounts. <span class="math inline">\({}_{\beta-x}E^{p^{ap},i^{ap}}_{x}=\frac{{}_{\beta-x}p^{ap}_{x}}{(1+i)^{\beta-x}}\)</span>
+is the actuarial present value of a life-contingent <span class="math inline">\(\beta-x\)</span>-year future payment of 1. While
+<span class="math inline">\(\ddot{a}^{p^{pp},u}_{\beta}\)</span> is the
+expected present value for the life-annuity due of infinite-duration. By
+applying Fouret’s formula, it is easily derive the contribution rate
+<span class="math inline">\(\gamma_{x}\)</span> as: <span class="math display">\[\begin{equation}
 \gamma_{x}={}_{\beta-x}E^{p^{ap},i^{ap}}_{x}\frac{1}{t}\left(1+\frac{j}{1+j}(x-\alpha)\right)\ddot{a}^{p^{pp},u}_{\beta}
-\end{equation}\]</span> In such calculations, allowance is made for increases in the benefits between the relevant date and the assumed date of retirement because of the future increases in salaries. Finally</p>
-<p>The Projected Unit Method is based on a similar structure of CUM, but the pensionable pay is projected from the relevant date up to the assumed date of retirement. This method is also known as the Projected Unit Credit Method. We have then the following relations for the mathematical reserve and the contribution rate respectively: <span class="math display">\[\begin{equation}
+\end{equation}\]</span> In such calculations, allowance is made for
+increases in the benefits between the relevant date and the assumed date
+of retirement because of the future increases in salaries. Finally</p>
+<p>The Projected Unit Method is based on a similar structure of CUM, but
+the pensionable pay is projected from the relevant date up to the
+assumed date of retirement. This method is also known as the Projected
+Unit Credit Method. We have then the following relations for the
+mathematical reserve and the contribution rate respectively: <span class="math display">\[\begin{equation}
 V_{x}={}_{\beta-x}E^{p^{ap},i^{ap}}_{x}\left(\frac{x-\alpha}{t}s_{\beta-1}\right)\ddot{a}^{p^{pp},u}_{\beta}
 \end{equation}\]</span> <span class="math display">\[\begin{equation}
 \gamma_{x}={}_{\beta-x}E^{p^{ap},i^{ap}}_{x}\frac{1}{t}(1+j)^{\beta-x-1}\ddot{a}^{p^{pp},u}_{\beta}
-\end{equation}\]</span> In this case, the normal cost depends yearly on a portion <span class="math inline">\(\frac{1}{t}\)</span> of the expected earning at the last year of service before than retirement.</p>
-<p>Finally, we consider Individual Entry-Age Method. This method assumes that every employee entered the plan (thus, entry age) at the time of employment and that contributions have been made on this basis from the entry age to the date of valuation. The contributions are the level annual amounts which, if accumulated at the rate of interest used in the actuarial valuation, would result in a fund equal to the present value of the pension benefits at retirement for employees that survive at that time. In this case the contribution rate is equal to the ratio of expected present value of future benefits to expected present value of future earnings: <span class="math display">\[\begin{equation}
+\end{equation}\]</span> In this case, the normal cost depends yearly on
+a portion <span class="math inline">\(\frac{1}{t}\)</span> of the
+expected earning at the last year of service before than retirement.</p>
+<p>Finally, we consider Individual Entry-Age Method. This method assumes
+that every employee entered the plan (thus, entry age) at the time of
+employment and that contributions have been made on this basis from the
+entry age to the date of valuation. The contributions are the level
+annual amounts which, if accumulated at the rate of interest used in the
+actuarial valuation, would result in a fund equal to the present value
+of the pension benefits at retirement for employees that survive at that
+time. In this case the contribution rate is equal to the ratio of
+expected present value of future benefits to expected present value of
+future earnings: <span class="math display">\[\begin{equation}
 \gamma_{x}=\frac{{}_{\beta-\alpha}E^{p^{ap},i^{ap}}_{\alpha}\left(\frac{\beta-\alpha}{t}s_{\beta-1}\right)\ddot{a}^{p^{pp},u}_{\beta}}{s_{\alpha}{}_{\beta-\alpha}\ddot{a}^{p^{pp},r}_{\alpha}}
-\end{equation}\]</span> where <span class="math inline">\(u=\frac{1+i^{pp}}{1+j}-1\)</span> is a syntethic index function of the technical financial rate <span class="math inline">\(i^{pp}\)</span> in the payment period and the annual salary increase <span class="math inline">\(j\)</span>. In this case, <span class="math inline">\(\gamma_{x}\)</span> is constant over time.</p>
+\end{equation}\]</span> where <span class="math inline">\(u=\frac{1+i^{pp}}{1+j}-1\)</span> is a syntethic
+index function of the technical financial rate <span class="math inline">\(i^{pp}\)</span> in the payment period and the
+annual salary increase <span class="math inline">\(j\)</span>. In this
+case, <span class="math inline">\(\gamma_{x}\)</span> is constant over
+time.</p>
 <p>Mathematical reserve can be derived in a perspective view as: <span class="math display">\[\begin{equation}
 V_{x}={}_{\beta-x}E^{p^{ap},i^{ap}}_{x}\left(\frac{\beta-\alpha}{t}s_{\beta-1}\right)\ddot{a}^{p^{pp},u}_{\beta}-\gamma_{x}s_{x}{}_{\beta-x}\ddot{a}^{p^{pp},r}_{x}
 \end{equation}\]</span></p>
@@ -180,8 +471,8 @@ V_{x}={}_{\beta-x}E^{p^{ap},i^{ap}}_{x}\left(\frac{\beta-\alpha}{t}s_{\beta-1}\r
 <div id="functions-definitions" class="section level2">
 <h2>Functions definitions</h2>
 <p>The CUM contribution rate is defined by following function:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>CUM <span class="ot">&lt;-</span> <span class="cf">function</span>(acttableAccPeriod, x, beta, <span class="at">i =</span> actuarialtable<span class="sc">@</span>interest, j, t, <span class="at">k =</span> <span class="dv">1</span>,</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">payment =</span> <span class="st">&quot;advance&quot;</span>, acttablePaymPeriod, i2, <span class="at">delta =</span> <span class="dv">0</span>) {</span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>CUM <span class="ot">&lt;-</span> <span class="cf">function</span>(acttableAccPeriod, x, beta, <span class="at">i =</span> actuarialtable<span class="sc">@</span>interest,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    j, t, <span class="at">k =</span> <span class="dv">1</span>, <span class="at">payment =</span> <span class="st">&quot;advance&quot;</span>, acttablePaymPeriod, i2, <span class="at">delta =</span> <span class="dv">0</span>) {</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="dv">1</span>)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(acttableAccPeriod))</span>
@@ -204,14 +495,14 @@ V_{x}={}_{\beta-x}E^{p^{ap},i^{ap}}_{x}\left(\frac{\beta-\alpha}{t}s_{\beta-1}\r
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need average salary increase rate&quot;</span>)</span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">any</span>(x <span class="sc">&lt;</span> <span class="dv">0</span>, beta <span class="sc">&lt;</span> <span class="dv">0</span>, t <span class="sc">&lt;</span> <span class="dv">0</span>))</span>
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Negative parameters&quot;</span>)</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">=</span> <span class="fu">sapply</span>(<span class="fu">seq</span>(x, beta <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="cf">function</span>(h) <span class="fu">Exn</span>(acttableAccPeriod, h, beta <span class="sc">-</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        h, <span class="at">i =</span> i) <span class="sc">*</span> ((<span class="dv">1</span><span class="sc">/</span>t) <span class="sc">+</span> (h <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span> (j<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> j))) <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod, beta,</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>))</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">=</span> <span class="fu">sapply</span>(<span class="fu">seq</span>(x, beta <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="cf">function</span>(h) <span class="fu">Exn</span>(acttableAccPeriod,</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        h, beta <span class="sc">-</span> h, <span class="at">i =</span> i) <span class="sc">*</span> ((<span class="dv">1</span><span class="sc">/</span>t) <span class="sc">+</span> (h <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span> (j<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> j))) <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        beta, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>))</span>
 <span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(out)</span>
 <span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>The mathematical reserve is instead equal to:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>CUMmr <span class="ot">&lt;-</span> <span class="cf">function</span>(acttableAccPeriod, x, beta, <span class="at">i =</span> actuarialtable<span class="sc">@</span>interest, j, t,</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">k =</span> <span class="dv">1</span>, <span class="at">payment =</span> <span class="st">&quot;advance&quot;</span>, acttablePaymPeriod, i2, <span class="at">delta =</span> <span class="dv">0</span>) {</span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>CUMmr <span class="ot">&lt;-</span> <span class="cf">function</span>(acttableAccPeriod, x, beta, <span class="at">i =</span> actuarialtable<span class="sc">@</span>interest,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    j, t, <span class="at">k =</span> <span class="dv">1</span>, <span class="at">payment =</span> <span class="st">&quot;advance&quot;</span>, acttablePaymPeriod, i2, <span class="at">delta =</span> <span class="dv">0</span>) {</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="dv">1</span>)</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(acttableAccPeriod))</span>
@@ -234,17 +525,18 @@ V_{x}={}_{\beta-x}E^{p^{ap},i^{ap}}_{x}\left(\frac{\beta-\alpha}{t}s_{\beta-1}\r
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need average salary increase rate&quot;</span>)</span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">any</span>(x <span class="sc">&lt;</span> <span class="dv">0</span>, beta <span class="sc">&lt;</span> <span class="dv">0</span>, t <span class="sc">&lt;</span> <span class="dv">0</span>))</span>
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Negative parameters&quot;</span>)</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">sapply</span>(<span class="fu">seq</span>(x, beta, <span class="dv">1</span>), <span class="cf">function</span>(h) <span class="fu">Exn</span>(acttableAccPeriod, h, beta <span class="sc">-</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        h, <span class="at">i =</span> i) <span class="sc">*</span> ((h <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(h <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod, beta,</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>)), <span class="fu">sapply</span>(<span class="fu">seq</span>(beta <span class="sc">+</span> <span class="dv">1</span>, <span class="fu">getOmega</span>(acttablePaymPeriod) <span class="sc">+</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        <span class="dv">1</span>, <span class="dv">1</span>), <span class="cf">function</span>(h) ((beta <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> delta)<span class="sc">^</span>(h <span class="sc">-</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        beta) <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod, h, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>)))</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(out)</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">sapply</span>(<span class="fu">seq</span>(x, beta, <span class="dv">1</span>), <span class="cf">function</span>(h) <span class="fu">Exn</span>(acttableAccPeriod,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        h, beta <span class="sc">-</span> h, <span class="at">i =</span> i) <span class="sc">*</span> ((h <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(h <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod,</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        beta, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>)), <span class="fu">sapply</span>(<span class="fu">seq</span>(beta <span class="sc">+</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        <span class="dv">1</span>, <span class="fu">getOmega</span>(acttablePaymPeriod) <span class="sc">+</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="cf">function</span>(h) ((beta <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> delta)<span class="sc">^</span>(h <span class="sc">-</span> beta) <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod,</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        h, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>)))</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(out)</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>The PUM contribution rate is defined by the following function:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Projected Unit Method</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>PUM <span class="ot">&lt;-</span> <span class="cf">function</span>(acttableAccPeriod, x, beta, <span class="at">i =</span> actuarialtable<span class="sc">@</span>interest, j, t, <span class="at">k =</span> <span class="dv">1</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">payment =</span> <span class="st">&quot;advance&quot;</span>, acttablePaymPeriod, i2, <span class="at">delta =</span> <span class="dv">0</span>) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>PUM <span class="ot">&lt;-</span> <span class="cf">function</span>(acttableAccPeriod, x, beta, <span class="at">i =</span> actuarialtable<span class="sc">@</span>interest,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    j, t, <span class="at">k =</span> <span class="dv">1</span>, <span class="at">payment =</span> <span class="st">&quot;advance&quot;</span>, acttablePaymPeriod, i2, <span class="at">delta =</span> <span class="dv">0</span>) {</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="dv">1</span>)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(acttableAccPeriod))</span>
@@ -267,14 +559,14 @@ V_{x}={}_{\beta-x}E^{p^{ap},i^{ap}}_{x}\left(\frac{\beta-\alpha}{t}s_{\beta-1}\r
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need average salary increase rate&quot;</span>)</span>
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">any</span>(x <span class="sc">&lt;</span> <span class="dv">0</span>, beta <span class="sc">&lt;</span> <span class="dv">0</span>, t <span class="sc">&lt;</span> <span class="dv">0</span>))</span>
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Negative parameters&quot;</span>)</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">=</span> <span class="fu">sapply</span>(<span class="fu">seq</span>(x, beta <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="cf">function</span>(h) <span class="fu">Exn</span>(acttableAccPeriod, h, beta <span class="sc">-</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        h, <span class="at">i =</span> i) <span class="sc">*</span> <span class="dv">1</span><span class="sc">/</span>t <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod, beta, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> h <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">=</span> <span class="fu">sapply</span>(<span class="fu">seq</span>(x, beta <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="cf">function</span>(h) <span class="fu">Exn</span>(acttableAccPeriod,</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        h, beta <span class="sc">-</span> h, <span class="at">i =</span> i) <span class="sc">*</span> <span class="dv">1</span><span class="sc">/</span>t <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod, beta, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> h <span class="sc">-</span> <span class="dv">1</span>))</span>
 <span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(out)</span>
 <span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>while the mathematical reserve is</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>PUMmr <span class="ot">&lt;-</span> <span class="cf">function</span>(acttableAccPeriod, x, beta, <span class="at">i =</span> actuarialtable<span class="sc">@</span>interest, j, t,</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">k =</span> <span class="dv">1</span>, <span class="at">payment =</span> <span class="st">&quot;advance&quot;</span>, acttablePaymPeriod, i2, <span class="at">delta =</span> <span class="dv">0</span>) {</span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>PUMmr <span class="ot">&lt;-</span> <span class="cf">function</span>(acttableAccPeriod, x, beta, <span class="at">i =</span> actuarialtable<span class="sc">@</span>interest,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    j, t, <span class="at">k =</span> <span class="dv">1</span>, <span class="at">payment =</span> <span class="st">&quot;advance&quot;</span>, acttablePaymPeriod, i2, <span class="at">delta =</span> <span class="dv">0</span>) {</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="dv">1</span>)</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(acttableAccPeriod))</span>
@@ -297,101 +589,111 @@ V_{x}={}_{\beta-x}E^{p^{ap},i^{ap}}_{x}\left(\frac{\beta-\alpha}{t}s_{\beta-1}\r
 <span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need average salary increase rate&quot;</span>)</span>
 <span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">any</span>(x <span class="sc">&lt;</span> <span class="dv">0</span>, beta <span class="sc">&lt;</span> <span class="dv">0</span>, t <span class="sc">&lt;</span> <span class="dv">0</span>))</span>
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Negative parameters&quot;</span>)</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">sapply</span>(<span class="fu">seq</span>(x, beta, <span class="dv">1</span>), <span class="cf">function</span>(h) <span class="fu">Exn</span>(acttableAccPeriod, h, beta <span class="sc">-</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        h, <span class="at">i =</span> i) <span class="sc">*</span> ((h <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod,</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        beta, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>)), <span class="fu">sapply</span>(<span class="fu">seq</span>(beta <span class="sc">+</span> <span class="dv">1</span>, <span class="fu">getOmega</span>(acttablePaymPeriod) <span class="sc">+</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        <span class="dv">1</span>, <span class="dv">1</span>), <span class="cf">function</span>(h) ((beta <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> delta)<span class="sc">^</span>(h <span class="sc">-</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>        beta) <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod, h, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>)))</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(out)</span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">sapply</span>(<span class="fu">seq</span>(x, beta, <span class="dv">1</span>), <span class="cf">function</span>(h) <span class="fu">Exn</span>(acttableAccPeriod,</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        h, beta <span class="sc">-</span> h, <span class="at">i =</span> i) <span class="sc">*</span> ((h <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod,</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        beta, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>)), <span class="fu">sapply</span>(<span class="fu">seq</span>(beta <span class="sc">+</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        <span class="dv">1</span>, <span class="fu">getOmega</span>(acttablePaymPeriod) <span class="sc">+</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="cf">function</span>(h) ((beta <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>        (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> delta)<span class="sc">^</span>(h <span class="sc">-</span> beta) <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod,</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>        h, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>)))</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(out)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>The IEAM is defined as follows:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Individual Entry-Age Unit Method Type: 0 constant contribution rate, 1 #</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Constant Contribution amount (Default is 0)</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>IEAM <span class="ot">&lt;-</span> <span class="cf">function</span>(acttableAccPeriod, x, beta, <span class="at">i =</span> actuarialtable<span class="sc">@</span>interest, j, t, <span class="at">k =</span> <span class="dv">1</span>,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">payment =</span> <span class="st">&quot;advance&quot;</span>, acttablePaymPeriod, i2, <span class="at">delta =</span> <span class="dv">0</span>, <span class="at">type =</span> <span class="dv">0</span>) {</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="dv">1</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(acttableAccPeriod))</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need an actuarial actuarialtable&quot;</span>)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(acttablePaymPeriod))</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        acttablePaymPeriod <span class="ot">=</span> acttableAccPeriod</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(i2))</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        i2 <span class="ot">=</span> i</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(x))</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need age!&quot;</span>)</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(beta))</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Retirement age!&quot;</span>)</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (x <span class="sc">&gt;</span> <span class="fu">getOmega</span>(acttableAccPeriod)) {</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        out <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(out)</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(t))</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need t&quot;</span>)</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(j))</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need average salary increase rate&quot;</span>)</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">any</span>(x <span class="sc">&lt;</span> <span class="dv">0</span>, beta <span class="sc">&lt;</span> <span class="dv">0</span>, t <span class="sc">&lt;</span> <span class="dv">0</span>))</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Negative parameters&quot;</span>)</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="sc">==</span> <span class="dv">0</span>) {</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>        out <span class="ot">=</span> (<span class="fu">Exn</span>(acttableAccPeriod, x, beta <span class="sc">-</span> x, <span class="at">i =</span> i) <span class="sc">*</span> (beta <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod,</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>            beta, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>))<span class="sc">/</span>(<span class="fu">axn</span>(acttablePaymPeriod,</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>            x, beta <span class="sc">-</span> x, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> j) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>, <span class="at">payment =</span> <span class="st">&quot;advance&quot;</span>))</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>        out <span class="ot">=</span> ((<span class="fu">Exn</span>(acttableAccPeriod, x, beta <span class="sc">-</span> x, <span class="at">i =</span> i) <span class="sc">*</span> (beta <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod,</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>            beta, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>))<span class="sc">/</span>(<span class="fu">axn</span>(acttablePaymPeriod,</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>            x, beta <span class="sc">-</span> x, i, <span class="at">k =</span> <span class="dv">1</span>, <span class="at">payment =</span> <span class="st">&quot;advance&quot;</span>)))<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span><span class="fu">seq</span>(<span class="dv">0</span>, beta <span class="sc">-</span> x <span class="sc">-</span></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>            <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(out)</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Individual Entry-Age Unit Method Type: 0 constant contribution</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># rate, 1 # Constant Contribution amount (Default is 0)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>IEAM <span class="ot">&lt;-</span> <span class="cf">function</span>(acttableAccPeriod, x, beta, <span class="at">i =</span> actuarialtable<span class="sc">@</span>interest,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    j, t, <span class="at">k =</span> <span class="dv">1</span>, <span class="at">payment =</span> <span class="st">&quot;advance&quot;</span>, acttablePaymPeriod, i2, <span class="at">delta =</span> <span class="dv">0</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="dv">0</span>) {</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="dv">1</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(acttableAccPeriod))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need an actuarial actuarialtable&quot;</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(acttablePaymPeriod))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        acttablePaymPeriod <span class="ot">=</span> acttableAccPeriod</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(i2))</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        i2 <span class="ot">=</span> i</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(x))</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need age!&quot;</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(beta))</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Retirement age!&quot;</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (x <span class="sc">&gt;</span> <span class="fu">getOmega</span>(acttableAccPeriod)) {</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        out <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(out)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(t))</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need t&quot;</span>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(j))</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need average salary increase rate&quot;</span>)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">any</span>(x <span class="sc">&lt;</span> <span class="dv">0</span>, beta <span class="sc">&lt;</span> <span class="dv">0</span>, t <span class="sc">&lt;</span> <span class="dv">0</span>))</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Negative parameters&quot;</span>)</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>        out <span class="ot">=</span> (<span class="fu">Exn</span>(acttableAccPeriod, x, beta <span class="sc">-</span> x, <span class="at">i =</span> i) <span class="sc">*</span> (beta <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>            <span class="fu">axn</span>(acttablePaymPeriod, beta, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>,</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>                <span class="at">k =</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>))<span class="sc">/</span>(<span class="fu">axn</span>(acttablePaymPeriod,</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>            x, beta <span class="sc">-</span> x, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> j) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>, <span class="at">payment =</span> <span class="st">&quot;advance&quot;</span>))</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>        out <span class="ot">=</span> ((<span class="fu">Exn</span>(acttableAccPeriod, x, beta <span class="sc">-</span> x, <span class="at">i =</span> i) <span class="sc">*</span> (beta <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>            <span class="fu">axn</span>(acttablePaymPeriod, beta, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>,</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>                <span class="at">k =</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>))<span class="sc">/</span>(<span class="fu">axn</span>(acttablePaymPeriod,</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>            x, beta <span class="sc">-</span> x, i, <span class="at">k =</span> <span class="dv">1</span>, <span class="at">payment =</span> <span class="st">&quot;advance&quot;</span>)))<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span><span class="fu">seq</span>(<span class="dv">0</span>,</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>            beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(out)</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>while the reserve is:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>IEAMmr <span class="ot">&lt;-</span> <span class="cf">function</span>(acttableAccPeriod, x, beta, <span class="at">i =</span> actuarialtable<span class="sc">@</span>interest, j, t,</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">k =</span> <span class="dv">1</span>, <span class="at">payment =</span> <span class="st">&quot;advance&quot;</span>, acttablePaymPeriod, i2, <span class="at">delta =</span> <span class="dv">0</span>, <span class="at">type =</span> <span class="dv">0</span>) {</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="dv">1</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(acttableAccPeriod))</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need an actuarial actuarialtable&quot;</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(acttablePaymPeriod))</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        acttablePaymPeriod <span class="ot">=</span> acttableAccPeriod</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(i2))</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        i2 <span class="ot">=</span> i</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(x))</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need age!&quot;</span>)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(beta))</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Retirement age!&quot;</span>)</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (x <span class="sc">&gt;</span> <span class="fu">getOmega</span>(acttableAccPeriod)) {</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>        out <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(out)</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(t))</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need t&quot;</span>)</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(j))</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need average salary increase rate&quot;</span>)</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">any</span>(x <span class="sc">&lt;</span> <span class="dv">0</span>, beta <span class="sc">&lt;</span> <span class="dv">0</span>, t <span class="sc">&lt;</span> <span class="dv">0</span>))</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Negative parameters&quot;</span>)</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    al <span class="ot">=</span> <span class="fu">IEAM</span>(acttableAccPeriod, x, beta, i, j, t, <span class="at">k =</span> <span class="dv">1</span>, payment, acttablePaymPeriod,</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>        i2, delta, type)</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="sc">==</span> <span class="dv">0</span>) {</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>        out <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">sapply</span>(<span class="fu">seq</span>(x, beta, <span class="dv">1</span>), <span class="cf">function</span>(h) <span class="fu">Exn</span>(acttableAccPeriod, h, beta <span class="sc">-</span></span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>            h, <span class="at">i =</span> i) <span class="sc">*</span> ((beta <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod,</span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>            beta, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>) <span class="sc">-</span> al <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(h <span class="sc">-</span> x) <span class="sc">*</span> <span class="fu">axn</span>(acttableAccPeriod,</span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>            h, beta <span class="sc">-</span> h, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> j) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>)), <span class="fu">sapply</span>(<span class="fu">seq</span>(beta <span class="sc">+</span> <span class="dv">1</span>, <span class="fu">getOmega</span>(acttablePaymPeriod) <span class="sc">+</span></span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>            <span class="dv">1</span>, <span class="dv">1</span>), <span class="cf">function</span>(h) ((beta <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> delta)<span class="sc">^</span>(h <span class="sc">-</span></span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>            beta) <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod, h, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>)))</span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>        out <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">sapply</span>(<span class="fu">seq</span>(x, beta <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="cf">function</span>(h) <span class="fu">Exn</span>(acttableAccPeriod, h,</span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>            beta <span class="sc">-</span> h, <span class="at">i =</span> i) <span class="sc">*</span> ((beta <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod,</span>
-<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>            beta, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>) <span class="sc">-</span> al[h <span class="sc">-</span> x <span class="sc">+</span> <span class="dv">1</span>] <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(h <span class="sc">-</span></span>
-<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>            x) <span class="sc">*</span> <span class="fu">axn</span>(acttableAccPeriod, h, beta <span class="sc">-</span> h, i, <span class="at">k =</span> <span class="dv">1</span>)), <span class="fu">sapply</span>(<span class="fu">seq</span>(beta,</span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>            <span class="fu">getOmega</span>(acttablePaymPeriod) <span class="sc">+</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="cf">function</span>(h) ((beta <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span></span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>            j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> delta)<span class="sc">^</span>(h <span class="sc">-</span> beta) <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod,</span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>            h, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>)))</span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(out)</span>
-<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>IEAMmr <span class="ot">&lt;-</span> <span class="cf">function</span>(acttableAccPeriod, x, beta, <span class="at">i =</span> actuarialtable<span class="sc">@</span>interest,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    j, t, <span class="at">k =</span> <span class="dv">1</span>, <span class="at">payment =</span> <span class="st">&quot;advance&quot;</span>, acttablePaymPeriod, i2, <span class="at">delta =</span> <span class="dv">0</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="dv">0</span>) {</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="dv">1</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(acttableAccPeriod))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need an actuarial actuarialtable&quot;</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(acttablePaymPeriod))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        acttablePaymPeriod <span class="ot">=</span> acttableAccPeriod</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(i2))</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        i2 <span class="ot">=</span> i</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(x))</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need age!&quot;</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(beta))</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Retirement age!&quot;</span>)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (x <span class="sc">&gt;</span> <span class="fu">getOmega</span>(acttableAccPeriod)) {</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        out <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(out)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(t))</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need t&quot;</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(j))</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Need average salary increase rate&quot;</span>)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">any</span>(x <span class="sc">&lt;</span> <span class="dv">0</span>, beta <span class="sc">&lt;</span> <span class="dv">0</span>, t <span class="sc">&lt;</span> <span class="dv">0</span>))</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">&quot;Error! Negative parameters&quot;</span>)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    al <span class="ot">=</span> <span class="fu">IEAM</span>(acttableAccPeriod, x, beta, i, j, t, <span class="at">k =</span> <span class="dv">1</span>, payment, acttablePaymPeriod,</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>        i2, delta, type)</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>        out <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">sapply</span>(<span class="fu">seq</span>(x, beta, <span class="dv">1</span>), <span class="cf">function</span>(h) <span class="fu">Exn</span>(acttableAccPeriod,</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>            h, beta <span class="sc">-</span> h, <span class="at">i =</span> i) <span class="sc">*</span> ((beta <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>            <span class="fu">axn</span>(acttablePaymPeriod, beta, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>,</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>                <span class="at">k =</span> <span class="dv">1</span>) <span class="sc">-</span> al <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(h <span class="sc">-</span> x) <span class="sc">*</span> <span class="fu">axn</span>(acttableAccPeriod,</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>            h, beta <span class="sc">-</span> h, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> j) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>)), <span class="fu">sapply</span>(<span class="fu">seq</span>(beta <span class="sc">+</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>            <span class="dv">1</span>, <span class="fu">getOmega</span>(acttablePaymPeriod) <span class="sc">+</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="cf">function</span>(h) ((beta <span class="sc">-</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>            x)<span class="sc">/</span>t <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> delta)<span class="sc">^</span>(h <span class="sc">-</span> beta) <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod,</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>            h, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>)))</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>        out <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">sapply</span>(<span class="fu">seq</span>(x, beta <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="cf">function</span>(h) <span class="fu">Exn</span>(acttableAccPeriod,</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>            h, beta <span class="sc">-</span> h, <span class="at">i =</span> i) <span class="sc">*</span> ((beta <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>            <span class="fu">axn</span>(acttablePaymPeriod, beta, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span> i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>,</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>                <span class="at">k =</span> <span class="dv">1</span>) <span class="sc">-</span> al[h <span class="sc">-</span> x <span class="sc">+</span> <span class="dv">1</span>] <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(h <span class="sc">-</span> x) <span class="sc">*</span> <span class="fu">axn</span>(acttableAccPeriod,</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>            h, beta <span class="sc">-</span> h, i, <span class="at">k =</span> <span class="dv">1</span>)), <span class="fu">sapply</span>(<span class="fu">seq</span>(beta, <span class="fu">getOmega</span>(acttablePaymPeriod) <span class="sc">+</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>            <span class="dv">1</span>, <span class="dv">1</span>), <span class="cf">function</span>(h) ((beta <span class="sc">-</span> x)<span class="sc">/</span>t <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> j)<span class="sc">^</span>(beta <span class="sc">-</span> x <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>            (<span class="dv">1</span> <span class="sc">+</span> delta)<span class="sc">^</span>(h <span class="sc">-</span> beta) <span class="sc">*</span> <span class="fu">axn</span>(acttablePaymPeriod, h, <span class="at">i =</span> (<span class="dv">1</span> <span class="sc">+</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>            i2)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">+</span> delta) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">k =</span> <span class="dv">1</span>)))</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(out)</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div id="an-applied-example" class="section level2">
 <h2>An applied example</h2>
-<p>We consider a pension fund based on a single cohort of age <span class="math inline">\(x=25\)</span>. Furthermore, we assume that the DB pension fund has based the quantification of the contribution rate on the following assumptions:</p>
+<p>We consider a pension fund based on a single cohort of age <span class="math inline">\(x=25\)</span>. Furthermore, we assume that the DB
+pension fund has based the quantification of the contribution rate on
+the following assumptions:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Current Unit Method</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>beta<span class="ot">=</span><span class="dv">65</span> <span class="co"># Beta Retirement age</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>x<span class="ot">=</span><span class="dv">25</span> <span class="co">#x Age of the insured.</span></span>
@@ -399,15 +701,20 @@ V_{x}={}_{\beta-x}E^{p^{ap},i^{ap}}_{x}\left(\frac{\beta-\alpha}{t}s_{\beta-1}\r
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>t<span class="ot">=</span><span class="dv">60</span> <span class="co">#1/t is the % of the salary, recognized as retirement pension, for each year of service</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>j<span class="ot">=</span><span class="fl">0.06</span> <span class="co">#  average salary increases (for both growth in wages and promotional salary for seniority)</span></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>delta<span class="ot">=</span><span class="fl">0.03</span> <span class="co">#Increase of retirement pension</span></span></code></pre></div>
-<p>Therefore, the following Figure shows the pattern of the contribution rates according to the three methods. As expected, Current Unit Method, being based on the current salary, shows a very increasing tendency over time. Differences with respect to PUM depends on the value of <span class="math inline">\(j\)</span>. It is indeed easy to prove that both methods lead to the same rates when <span class="math inline">\(j=0\)</span>.</p>
+<p>Therefore, the following Figure shows the pattern of the contribution
+rates according to the three methods. As expected, Current Unit Method,
+being based on the current salary, shows a very increasing tendency over
+time. Differences with respect to PUM depends on the value of <span class="math inline">\(j\)</span>. It is indeed easy to prove that both
+methods lead to the same rates when <span class="math inline">\(j=0\)</span>.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">CUM</span>(lt, x, beta, i, j, t, k, <span class="at">delta =</span> <span class="fl">0.03</span>)</span></code></pre></div>
-<pre><code>##  [1] 0.005822138 0.006650426 0.007574599 0.008604814 0.009752572 0.011030349
-##  [7] 0.012451659 0.014031470 0.015785917 0.017732613 0.019892423 0.022287570
-## [13] 0.024944411 0.027891562 0.031161684 0.034789025 0.038809741 0.043261288
-## [19] 0.048190217 0.053654252 0.059720601 0.066460108 0.073948311 0.082275637
-## [25] 0.091541182 0.101843507 0.113305658 0.126075296 0.140313448 0.156231670
-## [31] 0.174053818 0.194038950 0.216455210 0.241663403 0.270040950 0.301944371
-## [37] 0.337753233 0.378197856 0.424173906 0.477146484</code></pre>
+<pre><code>##  [1] 0.005822138 0.006650426 0.007574599 0.008604814 0.009752572
+##  [6] 0.011030349 0.012451659 0.014031470 0.015785917 0.017732613
+## [11] 0.019892423 0.022287570 0.024944411 0.027891562 0.031161684
+## [16] 0.034789025 0.038809741 0.043261288 0.048190217 0.053654252
+## [21] 0.059720601 0.066460108 0.073948311 0.082275637 0.091541182
+## [26] 0.101843507 0.113305658 0.126075296 0.140313448 0.156231670
+## [31] 0.174053818 0.194038950 0.216455210 0.241663403 0.270040950
+## [36] 0.301944371 0.337753233 0.378197856 0.424173906 0.477146484</code></pre>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">PUM</span>(lt, x, beta, i, j, t, k, <span class="at">delta =</span> <span class="fl">0.03</span>)</span></code></pre></div>
 <pre><code>##  [1] 0.05649516 0.05761827 0.05876254 0.05992897 0.06112051 0.06233840
 ##  [7] 0.06358260 0.06485374 0.06615106 0.06747371 0.06882648 0.07021087
@@ -420,15 +727,17 @@ V_{x}={}_{\beta-x}E^{p^{ap},i^{ap}}_{x}\left(\frac{\beta-\alpha}{t}s_{\beta-1}\r
 <pre><code>## [1] 0.08319755</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">seq</span>(x, beta <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="fu">CUM</span>(lt, x, beta, i, j, t, k, <span class="at">delta =</span> <span class="fl">0.03</span>), <span class="at">xlab =</span> <span class="st">&quot;age&quot;</span>,</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylab =</span> <span class="st">&quot;Contribution rate&quot;</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">seq</span>(x, beta <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="fu">PUM</span>(lt, x, beta, i, j, t, k, <span class="at">delta =</span> <span class="fl">0.03</span>), <span class="at">type =</span> <span class="st">&quot;p&quot;</span>,</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">seq</span>(x, beta <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="fu">rep</span>(<span class="fu">IEAM</span>(lt, x, beta, i, j, t, k, <span class="at">delta =</span> <span class="fl">0.03</span>), beta <span class="sc">-</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    x), <span class="at">type =</span> <span class="st">&quot;p&quot;</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">seq</span>(x, beta <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="fu">IEAM</span>(lt, x, beta, i, j, t, k, <span class="at">delta =</span> <span class="fl">0.03</span>, <span class="at">type =</span> <span class="dv">1</span>),</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;p&quot;</span>, <span class="at">col =</span> <span class="st">&quot;green&quot;</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">seq</span>(x, beta <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="fu">PUM</span>(lt, x, beta, i, j, t, k, <span class="at">delta =</span> <span class="fl">0.03</span>),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;p&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">seq</span>(x, beta <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="fu">rep</span>(<span class="fu">IEAM</span>(lt, x, beta, i, j, t, k, <span class="at">delta =</span> <span class="fl">0.03</span>),</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    beta <span class="sc">-</span> x), <span class="at">type =</span> <span class="st">&quot;p&quot;</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">seq</span>(x, beta <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="fu">IEAM</span>(lt, x, beta, i, j, t, k, <span class="at">delta =</span> <span class="fl">0.03</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="dv">1</span>), <span class="at">type =</span> <span class="st">&quot;p&quot;</span>, <span class="at">col =</span> <span class="st">&quot;green&quot;</span>)</span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;CUM&quot;</span>, <span class="st">&quot;PUM&quot;</span>, <span class="st">&quot;IEAM (constant rate)&quot;</span>, <span class="st">&quot;IEAM (constant premium)&quot;</span>),</span>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;green&quot;</span>), <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">cex =</span> <span class="fl">0.6</span>)</span></code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --> According to the mathematical reserve, we observe in the following figure the different behaviour in the accumulation period.</p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAAt1BMVEUAAAAAADoAAGYAAP8AOjoAOpAAZrYA/wA6AAA6ADo6AGY6Ojo6OmY6OpA6ZmY6ZrY6kLY6kNtmAABmADpmAGZmOmZmOpBmZjpmZmZmkJBmkLZmkNtmtv+QOgCQOjqQOmaQZgCQZpCQkGaQ29uQ2/+2ZgC2Zjq2kDq2kJC2tma225C22/+2/7a2/9u2///bkDrbkGbb25Db29vb/7bb/9vb////AAD/tmb/25D/27b//7b//9v///+H/RcbAAAACXBIWXMAAA7DAAAOwwHHb6hkAAANRElEQVR4nO2dCWPbuBGFYau2nKbpVt52t+3KTQ8zvcOmuyZVmf//dxWDg4QkAA8kwUPOPAeOSEEg+HkwwIAgJRpWVGLpCqxdDAiIAQExICAGBMSAgBgQEAMCYkBADAiIAQExICAGBMSAgBgQEAMCYkBADAiIAQExICAGBMSAgBgQEAMCYkBADAiIAQExICAGBMSAgBgQEAMCYkBADAiIAQExICAGBMSAgBgQEAMCYkBADAiIAQExICAGBMSAgBgQEAMCYkBADAiIAQExICAGBMSAgBgQEAMCYkBADAiIAQExICAGBMSAgBgQEAMCYkBADAiIAQExICAGBMSAgBgQEAMCYkBADAiIAQE5gI6P4u6l2C1Xl1WqA1TfPJd3L8dHJnSiFtDr066RgJry9vOY4q5GvQEdH/cKUD0O0IjPZpe3MoZNf0DWggqZMtdpKfkqI5zUsxDtg0qxz12nxeSpjLC/BwCiXkyIm+fcdVpOuQHl0BsGdPxW284bd9LDfZAFNLKbH/HZ7MrZixXdAGHUQHH9gBLe82e0FjRObxhQHtninJHq4YGs8vCNfFnsDw9koPXIvrJnZfq+F8ioenkp7IMOD3tQnNNNkGW+Pu0toF/8Rhb/6f01ApJD6PI+dvItwgjGS0Cl9mkW0Ie/7pvD7/9whYAojK8pWI2EGrX24NiCnCZW6rwtoC/fNP/5y0KAnBh1WLB6+PlnlYI6PhK+BECdamL6v38qQJ+eDx9++vjvP/20DCB3/DMsWCV/EQUkjUD6116AtA/aHX/9uZHp8OGl/N0Pr4sAEu7OAT6IRojFLtrEVDax6wXI9GKyeQoZB0tAh3fP1wmoKe7JDcNO7PDws16AllNuQKl6fQpPiawZUAYflL9Oiyp/L5auUEi7bkCJ7wUyjpnnuJgLryr7Fvlocfdy/aFGO0zOMd1RqX9Kst+i4fQbCDWyCAJaLNQ4u9IzESDZgcWtDDaxpUKN81nEaQCVdjatDk2rXRanLMjEYsuFGsK/o18hUM5IIDTeDgJaONSYB5AzEgh1eUFAC4caK7agBZXZB0EHTD5or1/08EELKnMvViQMgOxgKRjxrxdQj/f8GfMsDHrTgPZjKtP3uHOoi0wvlwMNiebvx1epLW6zsXuob6exIrkvNVt5Eo4dfvCX87eXlM06bvTu1IZv6iNJTrA6buHLSXEb9U9JD3706+K38ozccOz1o9/vHb97SdkMffy0MhddvGcTFpI5WPUDOn73oxwuuuEYja9L8vmFEPfN4f2DfCkHTPtCbjm7aFNmfH/7We007+7aSybxymQClEfhJia5y9MpaazYhWOyjRC98v29DtRe5BDy03PzX2kjkp3c0Lu0ydBVO7VTbtb3io4KYFBlVgmoU2dBykZl2OqEY/IclR8hS6hVxC/DtQexIyIlrebSuwygXaN3ys1SL7NIApTLB+m4O/sKsw4Q/dW1nbThmLGgWmgLUjQoOvlRItgpCzoFpHeSBWn3XEc7lry9mBkdZ1+j2PZiv9JI7r444ZjxQca3aBry5f74ePflQdx8b5jp65WSzkHtpM1C9YtJPqj3e/6MNtBC18USi0sT6IZGflxVJrAkevhAcd4leKFxUJoSxkE+/9ME9gULUVrEgqaVCPRggV3BQozG+KD+K/znUGZAWXux7dbumSLUOBVNVp7KNL3cgHLIFLdV/5QmCDWgTLF5fVAeRQGNDDUOv3yU/5uAY6c2d4V8l46gh5h2j+n+8/ZieRRuYuNDDWqgxV4GHDrOkJvU8xb7DpDdY0bYMZ/YE9DxcZc1WHWUL9Sg1/WOxtMqziCCHz+fALJ7LKAIiKUtqFO+UMNY0M744BNAH16O3zqAdAgiIic4YKA40b0a+UIN44N2+r6AvQvo9Uncfu8Acn1QakXRGS1yr0avUCMeunuKzQloqXs1+oQa6YC6cVBGH/QW79XI14tl07oADXzPnzGpmy91yHAtS/AitRlsQdFOrJQB1PFRTaB/tYBotXRIekbk9Sny+IGvAFDEhOycGt0XFAK0KvU57+SMkXFQu/yluF+1BanuPc5nOCDtYgKyWMJ3LKwBUHAO6DJTcmlNwsoWkp1vfH36+gDlEQOat7ghNdDOB1VkCCAzX5P0sdU66RQHbfMlF6ill7+Ug2btk3rWOZTUvBKznGW0ffh1Pz9oQkAZr6xuuxnpuTWpBekBUPTKatK9Gtumu6YxrxIddJOY5yyjvrIavZUr6V4NzWYJK0p10DZvcqFJz1RoUlfaKzDb7fxWlNy8emTr51XT7tXQLUz9nteMlgeUeK/G1l43nNUZ2aa1JKDUezWM4djfszASToqq0vf6TXRlNflejdZ4ZnJGxnqwg65MWjwWM/6ndUZ5D3N+1MTmZayHCA0fSY/TyXGtM1JWNCEkYWdXY2ddKTqa0CBAU9zM4ljRhE1NsxGRk+7gVLaNDRkojooxLoozatlM1dTa5hXwP2dwqmqoD5pq+cvEVhRtXqdwjPUM6sWyyVvchFbkb14EwQOncp53MMCCJnxUqfbQ+R22r3lpMI0XTtU972A4oKmWv0zQ1C6a16XVeOHEK3p5ENIsy1+yNjVjNap5+ZtUEA6sqDfjHMtfzq1oBCRlPR2Y8yYVhYMrOiRjpuJcKxoMyYKRR5PJD6YJw0mq6GXGhAcL9CkupM5h94fUgpHGQ1sSjqgCVhOBk1bRi4wpDxYIltLvqkbX1NIgeZqSBiOSm9RFjZMq6mbM+GCBzWajUvvCk7byH6Vmq5LeIEievJWT7D5hUuj9aBoIaJ8J0MamjbtxnpymZjDJjaqi3RtpBU7eSqXqPAkh/9d5KP/pZ2AaflVjnIStwkYD2kR/NA2Vmm0lf4ibZld5PyHU76pN9lWvH1XFwVdW5wHknKKC1KhUaZ/UQjqH44IR/cGMBJQtWPUBqja+v3v793cgNR5Il58UQ+GMsaAsUj7IuoSAb/D7FNWuGpU6n9Q0rU+iRPhFup/J64PyiIprO5W+vYtubrpDq856NxHo4QalgYAy3ZKpRyueob/vpxv1NmYMoyypMgNJIX8ayUYmoa1JZJoJGHzpefyDBSCgSyjnI19FQihIwngloZqbELkuSA6ftB99W/gFoFMgTQDKSSmC8GgXJJoO0fnIe1yw2zNjvuUvHYfGAwSFAjpe0ZOEypI0pBaPC6lxQPWENZEFpT2qtOWQAuTk0w4c/dMI3dyEE+D6QTX9rGoaHzTkUaVJlZBMfHCEYWZO3IDwgeptVZP0YtkfNNmBaYJwXHWgQpDCVnUGbJJx0KBHlXpzBcGE4bjC1uSH1X10GkCjLMhAiYBJg2N12uxSYJ0A6w1IB/P6uRpBJS5/sSw8UEJg+sFx5TSfVKui1BeQvvG6+z+gpOUvbUqA0oFpBsA5V5pVDQLUro4eObFoTxVBuQSTcxH6pVW5wIYASvAuycVBQNOB8emsF7OwegJK6J9OFblXwwuog9LMBCakYb2Y07AGXXo+uarh80EdlKXAnKm3D2onpDPcq+HrxUaUOYn6Amq/ESv2FX45j7u0eo+DzMimjK9dwMHq1agvIHPu8Us/OFhNOdJK82X4+LjBwFcAqPdgYNCRrhgQWxASDlYzHOmaAaU9fWDkka4a0BxHYkArzTfNxyc40lcL6ErFgIAYEBADAmJAQAwIiAEBMSAgBgTEgIAYEBADAmJAQDMAKu26tRouw9ZXLeP59KTdPS6PVszdpx03oukB0bVs9eAv+hV9Apg8EwIE8h3embdAvlqWpZ5Mi48b0+SA1GV/Wp6lp/wjj6sm25AnhfLZCyogn35b/nXwcaOaxwcRIH1RO7Y2orz7owSE8pXmVEG+1tDwcaOaBxA931PXOHJBTWYgH4TyFe+Furkf5Ktv//WYkg9pDkC1qqh2A2FnQE2BAIF8epFgsUP5SlpAQJaLjgs0VxO7e0EVpWuRCYC0pEEgQDfPSfmQZhoHyfoBU1dvpzQxnfthD/Jpp4PzIc0EiCoad5alWZaC8pny3j2DfJoIzoc0OSBdvzqtuy1wN59anl5pkXjciKa3oPakEwZsRcJAUZ1qgcsrexw3ohmamP7W4caJOcJZVagB8qWWVwthl82tOtS4cjEgIAYExICAGBAQAwJiQEAMCIgBATEgIAYExICAGBAQAwJiQEAMCIgBATEgIAYExICAGBAQAwJiQEAMCIgBATEgIAYExICAGBAQAwJaK6B2jYt8cfNnWr1SipHfXDVMKwVEq6TUMkz6Qp2alveolcTxB4VOonUCUt/lRYvt9IK74uZZP6cvyxdV9tM6AZFqamOaSH3zrNfQjXwE3RCtFJB0OLf/kDTKFpBdBDt3TdYJSFkK/TqzoAW0TkCKC33ZkFnkTD5ov0xV1gmIuBwfqVc/6cXIW89dlXUC0it3FQ45Drr9OxkUjYPm78TWCuhUC/TurVYOSPmgPN8uOFArB6SWy8/ftztaO6DFxYCAGBAQAwJiQEAMCIgBATEgIAYExICAGBAQAwJiQEAMCIgBATEgIAYExICAGBAQAwJiQED/B63sZfxHzdwaAAAAAElFTkSuQmCC" /><!-- -->
+According to the mathematical reserve, we observe in the following
+figure the different behaviour in the accumulation period.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">CUMmr</span>(lt, x, beta, i, j, t, k, <span class="at">delta =</span> <span class="fl">0.03</span>)</span></code></pre></div>
 <pre><code>##  [1]  0.000000000  0.006294153  0.014425118  0.024794687  0.037884301
 ##  [6]  0.054268732  0.074632040  0.099788513  0.130703134  0.168518676
@@ -448,20 +757,23 @@ V_{x}={}_{\beta-x}E^{p^{ap},i^{ap}}_{x}\left(\frac{\beta-\alpha}{t}s_{\beta-1}\r
 ## [76] 34.928684057 34.246062791 33.473705370 33.371432327 32.030006954
 ## [81] 31.164732706 21.735202923  0.000000000</code></pre>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">PUMmr</span>(lt, x, beta, i, j, t, k, <span class="at">delta =</span> <span class="fl">0.03</span>)</span></code></pre></div>
-<pre><code>##  [1]  0.00000000  0.06107536  0.13205117  0.21412908  0.30865295  0.41711418
-##  [7]  0.54115881  0.68261229  0.84347787  1.02595866  1.23257742  1.46609318
-## [13]  1.72969335  2.02690308  2.36172848  2.73849568  3.16186970  3.63680185
-## [19]  4.16919512  4.76617163  5.43601108  6.18766746  7.03086236  7.97707864
-## [25]  9.03904102 10.22982022 11.56533624 13.06452353 14.74828004 16.64346133
-## [31] 18.77903994 21.18860521 23.90762137 26.98272789 30.46361659 34.39873806
-## [37] 38.84013716 43.88150900 49.63816164 56.29528579 64.01300154 63.95004239
-## [43] 63.78630843 63.45820810 63.01087176 62.47041792 61.89295531 61.23408159
-## [49] 60.54120787 59.77567496 58.97898058 58.06849015 57.19077973 56.26723093
-## [55] 55.28178010 54.23776384 53.16170302 52.10344874 51.03010589 49.94843346
-## [61] 48.86081659 47.77187516 46.69410533 45.62324770 44.57431547 43.54057362
-## [67] 42.52925373 41.54622245 40.58842490 39.63003990 38.67268684 37.75906920
-## [73] 36.91623049 36.18391764 35.40201650 34.92868406 34.24606279 33.47370537
-## [79] 33.37143233 32.03000695 31.16473271 21.73520292  0.00000000</code></pre>
+<pre><code>##  [1]  0.00000000  0.06107536  0.13205117  0.21412908  0.30865295
+##  [6]  0.41711418  0.54115881  0.68261229  0.84347787  1.02595866
+## [11]  1.23257742  1.46609318  1.72969335  2.02690308  2.36172848
+## [16]  2.73849568  3.16186970  3.63680185  4.16919512  4.76617163
+## [21]  5.43601108  6.18766746  7.03086236  7.97707864  9.03904102
+## [26] 10.22982022 11.56533624 13.06452353 14.74828004 16.64346133
+## [31] 18.77903994 21.18860521 23.90762137 26.98272789 30.46361659
+## [36] 34.39873806 38.84013716 43.88150900 49.63816164 56.29528579
+## [41] 64.01300154 63.95004239 63.78630843 63.45820810 63.01087176
+## [46] 62.47041792 61.89295531 61.23408159 60.54120787 59.77567496
+## [51] 58.97898058 58.06849015 57.19077973 56.26723093 55.28178010
+## [56] 54.23776384 53.16170302 52.10344874 51.03010589 49.94843346
+## [61] 48.86081659 47.77187516 46.69410533 45.62324770 44.57431547
+## [66] 43.54057362 42.52925373 41.54622245 40.58842490 39.63003990
+## [71] 38.67268684 37.75906920 36.91623049 36.18391764 35.40201650
+## [76] 34.92868406 34.24606279 33.47370537 33.37143233 32.03000695
+## [81] 31.16473271 21.73520292  0.00000000</code></pre>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">IEAMmr</span>(lt, x, beta, i, j, t, k, <span class="at">delta =</span> <span class="fl">0.03</span>, <span class="at">type =</span> <span class="dv">0</span>)</span></code></pre></div>
 <pre><code>##  [1] 4.440892e-16 8.994257e-02 1.925698e-01 3.092323e-01 4.414268e-01
 ##  [6] 5.907917e-01 7.591110e-01 9.483436e-01 1.160610e+00 1.398215e+00
@@ -498,8 +810,8 @@ V_{x}={}_{\beta-x}E^{p^{ap},i^{ap}}_{x}\left(\frac{\beta-\alpha}{t}s_{\beta-1}\r
 ## [71] 3.867269e+01 3.775907e+01 3.691623e+01 3.618392e+01 3.540202e+01
 ## [76] 3.492868e+01 3.424606e+01 3.347371e+01 3.337143e+01 3.203001e+01
 ## [81] 3.116473e+01 2.173520e+01 0.000000e+00</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">seq</span>(x, <span class="fu">getOmega</span>(lt) <span class="sc">+</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="fu">CUMmr</span>(lt, x, beta, i, j, t, k, <span class="at">delta =</span> <span class="fl">0.03</span>), <span class="at">xlab =</span> <span class="st">&quot;age&quot;</span>,</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="at">main =</span> <span class="st">&quot;Mathematical reserve&quot;</span>)</span>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">seq</span>(x, <span class="fu">getOmega</span>(lt) <span class="sc">+</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="fu">CUMmr</span>(lt, x, beta, i, j, t, k, <span class="at">delta =</span> <span class="fl">0.03</span>),</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab =</span> <span class="st">&quot;age&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="at">main =</span> <span class="st">&quot;Mathematical reserve&quot;</span>)</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">seq</span>(x, <span class="fu">getOmega</span>(lt) <span class="sc">+</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="fu">PUMmr</span>(lt, x, beta, i, j, t, k, <span class="at">delta =</span> <span class="fl">0.03</span>),</span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;p&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">seq</span>(x, <span class="fu">getOmega</span>(lt) <span class="sc">+</span> <span class="dv">1</span>, <span class="dv">1</span>), <span class="fu">IEAMmr</span>(lt, x, beta, i, j, t, k, <span class="at">delta =</span> <span class="fl">0.03</span>,</span>

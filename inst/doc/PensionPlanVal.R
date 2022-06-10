@@ -1,7 +1,7 @@
-## ----echo=F-------------------------------------------------------------------
+## ----echo=F---------------------------------------------------------
 knitr::opts_chunk$set(warning=F, message=F, fig.width=6, fig.height=3.5, fig.align='center',fig.show='hold') 
 
-## ----echo=TRUE,  tidy=TRUE----------------------------------------------------
+## ----echo=TRUE,  tidy=TRUE------------------------------------------
 require("lifecontingencies")
 PensFund <-function(x, y, r, acttableAccPeriod, decrement, i, j, delta, n, avg, acttablePaymPeriod, CostMet){
 if (missing(n)) n <- getOmega(acttableAccPeriod)-x-1
@@ -83,15 +83,15 @@ out.x <- data.frame(x = ages_risk, AL = outAL.x, NC = outNC.x, PVFB = outPVFB.x)
 return(out.x)
 }
 
-## ----echo=TRUE,  tidy=TRUE, warning=FALSE, message=FALSE----------------------
+## ----echo=TRUE,  tidy=TRUE, warning=FALSE, message=FALSE------------
 data(SoAISTdata)
 data(soa08)
 MultiDecrTable <- new("mdt", name="testMDT", table=SoAISTdata)
 
-## ----echo=TRUE,  tidy=TRUE----------------------------------------------------
+## ----echo=TRUE,  tidy=TRUE------------------------------------------
 getDecrements(MultiDecrTable)
 
-## -----------------------------------------------------------------------------
+## -------------------------------------------------------------------
 x1=30
 y1=20
 r1=53
@@ -109,7 +109,7 @@ CPM_CP = PensFund(x1, y1, r1, acttableAccPeriod = MultiDecrTable, decrement = de
                   i = .04, j = .06, delta = .03, avg = 5, 
                   acttablePaymPeriod = soa08, CostMet = 'CPM_CB')
 
-## ----echo=FALSE, fig_width----------------------------------------------------
+## ----echo=FALSE, fig_width------------------------------------------
 par(mfrow=c(1,2))
 plot(x1:r1, BPM_CD$AL, t="o", ylab="ALx", xlab="Age", cex = .7)
   points(x1:r1, BPM_CP$AL, t="o", col=2, cex = .7)
@@ -126,7 +126,7 @@ plot(x1:r1, BPM_CP$NC, t="o", ylab="NCx", xlab="Age", cex = .7)
   legend("topleft", legend = c("BPM_CP", "BPM_CD", "CPM_CD", "CPM_CB"), 
          lty = rep(1,4), col = 1:4, cex=.6, bty = "n")
 
-## ----echo=TRUE, tidy=TRUE-----------------------------------------------------
+## ----echo=TRUE, tidy=TRUE-------------------------------------------
 # AL = PVBF - PVFNC
 # first get survivial for all causes
 acttableAccPeriodTotal = pxt(MultiDecrTable, x= 0:(getOmega(MultiDecrTable)), t=1)
@@ -134,14 +134,14 @@ acttableAccPeriodTotal = probs2lifetable(acttableAccPeriodTotal, type = "px")
 # are equal?
 round(BPM_CD$AL[1],10) ==  round(BPM_CD$PVFB[1] - sum(sapply(x1:(r1-1), function(x) Exn(acttableAccPeriodTotal, x1, x-x1, i=.04) * BPM_CD$NC[x-x1+1])),10)
 
-## ----echo=TRUE, tidy=TRUE-----------------------------------------------------
+## ----echo=TRUE, tidy=TRUE-------------------------------------------
 # Restrospective AL
 # First get the liability at entry age y
 BPM_CD_y = PensFund(y1, y1, r1, acttableAccPeriod = MultiDecrTable, decrement = decrement1,i = .04, j = .06, delta = .03, avg = 5, acttablePaymPeriod = soa08, CostMet = 'BPM_CD')
 # are equal?
 round(BPM_CD_y$AL[BPM_CD_y$x==45],10) == round(sum(sapply(y1:44, function(y) (1.04)^(45-y) / pxt(acttableAccPeriodTotal, y, 45-y) * BPM_CD_y$NC[BPM_CD_y$x==y])),10)
 
-## ----echo=TRUE, tidy=TRUE-----------------------------------------------------
+## ----echo=TRUE, tidy=TRUE-------------------------------------------
 x2=50
 y2=35
 decrement2 = "retirement"
@@ -150,7 +150,7 @@ snty_req = 20
 s_x = 5000
 Cost_Method2 = "BPM_CD"
 
-## ----echo=TRUE, tidy=TRUE-----------------------------------------------------
+## ----echo=TRUE, tidy=TRUE-------------------------------------------
 AL_xr = data.frame(r=0, AL=0, NC=0)
 for(r in x2:70) {
   if ((r-y2) < snty_req) 
@@ -164,7 +164,7 @@ for(r in x2:70) {
   AL_xr[r-x2+1,1] = r
 }
 
-## ----echo=FALSE, tidy=TRUE----------------------------------------------------
+## ----echo=FALSE, tidy=TRUE------------------------------------------
 par(mar=c(6, 4, 4, 6) + 0.1)
 par(mfrow=c(1,1))
 plot(AL_xr$r, AL_xr$AL, t="o", ylab="$", xlab="Retirement Age")
@@ -176,7 +176,7 @@ axis(side=4, at=seq(0, 1, .2))
 mtext("Probability", side = 4, line = 3)
 legend('topleft', legend=c('ALx', 'q(retire)'), col=1:2, lty=c(1,1), bty = 'n', cex = .6)
 
-## ----echo=TRUE, tidy=TRUE-----------------------------------------------------
+## ----echo=TRUE, tidy=TRUE-------------------------------------------
 decrement3 = "withdrawal"
 x3 = 30
 y3 = 20
@@ -187,7 +187,7 @@ BPM_CP3 = s_x * .5 * PensFund(x3, y3, r3, acttableAccPeriod = MultiDecrTable,
                         acttablePaymPeriod = soa08, CostMet = 'BPM_CP')
 
 
-## ----echo=FALSE, tidy=TRUE----------------------------------------------------
+## ----echo=FALSE, tidy=TRUE------------------------------------------
 par(mfrow=c(1,2))
 plot(x3:r3, BPM_CP3$AL, t="o", ylab="ALx", xlab="Age")
 title ("Actuarial liability. Example 3", cex.main=.9)

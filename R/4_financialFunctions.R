@@ -25,7 +25,35 @@
 #TO DO: check here http://www.mysmu.edu/faculty/yktse/FMA/S_FMA_1.pdf
 #TO DO: add k to increasing and decreasing annuities function
 
-#function to evaluate the present value of a series of cash flows
+
+#' Compute the present value of a series of cash flows
+#' 
+#' @description  This function evaluates the present values of a series of cash flows, given occurrence time.
+#' Probabilities of occurrence can also be taken into account.
+#'
+#' @param cashFlows Vector of cashFlow, must be coherent with \code{timeIds}
+#' @param timeIds Vector of points of time where \code{cashFlows} are due.
+#' @param interestRates A numeric value or a time-size vector of interest rate used to discount cahs flow.
+#' @param probabilities Optional vector of probabilities.
+#' @param power Power to square discount and cash flows. Default is set to 1
+#'
+#' @references Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition), 2008, ACTEX Publications.
+#' @return A numeric value representing the present value of cashFlows vector, 
+#' or the actuarial present value if probabilities
+#' @details \code{probabilities} is optional, a sequence of 1 length of timeIds is assumed. 
+#' Interest rate shall be a fixed number or a vector of the same size of \code{timeIds}. 
+#' \code{power} parameters is generally useless	beside life contingencies insurances evaluations.
+#' @note This simple function is the kernel working core of the package. Actuarial and financial mathematics ground on it.
+#' 
+#' @export
+#'
+#' @examples
+#'  #simple example
+#'  cf=c(10,10,10)	#$10 of payments one per year for three years
+#'  t=c(1,2,3) #years
+#'  p=c(1,1,1) #assume payments certainty
+#'  #assume 3% of interest rate
+#'  presentValue(cashFlows=cf, timeIds=t, interestRates=0.03, probabilities=p)
 presentValue<-function(cashFlows, timeIds, interestRates, probabilities, power=1)
 {
 	out<-0

@@ -63,7 +63,6 @@
 %% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
-\SweaveOpts{concordance=TRUE}
 
 
 <<setup,echo=FALSE, results=hide>>=
