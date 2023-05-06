@@ -44,7 +44,7 @@ this paper are mechanical and intended for didactic purposes.}
 
 \Address{
   Giorgio Alfredo Spedicato\\
-  Ph.D FCAS FSA CSPA C.Stat\\
+  Ph.D ACAS C.STAT\\
   Via Firenze 11
   20037 Italy\\
   E-mail: \email{spedicato_giorgio@yahoo.it}\\
@@ -62,7 +62,10 @@ this paper are mechanical and intended for didactic purposes.}
 
 
 
-
+\SweaveOpts{eps=FALSE, keep.source=TRUE}
+<<echo=FALSE,print=FALSE,results=hide>>=
+options(width=80, prompt='R>')
+@
 
 
 
@@ -135,48 +138,38 @@ which $t-x=YYYY$.
 
 We will perform such exercise on Italy HMD data and by applying the original version of Lee-Carter.
 
-\begin{Schunk}
-\begin{Sinput}
-R>library(demography)
-R>library(forecast)
-R>library(lifecontingencies)
-\end{Sinput}
-\end{Schunk}
+<<load, keep.source=TRUE>>=
+library(demography)
+library(forecast)
+library(lifecontingencies)
+@
 
 Following code import data from the Human mortality Database and it creates a \code{demogdata} object from HMD data structure.
 The \code{hmd.mx} function downloads all available annual data by single years of age, but for the application we will use the already saved data.
 
-\begin{Schunk}
-\begin{Sinput}
-R>#italyDemo<-hmd.mx(country="ITA", username="username@email.domain", 
-R>#password="password", label="Italy")
-R>load(file="mortalityDatasets.RData")
-\end{Sinput}
-\end{Schunk}
+<<createDemogData, keep.source=TRUE>>=
+#italyDemo<-hmd.mx(country="ITA", username="username@email.domain", 
+#password="password", label="Italy")
+load(file="mortalityDatasets.RData")
+@
 
 Plot method is available on \code{demogdata}. Following figures report for the Italian Population the pattern of logarithm of death rates according to age and time. As detailed in \pkg{demography} vignette, different colors indicate different years (most recent ones in violet, earliest in red). Several behavior are shown respectively for male, female and total population. 
 
-\begin{Schunk}
-\begin{Sinput}
-R>par(mfrow=c(1,3))
-R>plot(italyDemo,series="male",datatype="rate", main="Male rates")
-R>plot(italyDemo,series="female",datatype="rate", main="Female rates")
-R>plot(italyDemo,"total",datatype="rate", main="Total rates")
-\end{Sinput}
-\end{Schunk}
-\includegraphics{mortality_projection-italyDemoFig}
-\begin{Schunk}
-\begin{Sinput}
-R>par(mfrow=c(1,3))
-R>plot(italyDemo,series="male",datatype="rate",
-+      plot.type="time", main="Male rates",xlab="Years")
-R>plot(italyDemo,series="female",datatype="rate",
-+      plot.type="time", main="Female rates",xlab="Years")
-R>plot(italyDemo,series="total",datatype="rate",
-+      plot.type="time", main="Total rates",xlab="Years")
-\end{Sinput}
-\end{Schunk}
-\includegraphics{mortality_projection-italyDemoFigTime}
+<<italyDemoFig,fig=TRUE>>=
+par(mfrow=c(1,3))
+plot(italyDemo,series="male",datatype="rate", main="Male rates")
+plot(italyDemo,series="female",datatype="rate", main="Female rates")
+plot(italyDemo,"total",datatype="rate", main="Total rates")
+@
+<<italyDemoFigTime,fig=TRUE>>=
+par(mfrow=c(1,3))
+plot(italyDemo,series="male",datatype="rate",
+     plot.type="time", main="Male rates",xlab="Years")
+plot(italyDemo,series="female",datatype="rate",
+     plot.type="time", main="Female rates",xlab="Years")
+plot(italyDemo,series="total",datatype="rate",
+     plot.type="time", main="Total rates",xlab="Years")
+@
 
 Italian data confirms that mortality is falling at all ages with a different behavior according to different ages
 
@@ -184,39 +177,34 @@ Italian data confirms that mortality is falling at all ages with a different beh
 
 To fit Lee - Carter model (without going through logarithms) lca function can be used. Lee-Carter is here applied separately between male, female and total population and by considering a maximum age equal to 100.
 
-\begin{Schunk}
-\begin{Sinput}
-R>italyLcaM<-lca(italyDemo,series="male",max.age=100)
-R>italyLcaF<-lca(italyDemo,series="female",max.age=100)
-R>italyLcaT<-lca(italyDemo,series="total",max.age=100)
-\end{Sinput}
-\end{Schunk}
+<<fitLeeCarter, keep.source=TRUE>>=
+italyLcaM<-lca(italyDemo,series="male",max.age=100)
+italyLcaF<-lca(italyDemo,series="female",max.age=100)
+italyLcaT<-lca(italyDemo,series="total",max.age=100)
+@
 %italyLcaT1<-lca(italyDemo,series="total",max#.age=100,adjust="dxt")
 %italyLcaT2<-lca(italyDemo,series="total",max.age=100,adjust="none")
 
 \textbf{lca} returned object allows us to inspect $a_x$, $b_x$ and $k_t$. Figures represent the values of the estimated parameters. 
 
-\begin{Schunk}
-\begin{Sinput}
-R>  par(mfrow=c(1,3))
-R>  plot(italyLcaT$ax, main="ax", xlab="Age",ylab="ax",type="l")
-R>  lines(x=italyLcaF$age, y=italyLcaF$ax, main="ax", col="red")
-R>  lines(x=italyLcaM$age, y=italyLcaM$ax, main="ax", col="blue")
-R>  legend("topleft" , c("Male","Female","Total"),
-+   cex=0.8,col=c("blue","red","black"),lty=1);
-R>  plot(italyLcaT$bx, main="bx", xlab="Age",ylab="bx",type="l")
-R>  lines(x=italyLcaF$age, y=italyLcaF$bx, main="bx", col="red")
-R>  lines(x=italyLcaM$age, y=italyLcaM$bx, main="bx", col="blue")
-R>  legend("topright" , c("Male","Female","Total"),
-+   cex=0.8,col=c("blue","red","black"),lty=1);
-R>  plot(italyLcaT$kt, main="kt", xlab="Year",ylab="kt",type="l")
-R>  lines(x=italyLcaF$year, y=italyLcaF$kt, main="kt", col="red")
-R>  lines(x=italyLcaM$year, y=italyLcaM$kt, main="kt", col="blue")
-R>  legend("topright" , c("Male","Female","Total"),
-+   cex=0.8,col=c("blue","red","black"),lty=1);
-\end{Sinput}
-\end{Schunk}
-\includegraphics{mortality_projection-leeCarterResultsFig}
+<<leeCarterResultsFig, fig=TRUE>>=
+  par(mfrow=c(1,3))
+  plot(italyLcaT$ax, main="ax", xlab="Age",ylab="ax",type="l")
+  lines(x=italyLcaF$age, y=italyLcaF$ax, main="ax", col="red")
+  lines(x=italyLcaM$age, y=italyLcaM$ax, main="ax", col="blue")
+  legend("topleft" , c("Male","Female","Total"),
+  cex=0.8,col=c("blue","red","black"),lty=1);
+  plot(italyLcaT$bx, main="bx", xlab="Age",ylab="bx",type="l")
+  lines(x=italyLcaF$age, y=italyLcaF$bx, main="bx", col="red")
+  lines(x=italyLcaM$age, y=italyLcaM$bx, main="bx", col="blue")
+  legend("topright" , c("Male","Female","Total"),
+  cex=0.8,col=c("blue","red","black"),lty=1);
+  plot(italyLcaT$kt, main="kt", xlab="Year",ylab="kt",type="l")
+  lines(x=italyLcaF$year, y=italyLcaF$kt, main="kt", col="red")
+  lines(x=italyLcaM$year, y=italyLcaM$kt, main="kt", col="blue")
+  legend("topright" , c("Male","Female","Total"),
+  cex=0.8,col=c("blue","red","black"),lty=1);
+@
 
 A similar behavior of parameters is observed according to different data-sets. As expected the average mortality grows when age increases (see $\hat{a}_{x}$ pattern).Furthermore it is clearly visible the young mortality hump for males in the age-range (20,30) due to accidental deaths. $\hat{b}_{x}$ shows instead a greater value for younger ages and a greatest improvement for females in the age range (60-80).
 Finally, as expected, $\hat{k}_{t}$ has a decreasing trend with the increment of time. \\
@@ -227,55 +215,45 @@ We can therefore use \pkg{forecast} package to project the future $k_{t}$s (up t
 %ktTArimaForecasts<-forecast(ktTArima, h=110)
 %fullKtT<-ts(c(ktTArimaForecasts$fitted, ktTArimaForecasts$mean),start=1872)  
 
-\begin{Schunk}
-\begin{Sinput}
-R>fM<-forecast(italyLcaM,h=110)
-R>fF<-forecast(italyLcaF,h=110)
-R>fT<-forecast(italyLcaT,h=110)
-\end{Sinput}
-\end{Schunk}
+<<ktProjections, keep.source=TRUE>>=
+fM<-forecast(italyLcaM,h=110)
+fF<-forecast(italyLcaF,h=110)
+fT<-forecast(italyLcaT,h=110)
+@
 %plot(forecast(italyLcaT,h=110))
 
 The predicted values of $k_{t}$ re-scaled to zero in the last observed year (2014) are here reported.
 
-\begin{Schunk}
-\begin{Sinput}
-R>par(mfrow=c(1,3))
-R>plot(fM$kt.f,main="Male")
-R>plot(fF$kt.f,main="Female",)
-R>plot(fT$kt.f,main="Total")
-\end{Sinput}
-\end{Schunk}
-\includegraphics{mortality_projection-ktProjectionFig}
+<<ktProjectionFig, fig=TRUE>>=
+par(mfrow=c(1,3))
+plot(fM$kt.f,main="Male")
+plot(fF$kt.f,main="Female",)
+plot(fT$kt.f,main="Total")
+@
 
 Finally, it's easy to derive the full pattern of rates. Past and projected rates are here binded in the same matrix.
 
-\begin{Schunk}
-\begin{Sinput}
-R>ratesM<-cbind(italyDemo$rate$male[1:100,],fM$rate$male[1:100,])
-R>ratesF<-cbind(italyDemo$rate$female[1:100,],fF$rate$female[1:100,])
-R>ratesT<-cbind(italyDemo$rate$total[1:100,],fT$rate$total[1:100,])
-\end{Sinput}
-\end{Schunk}
+<<ktrates, keep.source=TRUE>>=
+ratesM<-cbind(italyDemo$rate$male[1:100,],fM$rate$male[1:100,])
+ratesF<-cbind(italyDemo$rate$female[1:100,],fF$rate$female[1:100,])
+ratesT<-cbind(italyDemo$rate$total[1:100,],fT$rate$total[1:100,])
+@
 %plot(italyDemo,series="total",main="Total: observed and forecasted rates",ylim=c(-20,2),lty=2)
 %lines(fT,lty=2)
 %max(unlist(fT$rate))
 We report here the pattern of past and projected rates according to different population for people aged $65$. The expected improvement is clearly visible in the Figure.
 
-\begin{Schunk}
-\begin{Sinput}
-R>par(mfrow=c(1,1))
-R>plot(seq(min(italyDemo$year),max(italyDemo$year)+110),ratesF[65,],
-+      col="red",xlab="Years",ylab="Death Rates",type="l")
-R>lines(seq(min(italyDemo$year),max(italyDemo$year)+110),ratesM[65,],
-+       col="blue",xlab="Years",ylab="Death Rates")
-R>lines(seq(min(italyDemo$year),max(italyDemo$year)+110),ratesT[65,],
-+       col="black",xlab="Years",ylab="Death Rates")
-R>legend("topright" , c("Male","Female","Total"),
-+        cex=0.8,col=c("blue","red","black"),lty=1);
-\end{Sinput}
-\end{Schunk}
-\includegraphics{mortality_projection-ktratesFig}
+<<ktratesFig, fig=TRUE>>=
+par(mfrow=c(1,1))
+plot(seq(min(italyDemo$year),max(italyDemo$year)+110),ratesF[65,],
+     col="red",xlab="Years",ylab="Death Rates",type="l")
+lines(seq(min(italyDemo$year),max(italyDemo$year)+110),ratesM[65,],
+      col="blue",xlab="Years",ylab="Death Rates")
+lines(seq(min(italyDemo$year),max(italyDemo$year)+110),ratesT[65,],
+      col="black",xlab="Years",ylab="Death Rates")
+legend("topright" , c("Male","Female","Total"),
+       cex=0.8,col=c("blue","red","black"),lty=1);
+@
 
 We have applied here the original version of Lee-Carter in order to obtain a forecast of mortality rates.
 Alternative estimates can be derived by using \textbf{lca} function through the \pkg{demography} package (as Lee-Miller (\cite{LM}), Booth-Maindonald-Smith (\cite{BMS}) and Hyndman-Ullah (\cite{Hyn}) methods).
@@ -298,101 +276,61 @@ assumed that on year probability decreases evenly in 20 steps.
 
 
 
-\begin{Schunk}
-\begin{Sinput}
-R>createActuarialTable<-function(yearOfBirth,rate){
-+ 
-+   mxcoh <- rate[1:nrow(rate),(yearOfBirth-min(italyDemo$year)+1):ncol(rate)]
-+   cohort.mx <- diag(mxcoh)
-+   cohort.px=exp(-cohort.mx)
-+   #get projected Px
-+   fittedPx=cohort.px #add px to table
-+ 	px4Completion=seq(from=cohort.px[length(fittedPx)], to=0, length=20)
-+ 	totalPx=c(fittedPx,px4Completion[2:length(px4Completion)])
-+ 	#create life table
-+ 	irate=1.04/1.02-1
-+ 
-+ 	cohortLt=probs2lifetable(probs=totalPx, radix=100000,type="px", 
-+   name=paste("Cohort",yearOfBirth))
-+ 	cohortAct=new("actuarialtable",x=cohortLt@x, lx=cohortLt@lx, 
-+ 	interest=irate, name=cohortLt@name)
-+ 	return(cohortAct)
-+ 	}
-R>
-R>
-\end{Sinput}
-\end{Schunk}
+<<lifeTableProject, keep.source=TRUE>>=
+
+createActuarialTable<-function(yearOfBirth,rate){
+
+  mxcoh <- rate[1:nrow(rate),(yearOfBirth-min(italyDemo$year)+1):ncol(rate)]
+  cohort.mx <- diag(mxcoh)
+  cohort.px=exp(-cohort.mx)
+  #get projected Px
+  fittedPx=cohort.px #add px to table
+	px4Completion=seq(from=cohort.px[length(fittedPx)], to=0, length=20)
+	totalPx=c(fittedPx,px4Completion[2:length(px4Completion)])
+	#create life table
+	irate=1.04/1.02-1
+
+	cohortLt=probs2lifetable(probs=totalPx, radix=100000,type="px", 
+  name=paste("Cohort",yearOfBirth))
+	cohortAct=new("actuarialtable",x=cohortLt@x, lx=cohortLt@lx, 
+	interest=irate, name=cohortLt@name)
+	return(cohortAct)
+	}
+
+
+@
 
 We can therefore calculate the APV of $\ddot{a}_{65}^{(12)}$ for the selected cohorts.
 Values have been derived separately between males and females and by using directly the total population.
 
-\begin{Schunk}
-\begin{Sinput}
-R>	getAnnuityAPV<-function(yearOfBirth,rate) {
-+ 		actuarialTable<-createActuarialTable(yearOfBirth,rate)
-+ 		out=axn(actuarialTable,x=65,m=12)
-+ 		return(out)
-+ 	}
-R>rate<-ratesM
-R>for(i in seq(1920,2000,by=10)) {
-+ 		cat("For cohort ",i, "of males the e0 is",
-+ 		round(exn(createActuarialTable(i,rate)),2),
-+ 		" and the APV is :",round(getAnnuityAPV(i,rate),2),"\n")
-+ 		
-+ 	}
-\end{Sinput}
-\begin{Soutput}
-For cohort  1920 of males the e0 is 50.76  and the APV is : 4.24 
-For cohort  1930 of males the e0 is 60.3  and the APV is : 5.13 
-For cohort  1940 of males the e0 is 64.76  and the APV is : 5.96 
-For cohort  1950 of males the e0 is 72.13  and the APV is : 6.3 
-For cohort  1960 of males the e0 is 75.51  and the APV is : 6.63 
-For cohort  1970 of males the e0 is 78.56  and the APV is : 6.95 
-For cohort  1980 of males the e0 is 81.31  and the APV is : 7.26 
-For cohort  1990 of males the e0 is 83.14  and the APV is : 7.56 
-For cohort  2000 of males the e0 is 84.53  and the APV is : 7.86 
-\end{Soutput}
-\begin{Sinput}
-R>rate<-ratesF
-R>for(i in seq(1920,2000,by=10)) {
-+   	cat("For cohort ",i, "of females the e0 at birth is",
-+ 	round(exn(createActuarialTable(i,rate)),2),
-+ 	" and the APV is :",round(getAnnuityAPV(i,rate),2),"\n")
-+ 		
-+ 	}
-\end{Sinput}
-\begin{Soutput}
-For cohort  1920 of females the e0 at birth is 59.51  and the APV is : 6.54 
-For cohort  1930 of females the e0 at birth is 67.15  and the APV is : 7.37 
-For cohort  1940 of females the e0 at birth is 71.26  and the APV is : 8 
-For cohort  1950 of females the e0 at birth is 78.41  and the APV is : 8.52 
-For cohort  1960 of females the e0 at birth is 82.16  and the APV is : 8.91 
-For cohort  1970 of females the e0 at birth is 84.97  and the APV is : 9.28 
-For cohort  1980 of females the e0 at birth is 87.33  and the APV is : 9.62 
-For cohort  1990 of females the e0 at birth is 88.69  and the APV is : 9.95 
-For cohort  2000 of females the e0 at birth is 89.79  and the APV is : 10.27 
-\end{Soutput}
-\begin{Sinput}
-R>rate<-ratesT
-R>for(i in seq(1920,2000,by=10)) {
-+     cat("For cohort ",i, "of total population the e0 is",
-+ 		round(exn(createActuarialTable(i,rate)),2),
-+ 		" and the APV is :",round(getAnnuityAPV(i,rate),2),"\n")
-+ 		
-+ 	}
-\end{Sinput}
-\begin{Soutput}
-For cohort  1920 of total population the e0 is 55.06  and the APV is : 5.51 
-For cohort  1930 of total population the e0 is 63.71  and the APV is : 6.34 
-For cohort  1940 of total population the e0 is 68.04  and the APV is : 7.09 
-For cohort  1950 of total population the e0 is 75.37  and the APV is : 7.54 
-For cohort  1960 of total population the e0 is 78.95  and the APV is : 7.92 
-For cohort  1970 of total population the e0 is 81.92  and the APV is : 8.29 
-For cohort  1980 of total population the e0 is 84.54  and the APV is : 8.65 
-For cohort  1990 of total population the e0 is 86.19  and the APV is : 8.99 
-For cohort  2000 of total population the e0 is 87.49  and the APV is : 9.31 
-\end{Soutput}
-\end{Schunk}
+<<annuityAPV, keep.source=TRUE>>=
+	getAnnuityAPV<-function(yearOfBirth,rate) {
+		actuarialTable<-createActuarialTable(yearOfBirth,rate)
+		out=axn(actuarialTable,x=65,m=12)
+		return(out)
+	}
+rate<-ratesM
+for(i in seq(1920,2000,by=10)) {
+		cat("For cohort ",i, "of males the e0 is",
+		round(exn(createActuarialTable(i,rate)),2),
+		" and the APV is :",round(getAnnuityAPV(i,rate),2),"\n")
+		
+	}
+rate<-ratesF
+for(i in seq(1920,2000,by=10)) {
+  	cat("For cohort ",i, "of females the e0 at birth is",
+	round(exn(createActuarialTable(i,rate)),2),
+	" and the APV is :",round(getAnnuityAPV(i,rate),2),"\n")
+		
+	}
+rate<-ratesT
+for(i in seq(1920,2000,by=10)) {
+    cat("For cohort ",i, "of total population the e0 is",
+		round(exn(createActuarialTable(i,rate)),2),
+		" and the APV is :",round(getAnnuityAPV(i,rate),2),"\n")
+		
+	}
+@
 
 \newpage
 \section{Using the StMoMo package}
@@ -403,251 +341,193 @@ The \pkg{StMoMo} package provides many useful functions to manage mortality data
 
 We will recycle previous example's data to initialize mortality data. The interested reader will find further details on the \pkg{StMoMo} package's vignette.
 
-\begin{Schunk}
-\begin{Sinput}
-R>#loading StMoMo package
-R>require(StMoMo) 
-R>#get data
-R>##use total death, mid year exposures
-R>ita.StMoMoData<-StMoMoData(data=italyDemo, series = "total",type="central")
-R>#bring to initial year
-R>ita.StMoMoData.Ini<-central2initial(ita.StMoMoData)
-R>#assume max age 103
-R>ages.fit = 0:103
-R>#generate weight matrix
-R>wxt <- genWeightMat(ages = ages.fit,  years = ita.StMoMoData.Ini$years,clip = 3)
-\end{Sinput}
-\end{Schunk}
+<<r_stmomoconfig, keep.source=TRUE>>=
+#loading StMoMo package
+require(StMoMo) 
+#get data
+##use total death, mid year exposures
+ita.StMoMoData<-StMoMoData(data=italyDemo, series = "total",type="central")
+#bring to initial year
+ita.StMoMoData.Ini<-central2initial(ita.StMoMoData)
+#assume max age 103
+ages.fit = 0:103
+#generate weight matrix
+wxt <- genWeightMat(ages = ages.fit,  years = ita.StMoMoData.Ini$years,clip = 3)
+@
 
 \subsection{Fitting models}
 
 The code below fits the Lee Carter models as well as the Reinshaw Haberman (RH) and the Cairn Blake Down (CBD) one \cite{Cairns2007;Renshaw2006} ones. 
 
-\begin{Schunk}
-\begin{Sinput}
-R>#fitting the models
-R>## LC
-R>LC <- lc(link = "logit")
-R>LCfit <- fit(LC, data = ita.StMoMoData.Ini, ages.fit = ages.fit, wxt = wxt)
-R>## CBD
-R>CBD <- cbd()
-R>CBDfit <- fit(CBD, data = ita.StMoMoData.Ini, ages.fit = ages.fit, wxt = wxt)
-\end{Sinput}
-\end{Schunk}
+<<r_stmomofit, keep.source=TRUE, eval=FALSE>>=
+#fitting the models
+## LC
+LC <- lc(link = "logit")
+LCfit <- fit(LC, data = ita.StMoMoData.Ini, ages.fit = ages.fit, wxt = wxt)
+## CBD
+CBD <- cbd()
+CBDfit <- fit(CBD, data = ita.StMoMoData.Ini, ages.fit = ages.fit, wxt = wxt)
+@
 
 Some are long to be fit (especially the RH one):
 
-\begin{Schunk}
-\begin{Sinput}
-R>## RH
-R>RH <- rh(link = "logit", cohortAgeFun = "1")
-R>RHfit <- fit(RH, data = ita.StMoMoData.Ini, ages.fit = ages.fit,   wxt = wxt,start.ax = LCfit$ax,
-+              start.bx = LCfit$bx, start.kt = LCfit$kt)
-\end{Sinput}
-\end{Schunk}
+<<stmomo_rh_fit, keep.source=TRUE, eval=FALSE>>=
+## RH
+RH <- rh(link = "logit", cohortAgeFun = "1")
+RHfit <- fit(RH, data = ita.StMoMoData.Ini, ages.fit = ages.fit,   wxt = wxt,start.ax = LCfit$ax,
+             start.bx = LCfit$bx, start.kt = LCfit$kt)
+@
 
 
-\begin{Schunk}
-\begin{Sinput}
-R>load(file = "StMoMoModels.RData")
-\end{Sinput}
-\end{Schunk}
+<<r_stmomosaveandload, keep.source=FALSE>>=
+#save(list=c("LCfit","CBDfit"),file="StMoMoModels.RData",compress = "xz")
+load(file="StMoMoModels.RData")
+@
 
 
 Plotting fitted models is immediate as well:
 
 The figure below shows LC fits:
 
-\begin{Schunk}
-\begin{Sinput}
-R>plot(LCfit)
-\end{Sinput}
-\end{Schunk}
-\includegraphics{mortality_projection-stmomo_lcplot}
+<<stmomo_lcplot,keep.source=FALSE, eval=TRUE,fig=TRUE>>=
+plot(LCfit)
+@
 
 The figure below shows CDB fits:
 
 
-\begin{Schunk}
-\begin{Sinput}
-R>plot(CBDfit)
-\end{Sinput}
-\end{Schunk}
-\includegraphics{mortality_projection-stmomo_cbdlot}
+<<stmomo_cbdlot,keep.source=TRUE, fig=TRUE>>=
+plot(CBDfit)
+@
 
 The figure below shows RH fits:
 
-\begin{Schunk}
-\begin{Sinput}
-R>plot(RHfit)
-\end{Sinput}
-\end{Schunk}
+<<stmomo_rhplot,keep.source=TRUE, fig=TRUE, eval=FALSE>>=
+plot(RHfit)
+@
 
 \subsection{Projecting and simulating mortality models}
 
 The following code projects individual fits for forthcoming 50 years:
 
-\begin{Schunk}
-\begin{Sinput}
-R>horizon=50
-R>LCfor <- forecast(LCfit, h = horizon)
-R>#assuming arima with drift
-R>#RHfor <- forecast(RHfit, h = horizon, gc.order = c(1,1,0))
-R>CBDfor <- forecast(CBDfit, h = horizon)
-\end{Sinput}
-\end{Schunk}
+<<stmomo_cbdlot,keep.source=TRUE>>=
+horizon=50
+LCfor <- forecast(LCfit, h = horizon)
+#assuming arima with drift
+#RHfor <- forecast(RHfit, h = horizon, gc.order = c(1,1,0))
+CBDfor <- forecast(CBDfit, h = horizon)
+@
 
 Also it is possible to simulate mortality models' projections:
 
-\begin{Schunk}
-\begin{Sinput}
-R>#simulazione & proiezione
-R>##simulazione
-R>nsims=100
-R>#RHsim <- simulate(RHfit, nsim = nsims, h = 50, gc.order = c(1, 1, 0))
-R>LCsim <- simulate(LCfit, nsim = nsims, h = 50)
-R>CBDsim <- simulate(CBDfit, nsim = nsims, h = 50)
-\end{Sinput}
-\end{Schunk}
+<<stmomo_simulate, keep.source=TRUE>>=
+#simulazione & proiezione
+##simulazione
+nsims=100
+#RHsim <- simulate(RHfit, nsim = nsims, h = 50, gc.order = c(1, 1, 0))
+LCsim <- simulate(LCfit, nsim = nsims, h = 50)
+CBDsim <- simulate(CBDfit, nsim = nsims, h = 50)
+@
 
 
 See for example 20 year projected LC trajectories:
 
-\begin{Schunk}
-\begin{Sinput}
-R>##LC
-R>plot(LCfit$years, LCfit$kt[1, ], xlim = range(LCfit$years, LCsim$kt.s$years), ylim = range(LCfit$kt, LCsim$kt.s$sim[1, , 1:20]),type = "l", xlab = "year", ylab = "kt", main = "LC model simulations")
-R>matlines(LCsim$kt.s$years, LCsim$kt.s$sim[1, , 1:20], type = "l", lty = 1)
-\end{Sinput}
-\end{Schunk}
+<<stmomo_lc_sims, keep.source=TRUE, eval=FALSE>>=
+##LC
+plot(LCfit$years, LCfit$kt[1, ], xlim = range(LCfit$years, LCsim$kt.s$years), ylim = range(LCfit$kt, LCsim$kt.s$sim[1, , 1:20]),type = "l", xlab = "year", ylab = "kt", main = "LC model simulations")
+matlines(LCsim$kt.s$years, LCsim$kt.s$sim[1, , 1:20], type = "l", lty = 1)
+@
 
-\begin{Schunk}
-\begin{Sinput}
-R>plot(LCfit$years, LCfit$kt[1, ], xlim = range(LCfit$years, LCsim$kt.s$years), 
-+     ylim = range(LCfit$kt, LCsim$kt.s$sim[1, , 1:20]), type = "l", 
-+     xlab = "year", ylab = "kt", main = "LC model simulations")
-R>matlines(LCsim$kt.s$years, LCsim$kt.s$sim[1, , 1:20], type = "l", 
-+     lty = 1)
-\end{Sinput}
-\end{Schunk}
-\includegraphics{mortality_projection-stmomo_lc_sims2}
+<<stmomo_lc_sims2, keep.source=FALSE, fig=TRUE>>=
+##LC
+plot(LCfit$years, LCfit$kt[1, ], xlim = range(LCfit$years, LCsim$kt.s$years), ylim = range(LCfit$kt, LCsim$kt.s$sim[1, , 1:20]),type = "l", xlab = "year", ylab = "kt", main = "LC model simulations")
+matlines(LCsim$kt.s$years, LCsim$kt.s$sim[1, , 1:20], type = "l", lty = 1)
+@
 
 \subsection{Obtaining life tables}
 
 The \pkg{StMoMo} package provides a useful function to extract mortality rates from model objects' fit and forecasts, the \code{extractCohort} one. In order to obtain a projected life table for a given cohort of birth, we need to blend fitted rates from historical data to projection, all from the same cohort.
 
-\begin{Schunk}
-\begin{Sinput}
-R>#plotting historical fitted rates, until 2014
-R>chosen_cohort=1950
-R>plot(0:64, extractCohort(fitted(LCfit, type = "rates"), cohort = chosen_cohort),
-+ type = "l", log = "y", xlab = "age", ylab = "q(x)",
-+ main = "Cohort 1950 mortality rate", xlim = c(0,103), ylim = c(0.0005, 0.07))
-R>#adding fitted projections
-R>lines(65:103, extractCohort(LCfor$rates, cohort = chosen_cohort), lty = 2, lwd=2, col="red")
-\end{Sinput}
-\end{Schunk}
+<<stmomo_lifetable, keep.source=TRUE, eval=FALSE>>=
+#plotting historical fitted rates, until 2014
+chosen_cohort=1950
+plot(0:64, extractCohort(fitted(LCfit, type = "rates"), cohort = chosen_cohort),
+type = "l", log = "y", xlab = "age", ylab = "q(x)",
+main = "Cohort 1950 mortality rate", xlim = c(0,103), ylim = c(0.0005, 0.07))
+#adding fitted projections
+lines(65:103, extractCohort(LCfor$rates, cohort = chosen_cohort), lty = 2, lwd=2, col="red")
+@
 
-\begin{Schunk}
-\begin{Sinput}
-R>chosen_cohort = 1950
-R>plot(0:64, extractCohort(fitted(LCfit, type = "rates"), cohort = chosen_cohort), 
-+     type = "l", log = "y", xlab = "age", ylab = "q(x)", main = "Cohort 1950 mortality rate", 
-+     xlim = c(0, 103), ylim = c(5e-04, 0.07))
-R>lines(65:103, extractCohort(LCfor$rates, cohort = chosen_cohort), 
-+     lty = 2, lwd = 2, col = "red")
-\end{Sinput}
-\end{Schunk}
-\includegraphics{mortality_projection-stmomo_lifetable2}
+<<stmomo_lifetable2, keep.source=FALSE, fig=TRUE>>=
+#plotting historical fitted rates, until 2014
+chosen_cohort=1950
+plot(0:64, extractCohort(fitted(LCfit, type = "rates"), cohort = chosen_cohort),
+type = "l", log = "y", xlab = "age", ylab = "q(x)",
+main = "Cohort 1950 mortality rate", xlim = c(0,103), ylim = c(0.0005, 0.07))
+#adding fitted projections
+lines(65:103, extractCohort(LCfor$rates, cohort = chosen_cohort), lty = 2, lwd=2, col="red")
+@
 
 So, the whole mortality rates, $m_{x}$, can be obtained as follows:
 
-\begin{Schunk}
-\begin{Sinput}
-R>#LC
-R>lc_historical_rates <- extractCohort(fitted(LCfit, type = "rates"), 
-+   cohort = chosen_cohort)
-R>lc_forecasted_rates <- extractCohort(LCfor$rates, 
-+   cohort = chosen_cohort)
-R>lc_rates_1950 <- c(lc_historical_rates,lc_forecasted_rates)
-R>#RH
-R>#rh_historical_rates <- extractCohort(fitted(RHfit, type = "rates"), cohort = chosen_cohort)
-R>#rh_forecasted_rates <- extractCohort(RHfor$rates, cohort = chosen_cohort)
-R>#rh_rates_1950 <- c(rh_historical_rates,rh_forecasted_rates)
-R>#CBD
-R>cbd_historical_rates <- extractCohort(fitted(CBDfit, type = "rates"), cohort = chosen_cohort)
-R>cbd_forecasted_rates <- extractCohort(CBDfor$rates, cohort = chosen_cohort)
-R>cbd_rates_1950 <- c(cbd_historical_rates,cbd_forecasted_rates)
-\end{Sinput}
-\end{Schunk}
+<<stmomo_mortality_rates, keep.source=TRUE>>=
+#LC
+lc_historical_rates <- extractCohort(fitted(LCfit, type = "rates"), 
+  cohort = chosen_cohort)
+lc_forecasted_rates <- extractCohort(LCfor$rates, 
+  cohort = chosen_cohort)
+lc_rates_1950 <- c(lc_historical_rates,lc_forecasted_rates)
+#RH
+#rh_historical_rates <- extractCohort(fitted(RHfit, type = "rates"), cohort = chosen_cohort)
+#rh_forecasted_rates <- extractCohort(RHfor$rates, cohort = chosen_cohort)
+#rh_rates_1950 <- c(rh_historical_rates,rh_forecasted_rates)
+#CBD
+cbd_historical_rates <- extractCohort(fitted(CBDfit, type = "rates"), cohort = chosen_cohort)
+cbd_forecasted_rates <- extractCohort(CBDfor$rates, cohort = chosen_cohort)
+cbd_rates_1950 <- c(cbd_historical_rates,cbd_forecasted_rates)
+@
 
 Now we use \pkg{lifecontingencies} functions to transform mortality rates to mortality probabilities
 
-\begin{Schunk}
-\begin{Sinput}
-R>lc_qx_1950<-mx2qx(lc_rates_1950)
-R>#rh_qx_1950<-mx2qx(rh_rates_1950)
-R>cbd_qx_1950<-mx2qx(cbd_rates_1950)
-\end{Sinput}
-\end{Schunk}
+<<rates_to_prob_1950, keep.source=TRUE>>=
+lc_qx_1950<-mx2qx(lc_rates_1950)
+#rh_qx_1950<-mx2qx(rh_rates_1950)
+cbd_qx_1950<-mx2qx(cbd_rates_1950)
+@
 
 And to get \code{lifetable} objects:
 
-\begin{Schunk}
-\begin{Sinput}
-R>lc_lifetable_1950<-probs2lifetable(probs=lc_qx_1950,type = "qx",
-+   name = paste("LC","1950","lt",sep="_"))
-R>#rh_lifetable_1950<-probs2lifetable(probs=rh_qx_1950,type = "qx",name = paste("RH","1950","lt",sep="_"))
-R>cbd_lifetable_1950<-probs2lifetable(probs=cbd_qx_1950,type = "qx",
-+   name = paste("CDB","1950","lt",sep="_"))
-\end{Sinput}
-\end{Schunk}
+<<qx_to_lifetable, keep.source=TRUE>>=
+lc_lifetable_1950<-probs2lifetable(probs=lc_qx_1950,type = "qx",
+  name = paste("LC","1950","lt",sep="_"))
+#rh_lifetable_1950<-probs2lifetable(probs=rh_qx_1950,type = "qx",name = paste("RH","1950","lt",sep="_"))
+cbd_lifetable_1950<-probs2lifetable(probs=cbd_qx_1950,type = "qx",
+  name = paste("CDB","1950","lt",sep="_"))
+@
 
 Then, we can easily obtain expected life time at $x=65$:
 
-\begin{Schunk}
-\begin{Sinput}
-R>exn(lc_lifetable_1950,x=65)
-\end{Sinput}
-\begin{Soutput}
-[1] 21.43934
-\end{Soutput}
-\begin{Sinput}
-R>#exn(rh_lifetable_1950,x=65)
-R>exn(cbd_lifetable_1950,x=65)
-\end{Sinput}
-\begin{Soutput}
-[1] 19.2421
-\end{Soutput}
-\end{Schunk}
+<<>>=
+exn(lc_lifetable_1950,x=65)
+#exn(rh_lifetable_1950,x=65)
+exn(cbd_lifetable_1950,x=65)
+@
 
 Finally, after having created actuarial tables:
 
-\begin{Schunk}
-\begin{Sinput}
-R>lc_acttbl_1950<-new("actuarialtable",x=lc_lifetable_1950@x,lx=lc_lifetable_1950@lx, interest=0.015,name="LC ActTbl")
-R>#rh_acttbl_1950<-new("actuarialtable",x=rh_lifetable_1950@x,lx=rh_lifetable_1950@lx, interest=0.015,name="RH ActTbl")
-R>cdb_acttbl_1950<-new("actuarialtable",x=cbd_lifetable_1950@x,lx=cbd_lifetable_1950@lx, interest=0.015,name="CBD ActTbl")
-\end{Sinput}
-\end{Schunk}
+<<stmomo_act, keep.source=TRUE>>=
+lc_acttbl_1950<-new("actuarialtable",x=lc_lifetable_1950@x,lx=lc_lifetable_1950@lx, interest=0.015,name="LC ActTbl")
+#rh_acttbl_1950<-new("actuarialtable",x=rh_lifetable_1950@x,lx=rh_lifetable_1950@lx, interest=0.015,name="RH ActTbl")
+cdb_acttbl_1950<-new("actuarialtable",x=cbd_lifetable_1950@x,lx=cbd_lifetable_1950@lx, interest=0.015,name="CBD ActTbl")
+@
 
 We can compute the APV of an annuity under the three mortality assumptions:
 
-\begin{Schunk}
-\begin{Sinput}
-R>axn(actuarialtable = lc_acttbl_1950,x=65)
-\end{Sinput}
-\begin{Soutput}
-[1] 18.76793
-\end{Soutput}
-\begin{Sinput}
-R>#axn(actuarialtable = rh_acttbl_1950,x=65)
-R>axn(actuarialtable = cdb_acttbl_1950,x=65)
-\end{Sinput}
-\begin{Soutput}
-[1] 17.2352
-\end{Soutput}
-\end{Schunk}
+<<stmomo_axn, keep.source=TRUE>>=
+axn(actuarialtable = lc_acttbl_1950,x=65)
+#axn(actuarialtable = rh_acttbl_1950,x=65)
+axn(actuarialtable = cdb_acttbl_1950,x=65)
+@
 
 
 \section*{Acknowledgments}\label{sec:acknowledgments}

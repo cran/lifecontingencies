@@ -1,5 +1,5 @@
 #############################################################################
-#   Copyright (c) 2018 Giorgio A. Spedicato
+#   Copyright (c) 2022 Giorgio A. Spedicato
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -25,35 +25,7 @@
 #TO DO: check here http://www.mysmu.edu/faculty/yktse/FMA/S_FMA_1.pdf
 #TO DO: add k to increasing and decreasing annuities function
 
-
-#' Compute the present value of a series of cash flows
-#' 
-#' @description  This function evaluates the present values of a series of cash flows, given occurrence time.
-#' Probabilities of occurrence can also be taken into account.
-#'
-#' @param cashFlows Vector of cashFlow, must be coherent with \code{timeIds}
-#' @param timeIds Vector of points of time where \code{cashFlows} are due.
-#' @param interestRates A numeric value or a time-size vector of interest rate used to discount cahs flow.
-#' @param probabilities Optional vector of probabilities.
-#' @param power Power to square discount and cash flows. Default is set to 1
-#'
-#' @references Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition), 2008, ACTEX Publications.
-#' @return A numeric value representing the present value of cashFlows vector, 
-#' or the actuarial present value if probabilities
-#' @details \code{probabilities} is optional, a sequence of 1 length of timeIds is assumed. 
-#' Interest rate shall be a fixed number or a vector of the same size of \code{timeIds}. 
-#' \code{power} parameters is generally useless	beside life contingencies insurances evaluations.
-#' @note This simple function is the kernel working core of the package. Actuarial and financial mathematics ground on it.
-#' 
-#' @export
-#'
-#' @examples
-#'  #simple example
-#'  cf=c(10,10,10)	#$10 of payments one per year for three years
-#'  t=c(1,2,3) #years
-#'  p=c(1,1,1) #assume payments certainty
-#'  #assume 3% of interest rate
-#'  presentValue(cashFlows=cf, timeIds=t, interestRates=0.03, probabilities=p)
+#function to evaluate the present value of a series of cash flows
 presentValue<-function(cashFlows, timeIds, interestRates, probabilities, power=1)
 {
 	out<-0
@@ -85,9 +57,30 @@ presentValue<-function(cashFlows, timeIds, interestRates, probabilities, power=1
 
 
 
-#duration
-#m=tasso di interesse nominale capitalizzato m volte
-duration=function(cashFlows, timeIds,i, k=1,macaulay=TRUE)
+
+#' Compute the duration or the convexity of a series of CF
+#'
+#' @param cashFlows A vector representing the cash flows amounts. 
+#' @param timeIds Cash flows times
+#' @param i APR interest, i.e. nominal interest rate compounded m-thly.
+#' @param k Compounding frequency for the nominal interest rate.
+#' @param macaulay Use the Macaulay formula
+#' @references Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition), 2008, ACTEX Publications.
+#' @details The Macaulay duration is defined  as 
+#' \eqn{\sum\limits_t^{T} \frac{t*CF_{t}\left( 1 + \frac{i}{k} \right)^{ - t*k}}{P}}, 
+#' while  \eqn{\sum\limits_{t}^{T} t*\left( t + \frac{1}{k} \right) * CF_t \left(1 + \frac{y}{k} \right)^{ - k*t - 2}}
+
+#'
+#' @return A numeric value representing either the duration or the convexity of the cash flow series
+#' @export
+#'
+#' @examples
+#' #evaluate the duration/convexity of a coupon payment
+#' cf=c(10,10,10,10,10,110)
+#' t=c(1,2,3,4,5,6)
+#' duration(cf, t, i=0.03)
+#' convexity(cf, t, i=0.03)
+duration<-function(cashFlows, timeIds,i, k=1,macaulay=TRUE)
 {
   out=0
   if(missing(timeIds)) #check coherence on time id vector
@@ -120,6 +113,7 @@ duration=function(cashFlows, timeIds,i, k=1,macaulay=TRUE)
 #convexity
 
 
+#' @rdname duration
 convexity=function(cashFlows, timeIds,i,k=1)
 {
 	out=0
