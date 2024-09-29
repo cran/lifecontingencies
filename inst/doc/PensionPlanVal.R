@@ -1,5 +1,15 @@
 ## ----echo=F-------------------------------------------------------------------
-knitr::opts_chunk$set(warning=F, message=F, fig.width=6, fig.height=3.5, fig.align='center',fig.show='hold') 
+knitr::opts_chunk$set(
+  warning = F,
+  message = F,
+  collapse = TRUE,
+  error = TRUE,
+  fig.width = 6,
+  fig.height = 3.5,
+  fig.align = 'center',
+  comment = "#>",
+  fig.show = 'hold'
+)
 
 ## ----echo=TRUE,  tidy=TRUE----------------------------------------------------
 require("lifecontingencies")

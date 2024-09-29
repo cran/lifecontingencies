@@ -1,5 +1,8 @@
+## ----include=FALSE------------------------------------------------------------
+knitr::opts_chunk$set(echo = TRUE,  collapse = TRUE,
+  comment = "#>")
+
 ## ----setup, include=FALSE-----------------------------------------------------
-knitr::opts_chunk$set(echo = TRUE)
 #configure
 library(lifecontingencies)
 data(demoIta)
