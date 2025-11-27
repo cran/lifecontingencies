@@ -25,33 +25,70 @@
 #TO DO: check here http://www.mysmu.edu/faculty/yktse/FMA/S_FMA_1.pdf
 #TO DO: add k to increasing and decreasing annuities function
 
-#function to evaluate the present value of a series of cash flows
-presentValue<-function(cashFlows, timeIds, interestRates, probabilities, power=1)
+
+#' Present value of a series of cash flows.
+#'
+#' Evaluate the present value (or actuarial present value when
+#' probabilities are provided) of a vector of cash flows occurring at
+#' given time instants and discounted by provided interest rates.
+#'
+#' @title Present value of a series of cash flows
+#' @description This function evaluates the present values of a series of cash flows,
+#' given occurrence time. Probabilities of occurrence can also be taken into account.
+#' @param cashFlows Numeric vector of cash flows. Must be coherent with \code{timeIds}.
+#' @param timeIds Numeric vector of time points where \code{cashFlows} are due.
+#' @param interestRates A single numeric interest rate or a numeric vector of the same
+#' length as \code{timeIds} used to discount cash flows.
+#' @param probabilities Optional numeric vector of occurrence probabilities. If
+#' missing, a vector of ones (certainty) is assumed.
+#' @param power Numeric power applied to discount and cash flows. Defaults to 1.
+#' @details \code{probabilities} is optional; when omitted a sequence of 1's with the
+#' same length as \code{timeIds} is assumed. Interest rate may be a fixed number
+#' or a vector of the same size as \code{timeIds}. The \code{power} parameter is
+#' normally unused except in special actuarial evaluations.
+#' @return A numeric scalar representing the present value of the cash flow vector,
+#' or the actuarial present value if \code{probabilities} are provided.
+#' @references Broverman, S.A., Mathematics of Investment and Credit (Fourth Edition), 2008, ACTEX Publications.
+#' @author Giorgio A. Spedicato
+#' @note This simple function is the kernel working core of the package. Actuarial and financial mathematics ground on it.
+#' @examples
+#' # simple example
+#' cf <- c(10,10,10)    # $10 payments one per year for three years
+#' t  <- c(1,2,3)       # years
+#' p  <- c(1,1,1)       # payments certainty
+#' presentValue(cashFlows = cf, timeIds = t, interestRates = 0.03, probabilities = p)
+#' @export
+presentValue <- function(cashFlows, timeIds, interestRates, probabilities, power = 1)
 {
-	out<-0
-	if(missing(timeIds)) #check coherence on time id vector
-	{	warning("Warning: missing time vector")
-		timeIds=1
+	# initialize output
+	out <- 0
+
+	# if timeIds omitted, warn and assume a single time point at t = 1
+	if (missing(timeIds)) {
+		warning("Warning: missing time vector")
+		timeIds <- 1
 	}
-	if(missing(probabilities)) #if no probabilities given than prob=1
-	{
-		probabilities <- rep(1,length(cashFlows))
+
+	# if probabilities omitted, assume certainty (vector of 1's)
+	if (missing(probabilities)) {
+		probabilities <- rep(1, length(cashFlows))
 	} else {
-		if(length(cashFlows)!=length(probabilities)) stop("Error! Probabilities must have same length of cash flows")
+		if (length(cashFlows) != length(probabilities)) stop("Error! Probabilities must have same length of cash flows")
 	}
-	
-	if(!(length(cashFlows)==length(timeIds))) stop("Error! check dimensionality of cash flow and time ids vectors") #check dimensionality of cash flows
-	if((length(interestRates)>1)&(length(interestRates)!=length(timeIds))) warning("Interest rates incoherent with time ids") #check dimensioanlity of time ids
-	
-	interestRates <- rep(interestRates,length.out=length(timeIds))
-	v <- (1+interestRates)^(-timeIds)
-	
-	#power used for APV, usually=1
-	out <- sum( ( (cashFlows^power) * (v^power) ) * probabilities) 
-  #using Rcpp code seems inefficient
-# 	out<-switch(calculation,
-#               R=sum(((cashFlows^power)*(v^power))*probabilities),
-#               Rcpp=.mult3sum(x=(cashFlows^power),y=(v^power),z=probabilities))
+
+	# dimensionality checks
+	if (!(length(cashFlows) == length(timeIds))) stop("Error! check dimensionality of cash flow and time ids vectors")
+	if ((length(interestRates) > 1) & (length(interestRates) != length(timeIds))) warning("Interest rates incoherent with time ids")
+
+	# expand interestRates if it's a single scalar to the full time vector
+	interestRates <- rep(interestRates, length.out = length(timeIds))
+
+	# power is preserved for specialised actuarial computations (default = 1)
+	out <- .presentValueC(cashFlows = cashFlows,
+												timeIds = timeIds,
+												interestRates = interestRates,
+												probabilities = probabilities,
+												power = power)
 	return(out)
 }
 
@@ -234,7 +271,7 @@ accumulatedValue=function(i, n, m=0,k=1, type="immediate")
 #' @title Functions to switch from nominal / effective / convertible rates
 #'
 #' @param i The rate to be converted.
-#' @param k The original / target compounting frequency.
+#' @param k The original / target compounding frequency.
 #' @param type Either "interest" (default) or "nominal".
 #' 
 #' @details \code{effective2Convertible} and \code{convertible2Effective} wrap the other two functions.

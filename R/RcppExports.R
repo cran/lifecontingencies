@@ -9,6 +9,10 @@
     .Call(`_lifecontingencies_mult2sum`, x, y)
 }
 
+.presentValueC <- function(cashFlows, timeIds, interestRates, probabilities, power = 1.0) {
+    .Call(`_lifecontingencies_presentValueC`, cashFlows, timeIds, interestRates, probabilities, power)
+}
+
 .fExnCpp <- function(T, y, n, i) {
     .Call(`_lifecontingencies_fExnCpp`, T, y, n, i)
 }

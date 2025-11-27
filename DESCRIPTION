@@ -1,7 +1,7 @@
 Package: lifecontingencies
 Type: Package
 Title: Financial and Actuarial Mathematics for Life Contingencies
-Version: 1.4.3
+Version: 1.4.4
 Authors@R: c(person("Giorgio Alfredo", "Spedicato", role = c("aut", "cre"),
     email = "spedicato_giorgio@yahoo.it",comment = c(ORCID = "0000-0002-0315-8888")),
     person("Christophe", "Dutang", role = "ctb",comment = c(ORCID = "0000-0001-6732-1501")),
@@ -31,7 +31,7 @@ URL: https://github.com/spedygiorgio/lifecontingencies
 LinkingTo: Rcpp
 RoxygenNote: 7.3.3
 NeedsCompilation: yes
-Packaged: 2025-09-18 17:56:55 UTC; Utente
+Packaged: 2025-11-27 21:51:26 UTC; Utente
 Author: Giorgio Alfredo Spedicato [aut, cre] (ORCID:
     <https://orcid.org/0000-0002-0315-8888>),
   Christophe Dutang [ctb] (ORCID:
@@ -44,4 +44,4 @@ Author: Giorgio Alfredo Spedicato [aut, cre] (ORCID:
     <https://orcid.org/0000-0001-6795-4595>),
   Ivan Williams [ctb]
 Repository: CRAN
-Date/Publication: 2025-09-18 18:30:02 UTC
+Date/Publication: 2025-11-27 22:40:02 UTC
