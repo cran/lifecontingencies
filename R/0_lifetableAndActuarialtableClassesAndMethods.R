@@ -23,24 +23,22 @@
 
 #CLASSES DEFINITIONS
 
+# Keep defaults in one place to avoid prototype/initialize drift.
+.LIFETABLE_DEFAULT_X <- 0:3
+.LIFETABLE_DEFAULT_LX <- c(100, 90, 50, 10)
+.LIFETABLE_DEFAULT_NAME <- "Generic life table"
+.ACTUARIALTABLE_DEFAULT_NAME <- "Generic actuarial table"
+.ACTUARIALTABLE_DEFAULT_INTEREST <- 0.03
+
 
 
 setClass("lifetable", #classe lifetable
-		representation(x="numeric",lx="numeric",name="character"),
-		prototype(x=c(0,1,2,3),
-				lx=c(100,90,50,10),
-				name="Generic life table"
-		)
+		slots = c(x = "numeric", lx = "numeric", name = "character")
 )
 #actuarial classes
 setClass("actuarialtable",
-         representation=representation(interest="numeric"),
-         contains="lifetable",
-         prototype(x=c(0,1,2,3),
-                   lx=c(100,90,50,10),
-                   name="Generic actuarial table",
-                   interest=0.03
-         )
+		 slots = c(interest = "numeric"),
+		 contains = "lifetable"
 )
 
 #METHODS DEFINITIONS
@@ -66,7 +64,10 @@ setClass("actuarialtable",
 
 setMethod(f="initialize",
           signature="lifetable",
-          definition=function(.Object, x = 0:3, lx=c(100,90, 50, 10), name="Generic life table") {
+		  definition=function(.Object,
+							  x = .LIFETABLE_DEFAULT_X,
+							  lx = .LIFETABLE_DEFAULT_LX,
+							  name = .LIFETABLE_DEFAULT_NAME) {
             
             if(length(x) != length(lx)) stop("length of x and lx must be equal")
           
@@ -76,7 +77,8 @@ setMethod(f="initialize",
               lx <- lx[-posToRemove]
             }
             
-            # order by increasing value of x
+			# Normalize user input before validity checks.
+			# This makes object creation deterministic across call sites.
             o <- order(x)
             x <- x[o]
             lx <- lx[o]
@@ -92,23 +94,13 @@ setMethod(f="initialize",
 
 setMethod(f="initialize",
           signature="actuarialtable",
-          definition=function(.Object, x = 0:3, lx=c(100,90, 50, 10), name="Generic life table", interest=0.03) {
-            if(length(x) != length(lx)) stop("length of x and lx must be equal")
-            
-            posToRemove <- which(lx %in% c(0,NA))
-            if(length(posToRemove) > 0) {
-              x <- x[-posToRemove]
-              lx <- lx[-posToRemove]
-            }
-            
-            # order by increasing value of x
-            o <- order(x)
-            x <- x[o]
-            lx <- lx[o]
-            
-            .Object@x <- x
-            .Object@lx <- lx
-            .Object@name <- name
+					definition=function(.Object,
+															x = .LIFETABLE_DEFAULT_X,
+															lx = .LIFETABLE_DEFAULT_LX,
+															name = .ACTUARIALTABLE_DEFAULT_NAME,
+															interest = .ACTUARIALTABLE_DEFAULT_INTEREST) {
+						# Reuse lifetable initialization logic to keep both classes aligned.
+						.Object <- callNextMethod(.Object, x=x, lx=lx, name=name)
             .Object@interest <- interest
             validObject(.Object)
             return(.Object)
@@ -119,6 +111,7 @@ setMethod(f="initialize",
 #validity method for lifetable object
 setValidity("lifetable",
 		function(object) {
+			# Return all failing constraints at once for clearer diagnostics.
 			check <- character(0)
 			if(length(object@x)!=length(object@lx)) 
 			  check <- c(check, "x and lx do not match in length")
@@ -146,47 +139,45 @@ setValidity("lifetable",
 #function to create lifetable cols
 .createLifeTableCols<-function(object)
 {
-	omega<-length(object@lx)+1
 	#vector used to obtain px
 	lxplus<-object@lx[2:length(object@lx)]
 	lxplus<-c(lxplus,0)
-	#ex
+	# Under UDD (fxt = 0.5 in Lxt), Lx = lx - 0.5*dx = (lx + lx+1)/2.
+	Lx <- 0.5 * (object@lx + lxplus)
+	# Tx is the backward cumulative sum of Lx.
+	Tx <- rev(cumsum(rev(Lx)))
+	# ex is intentionally computed via exn() to keep this output aligned
+	# with the package's expected-lifetime implementation.
 	lenlx=length(object@lx)
-	Tx=numeric(lenlx)
-	Lx=numeric(lenlx)
 	exni=numeric(lenlx)
-	for(i in 1:lenlx) Tx[i]=sum(object@lx[i:lenlx])
-	#for(i in 1:lenlx) Lx[i]=Lxt(object=object, x=i) # 1:lenlx prima object@x
-	for(i in 1:lenlx) exni[i]=exn(object=object, x=i-1,type="curtate") #prima x=i e come sopra e c'era complete
-	out<-data.frame(x=object@x, lx=object@lx,px=lxplus/object@lx, 
-			ex=exni)
+	for(i in seq_len(lenlx)) exni[i]=exn(object=object, x=i-1,type="curtate") #prima x=i e come sopra e c'era complete
+	out<-data.frame(x=object@x, lx=object@lx,px=lxplus/object@lx,
+			Lx=Lx, Tx=Tx, ex=exni)
 	#remove last row
 	out<-out[1:(nrow(out)-1),]
 	rownames(out)=NULL
 	return(out)
 }
 
+.printLifetable <- function(object)
+{
+	cat(paste("Life table",object@name),"\n")
+	cat("\n")
+	print(.createLifeTableCols(object))
+	cat("\n")
+}
+
 #show method 4 lifetable: prints x, lx, px, ex
 setMethod("show","lifetable", #metodo show
 		function(object){
-			cat(paste("Life table",object@name),"\n")
-			cat("\n")
-			
-			out<-.createLifeTableCols(object)
-			print(out)
-			cat("\n")
+			.printLifetable(object)
 		}
 )
 
 #show method 4 lifetable: prints x, lx, px, ex
 setMethod("print","lifetable", #metodo show
 		function(x){
-			cat(paste("Life table",x@name),"\n")
-			cat("\n")
-			
-			out<-.createLifeTableCols(x)
-			print(out)
-			cat("\n")
+			.printLifetable(x)
 		}
 )
 
@@ -233,25 +224,20 @@ setMethod("tail",
 #internal function to create the actuarial table object
 .createActuarialTableCols<-function(object)
 {
-	omega<-length(object@lx)+1
 	#vector used to obtain px
 	lxplus<-object@lx[2:length(object@lx)]
 	lxplus<-c(lxplus,0)
 	#Dx
 	Dx=object@lx*(1+object@interest)^(-object@x)
-	lnDx=length(Dx)
 	#Cx
 	dx=object@lx-lxplus
 	Cx=dx*(1+object@interest)^(-object@x-1)	
-	#Nx
-	Nx=numeric(length(Dx))
-	for(i in 1:length(Dx)) Nx[i]=sum(Dx[i:lnDx])
+	#Nx: cumulative commutation sum from last age backward.
+	Nx=rev(cumsum(rev(Dx)))
 	#Mx
 	Mx=Dx-(object@interest/(1+object@interest))*Nx
-	#Rx
-	Rx=numeric(length(Mx))
-	lnMx=length(Mx)
-	for(i in 1:length(Rx)) Rx[i]=sum(Mx[i:lnMx])
+	#Rx: cumulative sum of Mx from last age backward.
+	Rx=rev(cumsum(rev(Mx)))
 	out<-data.frame(x=object@x, lx=object@lx, Dx=Dx, Nx=Nx, Cx=Cx,
 			Mx=Mx, Rx=Rx)
 	rownames(out)=NULL
@@ -259,15 +245,17 @@ setMethod("tail",
 	
 }
 
+.printActuarialtable <- function(object)
+{
+	cat(paste("Actuarial table ",object@name, "interest rate ", object@interest*100,"%"),"\n")
+	cat("\n")
+	print(.createActuarialTableCols(object=object))
+	cat("\n")
+}
+
 setMethod("show","actuarialtable", #metodo show
 		function(object){
-			out<-NULL
-			cat(paste("Actuarial table ",object@name, "interest rate ", object@interest*100,"%"),"\n")
-			cat("\n")
-			#create the actuarial table object
-			out<-.createActuarialTableCols(object=object)
-			print(out)
-			cat("\n")
+			.printActuarialtable(object)
 		}
 )
 
@@ -275,14 +263,7 @@ setMethod("show","actuarialtable", #metodo show
 
 setMethod("print","actuarialtable", #metodo show
 		function(x){
-			out<-NULL
-			cat(paste("Actuarial table ",x@name, "interest rate ", 
-							x@interest*100,"%"),"\n")
-			cat("\n")
-			#create the actuarial table object
-			out<-.createActuarialTableCols(object=x)
-			print(out)
-			cat("\n")
+			.printActuarialtable(x)
 		}
 )
 

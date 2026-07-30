@@ -350,8 +350,11 @@ exampleActDf <- as(exampleAct, "data.frame")
 ### code chunk number 38: toMarkovChain
 ###################################################
 data(soa08)
-require(markovchain)
-soa08Mc<-as(soa08,"markovchainList")
+if (requireNamespace("markovchain", quietly = TRUE) && methods::canCoerce(soa08, "markovchainList")) {
+  soa08Mc<-as(soa08,"markovchainList")
+} else {
+  message("'markovchain' package or S4 coercion method unavailable: skipping lifetable -> markovchainList conversion.")
+}
 
 
 ###################################################
@@ -723,8 +726,11 @@ valdezMdt<-new("mdt",name="ValdezExample",table=valdezDf)
 ### code chunk number 71: md3b
 ###################################################
 valdezDf<-as(valdezMdt,"data.frame")
-require(markovchain)
-valdezMarkovChainList<-as(valdezMdt,"markovchainList")
+if (requireNamespace("markovchain", quietly = TRUE) && methods::canCoerce(valdezMdt, "markovchainList")) {
+  valdezMarkovChainList<-as(valdezMdt,"markovchainList")
+} else {
+  message("'markovchain' package or S4 coercion method unavailable: skipping mdt -> markovchainList conversion.")
+}
 
 
 ###################################################
@@ -850,5 +856,3 @@ axnmdt.firsttype(DAT,65,10,payment="arrears",i=0.03,delta=0.02)
 #Last case equal to axn
 axnmdt.firsttype(DAT,65,10,payment="arrears",delta=0)
 axn(DAT,65,10,payment="arrears")
-
-

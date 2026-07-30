@@ -85,7 +85,7 @@ statistical programming environment \citep{rSoftware} has become the
 primary reference software for academics. Even in a business context,
 \proglang{R} is now considered a valid alternative to affirmed
 proprietary packages for statistics and data analysis, namely
-\proglang{SAS} \citep{SAS}, \proglang{MATLAB} \citep{MATLAB} and
+\proglang{SAS} \citep{sas}, \proglang{MATLAB} \citep{matlab} and
 \proglang{SPSS} \citep{SPSS}. Some packages for actuarial applications
 have already been developed within \proglang{R}. However, most of them
 mainly focus on non-life insurance. In fact, non-life insurance
@@ -95,7 +95,7 @@ distributions and perform credibility analysis are provided within the
 package \pkg{actuar} \citep{Dutang2008}. This package represents the
 computational side of the classical actuarial textbook on loss
 distribution \citep{klugman2009loss}. The package \pkg{ChainLadder}
-\citep{chainLadder} provides functions that are capable of estimating
+\citep{ChainLadder} provides functions that are capable of estimating
 loss reserves for non-life insurance. Generalized linear models
 (GLMs), widely used in non-life insurance rate-making, can be fit by
 functions bundled within base \proglang{R} distributions. The
@@ -125,7 +125,7 @@ theoretical concepts exposed in textbooks like the classical
 actuarial mathematics and \cite{broverman2008mathematics} for
 financial mathematics. Package \pkg{lifecontingencies} is available from
 the Comprehensive \proglang{R} Archive Network at
-\url{http://CRAN.R-project.org/package=lifecontingencies}. The examples used throughout this
+\url{https://cran.r-project.org/package=lifecontingencies}. The examples used throughout this
 paper have been taken from \cite{mathFinAct} and \cite{finanMLC}, both
 freely available financial and actuarial mathematics textbooks. The
 paper is structured as follows: Section~\ref{sec:statistics} outlines
@@ -1044,8 +1044,11 @@ table as non - homogeneous discrete Markov chain by means of
 
 <<toMarkovChain, keep.source=TRUE>>=
 data(soa08)
-require(markovchain)
-soa08Mc<-as(soa08,"markovchainList")
+if (requireNamespace("markovchain", quietly = TRUE) && methods::canCoerce(soa08, "markovchainList")) {
+  soa08Mc<-as(soa08,"markovchainList")
+} else {
+  message("'markovchain' package or S4 coercion method unavailable: skipping lifetable -> markovchainList conversion.")
+}
 @
 
 Finally, a \code{plot} method can be applied to either\code{lifetable} or
@@ -1816,7 +1819,7 @@ The probability that a life $x$ will leave the group within one year as a result
 Examples in this paper are worked on slides provided in \cite{valdezSlides}.
 
 We create a \code{mdt} class object. We can use the first example found on
-\cite[p. 4]{valdezSlide}.
+\cite[p. 4]{valdezSlides}.
 
 <<mdt1,  keep.source=TRUE>>=
 valdezDf<-data.frame(
@@ -1871,8 +1874,11 @@ print(valdezMdt)
  
 <<md3b, keep.source=TRUE>>=
 valdezDf<-as(valdezMdt,"data.frame")
-require(markovchain)
-valdezMarkovChainList<-as(valdezMdt,"markovchainList")
+if (requireNamespace("markovchain", quietly = TRUE) && methods::canCoerce(valdezMdt, "markovchainList")) {
+  valdezMarkovChainList<-as(valdezMdt,"markovchainList")
+} else {
+  message("'markovchain' package or S4 coercion method unavailable: skipping mdt -> markovchainList conversion.")
+}
 @
 
 Two specific methods have been defined for \code{mdt} class objects:

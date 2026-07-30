@@ -676,7 +676,7 @@ getLifecontingencyPvXyz<-function(deathsTimeXyz,lifecontingency, tablesList, x,t
 #' @param include.t0 should initial status to be included (default is TRUE)?
 #' @return A matrix with n columns (the length of simulation) and either t (if initial status 
 #' is not included) or t+1 rows.
-#' @author Giorgio Spedicato
+#' @author Giorgio Alfredo Spedicato
 #' 
 #' @section Details:
 #' The functin uses \code{rmarkovchain} function from markovchain package to simulate the chain
@@ -690,8 +690,17 @@ getLifecontingencyPvXyz<-function(deathsTimeXyz,lifecontingency, tablesList, x,t
 #' 
 
 rmdt<-function(n=1,object, x=0,t=1,t0="alive", include.t0=TRUE) {
-	#require(markovchain)
-	mcList<-as(object, "markovchainList")
+	if (!.require_markovchain("rmdt")) {
+		return(invisible(NULL))
+	}
+	if (methods::canCoerce(object, "markovchainList")) {
+		mcList <- as(object, "markovchainList")
+	} else {
+		mcList <- .mdt_to_markovchain_list(object)
+	}
+	if (is.null(mcList)) {
+		return(invisible(NULL))
+	}
 	initialVal<-rep(t0,n)
 	endSim<-min(t,getOmega(object)-x)
 	row.names<-character()
@@ -712,7 +721,7 @@ rmdt<-function(n=1,object, x=0,t=1,t0="alive", include.t0=TRUE) {
 		row.names <- c(row.names,mcList[[x+i+1]]@name)  
     for(j in 1:n) {
       #this simulate the transition between period t and period t+1
-      simJ <- rmarkovchain(n=1,object=mcList[[x+i]],t0=initialVal[j])
+      simJ <- markovchain::rmarkovchain(n=1,object=mcList[[x+i]],t0=initialVal[j])
       simulations[j] <- simJ
 		  
     }

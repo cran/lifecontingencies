@@ -41,5 +41,5 @@ ciao<-rmdt(n=5,object = myMdt,x = 0,t = 4,include.t0=FALSE,t0="alive")
 \code{\link{rLifeContingenciesXyz}},\code{\link{rLifeContingencies}}
 }
 \author{
-Giorgio Spedicato
+Giorgio Alfredo Spedicato
 }

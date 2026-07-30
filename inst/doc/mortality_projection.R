@@ -1,7 +1,7 @@
 ### R code from vignette source 'mortality_projection.Rnw'
 
 ###################################################
-### code chunk number 1: mortality_projection.Rnw:66-67
+### code chunk number 1: mortality_projection.Rnw:68-69
 ###################################################
 options(width=80, prompt='R>')
 
@@ -329,7 +329,7 @@ cbd_lifetable_1950<-probs2lifetable(probs=cbd_qx_1950,type = "qx",
 
 
 ###################################################
-### code chunk number 30: mortality_projection.Rnw:510-513
+### code chunk number 30: mortality_projection.Rnw:512-515
 ###################################################
 exn(lc_lifetable_1950,x=65)
 #exn(rh_lifetable_1950,x=65)
@@ -350,5 +350,3 @@ cdb_acttbl_1950<-new("actuarialtable",x=cbd_lifetable_1950@x,lx=cbd_lifetable_19
 axn(actuarialtable = lc_acttbl_1950,x=65)
 #axn(actuarialtable = rh_acttbl_1950,x=65)
 axn(actuarialtable = cdb_acttbl_1950,x=65)
-
-
