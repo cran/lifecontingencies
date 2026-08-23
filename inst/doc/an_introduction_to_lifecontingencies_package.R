@@ -371,7 +371,25 @@ plot(soa08Act, type="l",col="steelblue")
 
 
 ###################################################
-### code chunk number 41: probabilityAndDemographics
+### code chunk number 41: autoplot-lifetable
+###################################################
+library(lifecontingencies)
+
+lt <- new("lifetable",
+          x = 0:3,
+          lx = c(100, 90, 50, 10))
+
+ggplot2::autoplot(lt)
+
+
+###################################################
+### code chunk number 42: autoplot-actuarialtable
+###################################################
+ggplot2::autoplot(soa08Act)
+
+
+###################################################
+### code chunk number 43: probabilityAndDemographics
 ###################################################
 demoEx1<-pxt(ips55M,20,1)
 demoEx2<-qxt(ips55M,30,2) 
@@ -380,7 +398,7 @@ c(demoEx1,demoEx2,demoEx3)
 
 
 ###################################################
-### code chunk number 42: mxAndqx
+### code chunk number 44: mxAndqx
 ###################################################
 mx20t1 <- mxt(ips55M,20,1)
 qx20t1 <- mx2qx(mx20t1)
@@ -388,7 +406,7 @@ c(mx20t1,qx20t1)
 
 
 ###################################################
-### code chunk number 43: fractionalAges
+### code chunk number 45: fractionalAges
 ###################################################
 data("soa08Act")
 pxtLin <- pxt(soa08Act,80,0.5,"linear") 
@@ -398,7 +416,7 @@ c(pxtLin,pxtCnst,pxtHyph)
 
 
 ###################################################
-### code chunk number 44: moreThanOneHead
+### code chunk number 46: moreThanOneHead
 ###################################################
 tablesList <- list(ips55M, ips55F)
 jsp <- pxyzt(tablesList, x=c(65,63), t=2)
@@ -408,7 +426,7 @@ c(jsp,lsp,jelt)
 
 
 ###################################################
-### code chunk number 45: lifeIns1
+### code chunk number 47: lifeIns1
 ###################################################
 data(soa08Act)
 UComm <- Axn(actuarialtable=soa08Act, x=25, n=65-25, k=12)
@@ -418,14 +436,14 @@ c(UComm, UCpt)
 
 
 ###################################################
-### code chunk number 46: lifeIns2
+### code chunk number 48: lifeIns2
 ###################################################
 P <- UCpt/axn(actuarialtable=soa08Act,x=25,n=10)
 P
 
 
 ###################################################
-### code chunk number 47: lifeIns3
+### code chunk number 49: lifeIns3
 ###################################################
 (10 + 1 ) * Axn(actuarialtable=soa08Act, x=25, n=10) 
 DAxn(actuarialtable = soa08Act, x=25, n=10) + 
@@ -433,7 +451,7 @@ IAxn(actuarialtable = soa08Act, x=25, n=10)
 
 
 ###################################################
-### code chunk number 48: annuity1
+### code chunk number 50: annuity1
 ###################################################
 UCpt <- axn(actuarialtable=soa08Act, x=75, m=10)
 UComm <- with(soa08ActDf,Nx[86]/Dx[76])
@@ -441,7 +459,7 @@ c(UCpt,UComm)
 
 
 ###################################################
-### code chunk number 49: annuity2
+### code chunk number 51: annuity2
 ###################################################
 P=axn(actuarialtable=soa08Act, x=75, m=10) / 
 		axn(actuarialtable=soa08Act, x=75, n=5)
@@ -453,7 +471,7 @@ PComm
 
 
 ###################################################
-### code chunk number 50: annuity3
+### code chunk number 52: annuity3
 ###################################################
 U <- axn(actuarialtable=soa08Act, x=75, m=10, k=12)
 P <- axn(actuarialtable=soa08Act, x=75, m=10, k=12) / 
@@ -462,7 +480,7 @@ c(U,P)
 
 
 ###################################################
-### code chunk number 51: lifeInsuranceBenefitReserve
+### code chunk number 53: lifeInsuranceBenefitReserve
 ###################################################
 P=100000 * Axn(soa08Act,x=25,n=40)/axn(soa08Act,x=25,n=40)
 reserveFun = function(t) return(100000*Axn(soa08Act,x=25+t,n=40-t)-P*
@@ -473,7 +491,7 @@ for(t in 0:40) {if(t%%5==0) cat("At time ",t,
 
 
 ###################################################
-### code chunk number 52: annuityReserve
+### code chunk number 54: annuityReserve
 ###################################################
 yearlyRate <- 12000
 irate <- 0.02
@@ -497,7 +515,7 @@ dataAnnuityRes <- data.frame(years=years, reserve=annuityRes)
 
 
 ###################################################
-### code chunk number 53: annuityReserveGraph
+### code chunk number 55: annuityReserveGraph
 ###################################################
 plot(y=dataAnnuityRes$reserve, x=dataAnnuityRes$years,
 col="steelblue", main="Deferred annuity benefit reserve",
@@ -505,7 +523,7 @@ ylab="amount",xlab="years",type="l")
 
 
 ###################################################
-### code chunk number 54: expAugmented
+### code chunk number 56: expAugmented
 ###################################################
 G <- (100000*Axn(soa08Act, x=35) + (2.5*100000/1000 + 25)*
 			axn(soa08Act,x=35))/((1-.1)*axn(soa08Act,x=35))
@@ -513,7 +531,7 @@ G
 
 
 ###################################################
-### code chunk number 55: twoHeadsAnnuitImmediate
+### code chunk number 57: twoHeadsAnnuitImmediate
 ###################################################
 twoLifeTables <- list(maleTable=soa08Act, femaleTable=soa08Act)
 axn(soa08Act, x=65,m=1)+axn(soa08Act, x=70,m=1)-
@@ -522,7 +540,7 @@ axyzn(tablesList=twoLifeTables, x=c(65,y=70), status="last",m=1)
 
 
 ###################################################
-### code chunk number 56: revesionaryAnuity
+### code chunk number 58: revesionaryAnuity
 ###################################################
 axn(actuarialtable = soa08Act, x=60,m=1)-
 		axyzn(tablesList = twoLifeTables, 
@@ -530,13 +548,13 @@ axn(actuarialtable = soa08Act, x=60,m=1)-
 
 
 ###################################################
-### code chunk number 57: rLife1
+### code chunk number 59: rLife1
 ###################################################
 rLife(n = 5, object = soa08Act, x = 45, type = "Kx")
 
 
 ###################################################
-### code chunk number 58: rLife2
+### code chunk number 60: rLife2
 ###################################################
 futureLifetimes <- as.data.frame(rLifexyz(n=numSim, 
 				tablesList=list(husband=ips55M,wife=ips55F),
@@ -548,7 +566,7 @@ mean(futureLifetimes$widowance)
 
 
 ###################################################
-### code chunk number 59: widowanceFig
+### code chunk number 61: widowanceFig
 ###################################################
 hist(futureLifetimes$widowance, freq=FALSE, main="Distribution of widowance yars",
 			xlab="Widowance years", col="steelblue", nclass=100);abline(v=mean(futureLifetimes$widowance), 
@@ -556,7 +574,7 @@ hist(futureLifetimes$widowance, freq=FALSE, main="Distribution of widowance yars
 
 
 ###################################################
-### code chunk number 60: AxnAPVAndStochastic
+### code chunk number 62: AxnAPVAndStochastic
 ###################################################
 APVAxn <- Axn(soa08Act,x=25,n=40,type="EV")
 APVAxn
@@ -585,7 +603,7 @@ c(tt1, tt2,tt3, tt4)
 
 
 ###################################################
-### code chunk number 61: figsim
+### code chunk number 63: figsim
 ###################################################
 	par(mfrow=c(2,2))
 	hist(sampleAxn, main="Term Insurance", xlab="Actuarial present value",nclass=50, col="steelblue",freq=FALSE);abline(v=APVAxn, col="red", lwd=2)
@@ -595,7 +613,7 @@ c(tt1, tt2,tt3, tt4)
 
 
 ###################################################
-### code chunk number 62: randomMultipleLifeCon
+### code chunk number 64: randomMultipleLifeCon
 ###################################################
 tablesList=list(soa08Act,soa08Act);x=c(60,60);m=0;status="last";t=30;k=1
 APVAxyz<-Axyzn(tablesList=tablesList,x=x,n=t,status=status,type="EV")
@@ -612,21 +630,21 @@ c(tt5,tt6)
 
 
 ###################################################
-### code chunk number 63: variance
+### code chunk number 65: variance
 ###################################################
 var(sampleAxn)
 Axn(soa08Act, x=25,n=40, power=2)-Axn(soa08Act, x=25,n=40, power=1)^2
 
 
 ###################################################
-### code chunk number 64: benefitPremium1
+### code chunk number 66: benefitPremium1
 ###################################################
 APV <- Axn(actuarialtable = soa08Act, x=25, n=40)
 APV
 
 
 ###################################################
-### code chunk number 65: benefitPremium2
+### code chunk number 67: benefitPremium2
 ###################################################
 samples <- rLifeContingencies(n=numSim, lifecontingency = "Axn", 
 		object= soa08Act, x=25,t=40,parallel=FALSE)
@@ -635,14 +653,14 @@ pct90Pr
 
 
 ###################################################
-### code chunk number 66: benefitPremium3
+### code chunk number 68: benefitPremium3
 ###################################################
 pct90Pr2 <- qnorm(p=0.90,mean=APV, sd=sd(samples)/sqrt(1000))
 pct90Pr2
 
 
 ###################################################
-### code chunk number 67: stochasticExampleFull1
+### code chunk number 69: stochasticExampleFull1
 ###################################################
 nsim <- 50
 employees <- 100
@@ -674,7 +692,7 @@ clusterExport(cl, varlist=c("employees","getEmployeeBenefit",
 
 
 ###################################################
-### code chunk number 68: stochasticExampleFull2
+### code chunk number 70: stochasticExampleFull2
 ###################################################
 employeeBenefits <- numeric(employees)
 employeeBenefits <- parSapply(cl, 1:employees,getEmployeeBenefit, type="EV")
@@ -704,7 +722,7 @@ totalBookedCost
 
 
 ###################################################
-### code chunk number 69: mdt1
+### code chunk number 71: mdt1
 ###################################################
 valdezDf<-data.frame(
 		x=c(50:54),
@@ -717,13 +735,13 @@ valdezMdt<-new("mdt",name="ValdezExample",table=valdezDf)
 
 
 ###################################################
-### code chunk number 70: md3a (eval = FALSE)
+### code chunk number 72: md3a (eval = FALSE)
 ###################################################
 ## print(valdezMdt)
 
 
 ###################################################
-### code chunk number 71: md3b
+### code chunk number 73: md3b
 ###################################################
 valdezDf<-as(valdezMdt,"data.frame")
 if (requireNamespace("markovchain", quietly = TRUE) && methods::canCoerce(valdezMdt, "markovchainList")) {
@@ -734,20 +752,20 @@ if (requireNamespace("markovchain", quietly = TRUE) && methods::canCoerce(valdez
 
 
 ###################################################
-### code chunk number 72: mdt4
+### code chunk number 74: mdt4
 ###################################################
 getOmega(valdezMdt)
 getDecrements(valdezMdt)
 
 
 ###################################################
-### code chunk number 73: summary.mdt
+### code chunk number 75: summary.mdt
 ###################################################
 summary(valdezMdt)
 
 
 ###################################################
-### code chunk number 74: mdt.dx1
+### code chunk number 76: mdt.dx1
 ###################################################
 dxt(valdezMdt,x=51,decrement="other")
 dxt(valdezMdt,x=51,t=2, decrement="other")
@@ -755,7 +773,7 @@ dxt(valdezMdt,x=51)
 
 
 ###################################################
-### code chunk number 75: mdt.dx2
+### code chunk number 77: mdt.dx2
 ###################################################
 dxt(valdezMdt,x=51,t=2, decrement="other")
 pxt(valdezMdt,x=50,t=3)
@@ -763,25 +781,25 @@ qxt(valdezMdt,x=53,t=2,decrement=1)
 
 
 ###################################################
-### code chunk number 76: mdt.randomSamples
+### code chunk number 78: mdt.randomSamples
 ###################################################
 rmdt(n = 2,object = valdezMdt,x = 50,t = 2)
 
 
 ###################################################
-### code chunk number 77: mdt.udd1
+### code chunk number 79: mdt.udd1
 ###################################################
 qxt.prime.fromMdt(object = valdezMdt,x=53, decrement="accidents")
 
 
 ###################################################
-### code chunk number 78: mdt.udd2
+### code chunk number 80: mdt.udd2
 ###################################################
 qxt.fromQxprime(qx.prime = 0.01,other.qx.prime = c(0.03,0.06))
 
 
 ###################################################
-### code chunk number 79: mdt.act1
+### code chunk number 81: mdt.act1
 ###################################################
 myTable<-data.frame(x=c(16,17,18),
   lx=c(20000,17600,14520),
@@ -792,13 +810,13 @@ myMdt<-new("mdt",table=myTable,name="Sample")
 
 
 ###################################################
-### code chunk number 80: mdt.act2
+### code chunk number 82: mdt.act2
 ###################################################
 Axn.mdt(object=myMdt,x=16,i=.1,decrement="da")
 
 
 ###################################################
-### code chunk number 81: deadifalco.1a
+### code chunk number 83: deadifalco.1a
 ###################################################
 axnmdt.firsttype<-function (object, x, n, i , payment="advance", delta=0) {
   #delta is the annuity indexing
@@ -844,7 +862,7 @@ axnmdt.firsttype<-function (object, x, n, i , payment="advance", delta=0) {
 
 
 ###################################################
-### code chunk number 82: deadifalco.1b
+### code chunk number 84: deadifalco.1b
 ###################################################
 data("de_angelis_di_falco")
 HealthyMaleTable2013 <- de_angelis_di_falco$HealthyMaleTable2013

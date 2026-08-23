@@ -1,7 +1,7 @@
 Package: lifecontingencies
 Type: Package
 Title: Financial and Actuarial Mathematics for Life Contingencies
-Version: 1.5.2
+Version: 1.6.0
 Authors@R: c(person("Giorgio Alfredo", "Spedicato", role = c("aut", "cre"),
     email = "spedicato_giorgio@yahoo.it",comment = c(ORCID = "0000-0002-0315-8888")),
     person("Christophe", "Dutang", role = "ctb",comment = c(ORCID = "0000-0001-6732-1501")),
@@ -17,7 +17,7 @@ Description: Classes and methods that allow the user to manage life table,
     perform demographic, financial and actuarial mathematics on life contingencies
     insurances calculations are contained therein. See Spedicato (2013)	<doi:10.18637/jss.v055.i10>.
 Depends: R (>= 4.1.0), methods
-Imports: parallel, utils, Rcpp (>= 1.0.0), stats
+Imports: ggplot2, parallel, utils, Rcpp (>= 1.0.0), stats
 Suggests: demography, forecast, markovchain, testthat, knitr, formatR,
         StMoMo, rmarkdown
 License: MIT + file LICENSE
@@ -29,9 +29,9 @@ BuildVignettes: yes
 VignetteBuilder: utils, knitr
 URL: https://github.com/spedygiorgio/lifecontingencies
 LinkingTo: Rcpp
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0
 NeedsCompilation: yes
-Packaged: 2026-07-30 13:15:23 UTC; LEI00010
+Packaged: 2026-08-23 18:35:18 UTC; Utente
 Author: Giorgio Alfredo Spedicato [aut, cre] (ORCID:
     <https://orcid.org/0000-0002-0315-8888>),
   Christophe Dutang [ctb] (ORCID:
@@ -44,4 +44,4 @@ Author: Giorgio Alfredo Spedicato [aut, cre] (ORCID:
     <https://orcid.org/0000-0001-6795-4595>),
   Ivan Williams [ctb]
 Repository: CRAN
-Date/Publication: 2026-07-30 15:50:07 UTC
+Date/Publication: 2026-08-23 19:20:02 UTC
