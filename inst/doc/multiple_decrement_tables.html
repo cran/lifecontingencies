@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Giorgio Alfredo Spedicato" />
+
+
+<title>Multiple decrement tables in lifecontingencies</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Multiple decrement tables in
+lifecontingencies</h1>
+<h4 class="author">Giorgio Alfredo Spedicato</h4>
+<h4 class="date">10 ottobre, 2026</h4>
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Until now no R package provided a good tool to manage multiple
+decrement tables, even if <span class="citation">Deshmukh (2012)</span>
+gives an R-based treatment of multiple decrement tables with
+applications. The topic is deeply related to multistate analysis of life
+histories, on which <span class="citation">Willekens (2014)</span>
+provide a very good introduction. The <code>mdt</code> class of
+<strong>lifecontingencies</strong> has been specifically engineered to
+manage multiple decrement models in R.</p>
+<p>This vignette walks through the whole workflow the package supports
+around multiple decrements: creating and validating a combined
+<code>mdt</code> table, computing decrement probabilities from it,
+deriving the Associated Single Decrement Table (ASDT) implied by each
+cause under the uniform distribution of decrements (UDD) assumption,
+using a <code>mdt</code> object in actuarial insurance and annuity
+calculations, and finally building a real, cause-specific
+<code>mdt</code> object end-to-end from an official government mortality
+report. For a shorter, self-contained example see the “Multiple
+Decrement Models” section of the main package vignette
+(<code>vignette(&quot;an_introduction_to_lifecontingencies_package&quot;, package = &quot;lifecontingencies&quot;)</code>);
+this vignette develops the same material in full.</p>
+<p>Following the notation in <span class="citation">Finan (2014)</span>,
+let <span class="math inline">\(l_x^{(\tau)} = \sum_{j=1\ldots m}
+l_x^{(j)}\)</span> be the survivors to age <span class="math inline">\(x\)</span> that will, at future ages, be fully
+depleted by <span class="math inline">\(m\)</span> causes of decrement.
+<span class="math inline">\(d_x^{(j)} = l_x^{(j)} -
+l_{x+1}^{(j)}\)</span> is the expected number of lives exiting the
+population between ages <span class="math inline">\(x\)</span> and <span class="math inline">\(x+1\)</span> due to decrement <span class="math inline">\(j\)</span>, so that <span class="math inline">\({}_nd_x^{(j)} = \sum_{t=0\ldots n-1}
+d_{x+t}^{(j)}\)</span>. The probability that a life aged <span class="math inline">\(x\)</span> will leave the group within one year as
+a result of decrement <span class="math inline">\(j\)</span> is <span class="math inline">\({}_nq_x^{(j)} =
+\dfrac{{}_nd_x^{(j)}}{l_x^{(\tau)}}\)</span>, so that <span class="math inline">\(q_x^{(\tau)} = \sum_{j=1}^m q_x^{(j)}\)</span> and
+<span class="math inline">\({}_tq_x^{(\tau)} = 1 - {}_tp_x^{(\tau)} =
+\sum_j {}_tq_x^{(j)}\)</span>.</p>
+</div>
+<div id="the-mdt-class" class="section level2">
+<h2>The mdt class</h2>
+<p>Examples in this section are worked on slides provided by <span class="citation">Valdez (2011)</span> (p. 4). We create a
+<code>mdt</code> class object:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>valdezDf <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">50</span><span class="sc">:</span><span class="dv">54</span>),</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="at">lx =</span> <span class="fu">c</span>(<span class="dv">4832555</span>, <span class="dv">4821937</span>, <span class="dv">4810206</span>, <span class="dv">4797185</span>, <span class="dv">4782737</span>),</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="at">heart =</span> <span class="fu">c</span>(<span class="dv">5168</span>, <span class="dv">5363</span>, <span class="dv">5618</span>, <span class="dv">5929</span>, <span class="dv">6277</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="at">accidents =</span> <span class="fu">c</span>(<span class="dv">1157</span>, <span class="dv">1206</span>, <span class="dv">1443</span>, <span class="dv">1679</span>, <span class="dv">2152</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="at">other =</span> <span class="fu">c</span>(<span class="dv">4293</span>, <span class="dv">5162</span>, <span class="dv">5960</span>, <span class="dv">6840</span>, <span class="dv">7631</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>)</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>valdezMdt <span class="ot">&lt;-</span> <span class="fu">new</span>(<span class="st">&quot;mdt&quot;</span>, <span class="at">name =</span> <span class="st">&quot;ValdezExample&quot;</span>, <span class="at">table =</span> valdezDf)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="do">## Added fictional decrement below last x and completed x and lx until zero.... </span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="do">## Completed the table at top, all decrements on first cause</span></span></code></pre></div>
+<p>The <code>mdt</code> class is an S4 class object <span class="citation">(Chambers 2008)</span> comprised of a character slot
+<code>name</code> and a <code>data.frame</code> slot <code>table</code>,
+made of:</p>
+<ol style="list-style-type: decimal">
+<li><code>x</code>: the age, from 0 to <span class="math inline">\(\omega\)</span>.</li>
+<li><code>lx</code>: the subjects living (at risk) at the beginning of
+age <span class="math inline">\(x\)</span>.</li>
+<li>one or more columns for the different causes of decrement.</li>
+</ol>
+<p>Values within <code>table</code> represent the absolute number of
+subjects at risk at the beginning of age <span class="math inline">\(x\)</span> dying of cause <span class="math inline">\(j\)</span> during the period <span class="math inline">\(x\)</span> to <span class="math inline">\(x+1\)</span>.</p>
+<p><code>setValidity</code> performs consistency checks when a
+<code>mdt</code> object is created. In particular it verifies that:</p>
+<ol style="list-style-type: decimal">
+<li><code>x</code> and <code>lx</code> exist and are consistent:
+<code>x</code> starts from 0 and increases by one, and <span class="math inline">\(l_x = l_{x-1} - (d_{x-1,1} + d_{x-1,2} + \ldots +
+d_{x-1,k})\)</span> for every <span class="math inline">\(x\)</span>.</li>
+<li>If the decrements (or <code>x</code> and <code>lx</code>) are
+supplied only for a partial age range, the table is completed below
+assuming a decrement rate of <code>0.01</code> for the first cause of
+death. This rate can be changed via the
+<code>bottomCompletionSurvival</code> argument of
+<code>new(&quot;mdt&quot;, ...)</code> (default <code>0.99</code>, i.e. a 0.01
+decrement rate, unchanged from previous releases); it only affects the
+synthetically reconstructed ages below the lowest age actually supplied
+and leaves all originally supplied rows untouched.</li>
+<li>If the decrements at the last supplied age <span class="math inline">\(\omega\)</span> do not sum to <span class="math inline">\(l_\omega\)</span>, the table is extended by one
+row such that <span class="math inline">\(l_{\omega+1} = l_\omega -
+(d_{\omega,1} + d_{\omega,2} + \ldots + d_{\omega,j})\)</span>.</li>
+</ol>
+<p>The internal function <code>.tableSanitizer</code> implements this
+completion logic and reports on the console what it did. The table can
+be viewed with <code>print</code> and <code>show</code> (output omitted
+here for brevity), and coerced to a <code>data.frame</code>. Coercion to
+a <code>markovchainList</code> object needs the
+<strong>optional</strong> <strong>markovchain</strong> package: the
+chunk below is evaluated only when that package is installed, and is
+skipped otherwise.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">print</span>(valdezMdt)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>valdezDf2 <span class="ot">&lt;-</span> <span class="fu">as</span>(valdezMdt, <span class="st">&quot;data.frame&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>valdezMarkovChainList <span class="ot">&lt;-</span> <span class="fu">as</span>(valdezMdt, <span class="st">&quot;markovchainList&quot;</span>)</span></code></pre></div>
+<p>Two specific methods are defined for <code>mdt</code> objects:
+<code>getOmega</code>, returning the maximum attainable age (as for the
+<code>lifetable</code> class), and <code>getDecrements</code>, returning
+the decrement names (the columns of <code>table</code> other than
+<code>x</code> and <code>lx</code>). A <code>summary</code> method is
+available as well.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">getOmega</span>(valdezMdt)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="do">## [1] 55</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">getDecrements</span>(valdezMdt)</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="do">## [1] &quot;heart&quot;     &quot;accidents&quot; &quot;other&quot;</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="fu">summary</span>(valdezMdt)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="do">## This is Multiple Decrements Table:  ValdezExample </span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="do">##  Omega age is:  55 </span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="do">##  Stored decrements are:  heart accidents other</span></span></code></pre></div>
+</div>
+<div id="decrement-probabilities-calculation" class="section level2">
+<h2>Decrement probabilities calculation</h2>
+<p><strong>lifecontingencies</strong> makes it easy to compute <span class="math inline">\(d_x^{(j)}\)</span>, <span class="math inline">\({}_nd_x^{(j)}\)</span> and <span class="math inline">\({}_nd_x^{(\tau)}\)</span> via the <code>dxt</code>
+function, and the corresponding probabilities via
+<code>qxt</code>/<code>pxt</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">dxt</span>(valdezMdt, <span class="at">x =</span> <span class="dv">51</span>, <span class="at">decrement =</span> <span class="st">&quot;other&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">dxt</span>(valdezMdt, <span class="at">x =</span> <span class="dv">51</span>, <span class="at">t =</span> <span class="dv">2</span>, <span class="at">decrement =</span> <span class="st">&quot;other&quot;</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="fu">dxt</span>(valdezMdt, <span class="at">x =</span> <span class="dv">51</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="fu">pxt</span>(valdezMdt, <span class="at">x =</span> <span class="dv">50</span>, <span class="at">t =</span> <span class="dv">3</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="do">## [1] 0.9926809</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="fu">qxt</span>(valdezMdt, <span class="at">x =</span> <span class="dv">53</span>, <span class="at">t =</span> <span class="dv">2</span>, <span class="at">decrement =</span> <span class="dv">1</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="do">## [1] 0.002544409</span></span></code></pre></div>
+<p>It is also possible to generate random trajectories of a life subject
+to multiple causes of decrement:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">rmdt</span>(<span class="at">n =</span> <span class="dv">2</span>, <span class="at">object =</span> valdezMdt, <span class="at">x =</span> <span class="dv">50</span>, <span class="at">t =</span> <span class="dv">2</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="do">##    1       2      </span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="do">## 50 &quot;alive&quot; &quot;alive&quot;</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="do">## 51 &quot;alive&quot; &quot;alive&quot;</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="do">## 52 &quot;alive&quot; &quot;alive&quot;</span></span></code></pre></div>
+</div>
+<div id="associated-single-decrement-table-calculation" class="section level2">
+<h2>Associated Single Decrement Table calculation</h2>
+<p>For each force of decrement <span class="math inline">\(\mu_j(x+t)\)</span>, the Associated Single
+Decrement Table (ASDT) is a decrement model that assumes survivorship
+depends only on <span class="math inline">\(j\)</span>. Within the ASDT
+the following identities hold:</p>
+<p><span class="math display">\[
+{}_tp_x^{\prime(j)} = \exp\!\left(\int_a^b \mu_j(x+s)\,ds\right), \qquad
+{}_tq_x^{\prime(j)} = 1 - {}_tp_x^{\prime(j)}, \qquad
+{}_tp_x^{(\tau)} = \prod_{j=1}^m {}_tp_x^{\prime(j)}.
+\]</span></p>
+<p>Assuming a uniform distribution of decrements (UDD), i.e. <span class="math inline">\({}_tq_x^{(j)} = t \cdot q_x^{(j)}\)</span> for
+<span class="math inline">\(t \in [0,1]\)</span>, then:</p>
+<p><span class="math display">\[
+p_x^{\prime(j)} = \left(1 - t \cdot
+q_x^{(\tau)}\right)^{\frac{q_x^{(j)}}{q_x^{(\tau)}}} = 1 -
+q_x^{\prime(j)}.
+\]</span></p>
+<p>This is implemented in <code>qxt.prime.fromMdt</code>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">qxt.prime.fromMdt</span>(<span class="at">object =</span> valdezMdt, <span class="at">x =</span> <span class="dv">53</span>, <span class="at">decrement =</span> <span class="st">&quot;accidents&quot;</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="do">## [1] 0.0003504636</span></span></code></pre></div>
+<p>If UDD also holds for each associated single decrement, then:</p>
+<p><span class="math display">\[
+{}_tq_x^{(j)} = {}_tq_x^{\prime(j)} \cdot \int_0^t \prod_{i \ne
+j}\left(1 - s \cdot q_x^{\prime(i)}\right) ds,
+\]</span></p>
+<p>of which the case <span class="math inline">\(m=2\)</span>, <span class="math inline">\(t=1\)</span> is a particular case:</p>
+<p><span class="math display">\[
+q_x^{(2)} = q_x^{\prime(2)}\left(1 - 0.5\, q_x^{\prime(1)}\right).
+\]</span></p>
+<p><code>qxt.fromQxprime</code> computes this; the example below
+replicates <span class="citation">Finan (2014, Example 67.2)</span>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">qxt.fromQxprime</span>(<span class="at">qx.prime =</span> <span class="fl">0.01</span>, <span class="at">other.qx.prime =</span> <span class="fu">c</span>(<span class="fl">0.03</span>, <span class="fl">0.06</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="do">## [1] 0.009556</span></span></code></pre></div>
+<div id="extracting-the-full-asdt-matrix-independentratesfrommdt" class="section level3">
+<h3>Extracting the full ASDT matrix:
+<code>independentRatesFromMdt()</code></h3>
+<p>While <code>qxt.prime.fromMdt</code> returns a single scalar for one
+(age, decrement) pair, <code>independentRatesFromMdt</code> computes the
+full matrix of independent rates <span class="math inline">\(q&#39;^{(j)}_x\)</span> for every age and every
+decrement in the table. This is convenient for inspecting and comparing
+rates across ages, and for the round-trip reconstruction described
+below.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>qprime <span class="ot">&lt;-</span> <span class="fu">independentRatesFromMdt</span>(valdezMdt, <span class="at">x =</span> <span class="dv">50</span><span class="sc">:</span><span class="dv">54</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>qprime</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="do">##          heart    accidents       other</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="do">## 50 0.001070017 0.0002396526 0.000888932</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="do">## 51 0.001112944 0.0002503803 0.001071254</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="do">## 52 0.001168833 0.0003003488 0.001239943</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="do">## 53 0.001237032 0.0003504636 0.001426969</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="do">## 54 0.001313773 0.0004506072 0.001596938</span></span></code></pre></div>
+<p>Each cell equals the value that <code>qxt.prime.fromMdt</code> would
+return for the same (age, decrement) pair:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">qxt.prime.fromMdt</span>(valdezMdt, <span class="at">x =</span> <span class="dv">53</span>, <span class="at">decrement =</span> <span class="st">&quot;accidents&quot;</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="do">## [1] 0.0003504636</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>qprime[<span class="st">&quot;53&quot;</span>, <span class="st">&quot;accidents&quot;</span>]</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="do">## [1] 0.0003504636</span></span></code></pre></div>
+<p>A subset of ages may be specified:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">independentRatesFromMdt</span>(valdezMdt, <span class="at">x =</span> <span class="dv">51</span><span class="sc">:</span><span class="dv">52</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="do">##          heart    accidents       other</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="do">## 51 0.001112944 0.0002503803 0.001071254</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="do">## 52 0.001168833 0.0003003488 0.001239943</span></span></code></pre></div>
+</div>
+<div id="building-an-mdt-from-independent-rates-buildmdtfromindependentrates" class="section level3">
+<h3>Building an mdt from independent rates:
+<code>buildMdtFromIndependentRates()</code></h3>
+<p>The inverse operation — constructing a combined multiple-decrement
+table from a matrix of ASDT independent rates — is provided by
+<code>buildMdtFromIndependentRates</code>. This is useful when
+independent rates are estimated separately (e.g. from cause-specific
+mortality studies or from different data sources) and need to be
+combined into a single <code>mdt</code> object.</p>
+<p>For each age, the absolute (combined) rate of decrement <span class="math inline">\(j\)</span> is obtained by the UDD integration
+formula: <span class="math display">\[
+q_x^{(j)} = q&#39;^{(j)}_x \int_0^1 \prod_{i \ne j}
+\bigl(1 - s\, q&#39;^{(i)}_x\bigr)\,ds,
+\]</span> and the survivorship column is built recursively from <span class="math inline">\(p_x^{(\tau)} = \prod_j (1 -
+q&#39;^{(j)}_x)\)</span>.</p>
+<p>The following example replicates <span class="citation">Finan (2014,
+Example 67.4)</span>: three decrements (death, disability, retirement)
+over two ages, with 1000 initial lives:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>qp <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.010</span>, <span class="fl">0.030</span>, <span class="fl">0.100</span>,</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>                <span class="fl">0.013</span>, <span class="fl">0.050</span>, <span class="fl">0.200</span>),</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>             <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>             <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="fu">c</span>(<span class="st">&quot;death&quot;</span>, <span class="st">&quot;disability&quot;</span>, <span class="st">&quot;retirement&quot;</span>)))</span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>qp</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="do">##      death disability retirement</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="do">## [1,] 0.010       0.03        0.1</span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="do">## [2,] 0.013       0.05        0.2</span></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>mdt674 <span class="ot">&lt;-</span> <span class="fu">buildMdtFromIndependentRates</span>(</span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a>  <span class="at">x =</span> <span class="dv">60</span><span class="sc">:</span><span class="dv">61</span>, <span class="at">qx.primes =</span> qp,</span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>  <span class="at">radix =</span> <span class="dv">1000</span>, <span class="at">name =</span> <span class="st">&quot;Finan 67.4&quot;</span></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a>)</span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="do">## Added fictional decrement below last x and completed x and lx until zero.... </span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="do">## Completed the table at top, all decrements on first cause</span></span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="fu">print</span>(mdt674)</span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="do">## Multiple decrements table Finan 67.4 </span></span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="do">##         death disability retirement</span></span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="do">## 0  0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a><span class="do">## 1  0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a><span class="do">## 2  0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-22"><a href="#cb12-22" tabindex="-1"></a><span class="do">## 3  0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-23"><a href="#cb12-23" tabindex="-1"></a><span class="do">## 4  0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-24"><a href="#cb12-24" tabindex="-1"></a><span class="do">## 5  0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-25"><a href="#cb12-25" tabindex="-1"></a><span class="do">## 6  0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-26"><a href="#cb12-26" tabindex="-1"></a><span class="do">## 7  0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-27"><a href="#cb12-27" tabindex="-1"></a><span class="do">## 8  0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-28"><a href="#cb12-28" tabindex="-1"></a><span class="do">## 9  0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-29"><a href="#cb12-29" tabindex="-1"></a><span class="do">## 10 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-30"><a href="#cb12-30" tabindex="-1"></a><span class="do">## 11 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-31"><a href="#cb12-31" tabindex="-1"></a><span class="do">## 12 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-32"><a href="#cb12-32" tabindex="-1"></a><span class="do">## 13 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-33"><a href="#cb12-33" tabindex="-1"></a><span class="do">## 14 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-34"><a href="#cb12-34" tabindex="-1"></a><span class="do">## 15 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-35"><a href="#cb12-35" tabindex="-1"></a><span class="do">## 16 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-36"><a href="#cb12-36" tabindex="-1"></a><span class="do">## 17 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-37"><a href="#cb12-37" tabindex="-1"></a><span class="do">## 18 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-38"><a href="#cb12-38" tabindex="-1"></a><span class="do">## 19 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-39"><a href="#cb12-39" tabindex="-1"></a><span class="do">## 20 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-40"><a href="#cb12-40" tabindex="-1"></a><span class="do">## 21 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-41"><a href="#cb12-41" tabindex="-1"></a><span class="do">## 22 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-42"><a href="#cb12-42" tabindex="-1"></a><span class="do">## 23 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-43"><a href="#cb12-43" tabindex="-1"></a><span class="do">## 24 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-44"><a href="#cb12-44" tabindex="-1"></a><span class="do">## 25 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-45"><a href="#cb12-45" tabindex="-1"></a><span class="do">## 26 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-46"><a href="#cb12-46" tabindex="-1"></a><span class="do">## 27 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-47"><a href="#cb12-47" tabindex="-1"></a><span class="do">## 28 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-48"><a href="#cb12-48" tabindex="-1"></a><span class="do">## 29 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-49"><a href="#cb12-49" tabindex="-1"></a><span class="do">## 30 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-50"><a href="#cb12-50" tabindex="-1"></a><span class="do">## 31 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-51"><a href="#cb12-51" tabindex="-1"></a><span class="do">## 32 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-52"><a href="#cb12-52" tabindex="-1"></a><span class="do">## 33 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-53"><a href="#cb12-53" tabindex="-1"></a><span class="do">## 34 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-54"><a href="#cb12-54" tabindex="-1"></a><span class="do">## 35 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-55"><a href="#cb12-55" tabindex="-1"></a><span class="do">## 36 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-56"><a href="#cb12-56" tabindex="-1"></a><span class="do">## 37 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-57"><a href="#cb12-57" tabindex="-1"></a><span class="do">## 38 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-58"><a href="#cb12-58" tabindex="-1"></a><span class="do">## 39 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-59"><a href="#cb12-59" tabindex="-1"></a><span class="do">## 40 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-60"><a href="#cb12-60" tabindex="-1"></a><span class="do">## 41 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-61"><a href="#cb12-61" tabindex="-1"></a><span class="do">## 42 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-62"><a href="#cb12-62" tabindex="-1"></a><span class="do">## 43 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-63"><a href="#cb12-63" tabindex="-1"></a><span class="do">## 44 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-64"><a href="#cb12-64" tabindex="-1"></a><span class="do">## 45 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-65"><a href="#cb12-65" tabindex="-1"></a><span class="do">## 46 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-66"><a href="#cb12-66" tabindex="-1"></a><span class="do">## 47 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-67"><a href="#cb12-67" tabindex="-1"></a><span class="do">## 48 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-68"><a href="#cb12-68" tabindex="-1"></a><span class="do">## 49 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-69"><a href="#cb12-69" tabindex="-1"></a><span class="do">## 50 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-70"><a href="#cb12-70" tabindex="-1"></a><span class="do">## 51 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-71"><a href="#cb12-71" tabindex="-1"></a><span class="do">## 52 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-72"><a href="#cb12-72" tabindex="-1"></a><span class="do">## 53 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-73"><a href="#cb12-73" tabindex="-1"></a><span class="do">## 54 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-74"><a href="#cb12-74" tabindex="-1"></a><span class="do">## 55 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-75"><a href="#cb12-75" tabindex="-1"></a><span class="do">## 56 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-76"><a href="#cb12-76" tabindex="-1"></a><span class="do">## 57 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-77"><a href="#cb12-77" tabindex="-1"></a><span class="do">## 58 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-78"><a href="#cb12-78" tabindex="-1"></a><span class="do">## 59 0.01000000 0.00000000  0.0000000</span></span>
+<span id="cb12-79"><a href="#cb12-79" tabindex="-1"></a><span class="do">## 60 0.00936000 0.02836000  0.0980100</span></span>
+<span id="cb12-80"><a href="#cb12-80" tabindex="-1"></a><span class="do">## 61 0.01141833 0.04471833  0.1937433</span></span>
+<span id="cb12-81"><a href="#cb12-81" tabindex="-1"></a><span class="do">## 62 1.00000000 0.00000000  0.0000000</span></span></code></pre></div>
+<p>We can verify the key numerical results from the example. The
+combined survival probability at age 60 is <span class="math inline">\(p^{(\tau)}_{60} = (1-0.010)(1-0.030)(1-0.100) =
+0.86427\)</span>, giving <span class="math inline">\(l^{(\tau)}_{61} =
+864.27\)</span>:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>ptau60 <span class="ot">&lt;-</span> <span class="fu">prod</span>(<span class="dv">1</span> <span class="sc">-</span> qp[<span class="dv">1</span>, ])</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">round</span>(ptau60, <span class="dv">5</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="do">## [1] 0.86427</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>tbl674 <span class="ot">&lt;-</span> mdt674<span class="sc">@</span>table</span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="fu">round</span>(tbl674<span class="sc">$</span>lx[tbl674<span class="sc">$</span>x <span class="sc">==</span> <span class="dv">61</span>], <span class="dv">2</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="do">## [1] 864.27</span></span></code></pre></div>
+</div>
+<div id="round-trip-mdt-to-asdt-to-mdt" class="section level3">
+<h3>Round-trip: mdt <span class="math inline">\(\to\)</span> ASDT <span class="math inline">\(\to\)</span> mdt</h3>
+<p>The two functions compose naturally: extracting independent rates
+from an <code>mdt</code> and then rebuilding should recover the original
+table (up to floating-point rounding). We verify this on the Valdez
+example:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>qprime <span class="ot">&lt;-</span> <span class="fu">independentRatesFromMdt</span>(valdezMdt, <span class="at">x =</span> <span class="dv">50</span><span class="sc">:</span><span class="dv">54</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>rebuilt <span class="ot">&lt;-</span> <span class="fu">buildMdtFromIndependentRates</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="at">x =</span> <span class="dv">50</span><span class="sc">:</span><span class="dv">54</span>, <span class="at">qx.primes =</span> qprime,</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>  <span class="at">radix =</span> valdezMdt<span class="sc">@</span>table<span class="sc">$</span>lx[valdezMdt<span class="sc">@</span>table<span class="sc">$</span>x <span class="sc">==</span> <span class="dv">50</span>],</span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>  <span class="at">name =</span> <span class="st">&quot;Roundtrip&quot;</span></span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>)</span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="do">## Added fictional decrement below last x and completed x and lx until zero.... </span></span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a><span class="do">## Completed the table at top, all decrements on first cause</span></span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="do">## Compare lx</span></span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a>  <span class="at">age =</span> <span class="dv">50</span><span class="sc">:</span><span class="dv">54</span>,</span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a>  <span class="at">original =</span> valdezMdt<span class="sc">@</span>table<span class="sc">$</span>lx[valdezMdt<span class="sc">@</span>table<span class="sc">$</span>x <span class="sc">%in%</span> <span class="dv">50</span><span class="sc">:</span><span class="dv">54</span>],</span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a>  <span class="at">rebuilt  =</span> <span class="fu">round</span>(rebuilt<span class="sc">@</span>table<span class="sc">$</span>lx[rebuilt<span class="sc">@</span>table<span class="sc">$</span>x <span class="sc">%in%</span> <span class="dv">50</span><span class="sc">:</span><span class="dv">54</span>], <span class="dv">0</span>)</span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a>)</span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a><span class="do">##   age original rebuilt</span></span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a><span class="do">## 1  50  4832555 4832555</span></span>
+<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a><span class="do">## 2  51  4821937 4821937</span></span>
+<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a><span class="do">## 3  52  4810206 4810206</span></span>
+<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a><span class="do">## 4  53  4797185 4797185</span></span>
+<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a><span class="do">## 5  54  4782737 4782737</span></span></code></pre></div>
+</div>
+</div>
+<div id="visualising-mdt-objects-plot" class="section level2">
+<h2>Visualising mdt objects: <code>plot()</code></h2>
+<p>The <code>plot</code> S4 method for <code>mdt</code> objects produces
+a <code>ggplot2</code> visualisation of the decrement structure. Three
+views are available:</p>
+<ul>
+<li><code>&quot;area&quot;</code> (default): stacked-area chart of decrement
+counts <span class="math inline">\(d^{(j)}_x\)</span>.</li>
+<li><code>&quot;bar&quot;</code>: stacked bar chart of decrement counts.</li>
+<li><code>&quot;probability&quot;</code>: line chart of decrement-specific
+probabilities <span class="math inline">\(q^{(j)}_x = d^{(j)}_x /
+l^{(\tau)}_x\)</span>.</li>
+</ul>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">plot</span>(valdezMdt)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">plot</span>(valdezMdt, <span class="at">type =</span> <span class="st">&quot;bar&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">plot</span>(valdezMdt, <span class="at">type =</span> <span class="st">&quot;probability&quot;</span>)</span></code></pre></div>
+<p>The plot method also works on larger tables; here is the CDC-based
+<code>mdt</code> object built later in this vignette, aggregated across
+its 18 causes:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">plot</span>(cdcMdt, <span class="at">type =</span> <span class="st">&quot;probability&quot;</span>)</span></code></pre></div>
+</div>
+<div id="actuarial-applications" class="section level2">
+<h2>Actuarial applications</h2>
+<p>Two functions value contracts on a <code>mdt</code> object.
+<code>Axn.mdt</code> gives the actuarial present value (APV) of a term
+insurance paying, at the end of the year of decrement, a benefit <span class="math inline">\(b_j\)</span> that may depend on the cause <span class="math inline">\(j\)</span>: <span class="math display">\[
+\sum_{j \in J} b_j \sum_{h=0}^{n-1} v^{h+1}\,{}_hp^{(\tau)}_x\,
+q^{(j)}_{x+h},
+\]</span> where <span class="math inline">\(J\)</span> is the set of
+covered decrements (all of them if <code>decrement</code> is omitted).
+<code>axn.mdt</code> gives the APV of an annuity payable while the
+insured has not yet left the table, with optional deferment
+<code>m</code>, <code>k</code> payments per year and payments in advance
+or in arrears. Benefit premiums and reserves follow from the equivalence
+principle.</p>
+<p>The example below, from <span class="citation">Finan (2014, Problem
+68.1)</span>, considers a 3-year term issued to (16) paying 20,000 at
+the end of the year of death if death results from an accident:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>myTable <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">16</span>, <span class="dv">17</span>, <span class="dv">18</span>),</span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>  <span class="at">lx =</span> <span class="fu">c</span>(<span class="dv">20000</span>, <span class="dv">17600</span>, <span class="dv">14520</span>),</span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>  <span class="at">da =</span> <span class="fu">c</span>(<span class="dv">1300</span>, <span class="dv">1870</span>, <span class="dv">2380</span>),</span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>  <span class="at">doc =</span> <span class="fu">c</span>(<span class="dv">1100</span>, <span class="dv">1210</span>, <span class="dv">1331</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a>)</span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a>myMdt <span class="ot">&lt;-</span> <span class="fu">new</span>(<span class="st">&quot;mdt&quot;</span>, <span class="at">table =</span> myTable, <span class="at">name =</span> <span class="st">&quot;Sample&quot;</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a><span class="do">## Added fictional decrement below last x and completed x and lx until zero.... </span></span>
+<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a><span class="do">## Completed the table at top, all decrements on first cause</span></span></code></pre></div>
+<p>The value of <span class="math inline">\(A^{1}_{16:\overline{3}|}\)</span>, restricted to
+decrement <code>da</code> (accidental death), is computed by
+<code>Axn.mdt</code>:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="dv">20000</span> <span class="sc">*</span> <span class="fu">Axn.mdt</span>(<span class="at">object =</span> myMdt, <span class="at">x =</span> <span class="dv">16</span>, <span class="at">n =</span> <span class="dv">3</span>, <span class="at">i =</span> .<span class="dv">1</span>, <span class="at">decrement =</span> <span class="st">&quot;da&quot;</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="do">## [1] 4515.402</span></span></code></pre></div>
+<p>If <code>n</code> is omitted the cover runs to the end of the table,
+which here would include the synthetic closing row (age 19) added by
+<code>new(&quot;mdt&quot;, ...)</code>: for term covers it is safer to always pass
+<code>n</code>.</p>
+<p><span class="citation">Finan (2014, Example 69.1)</span> uses the
+same table to price a level annual premium. Finan’s printed solution
+uses the column of non-accidental deaths (1100, 1210, 1331), giving
+<span class="math inline">\(A = 3000/20000\)</span>, <span class="math inline">\(\ddot a^{(\tau)}_{16:\overline{3}|} = 2.4\)</span>
+and a premium of 1250:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>A691 <span class="ot">&lt;-</span> <span class="fu">Axn.mdt</span>(myMdt, <span class="at">x =</span> <span class="dv">16</span>, <span class="at">n =</span> <span class="dv">3</span>, <span class="at">i =</span> <span class="fl">0.10</span>, <span class="at">decrement =</span> <span class="st">&quot;doc&quot;</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>a691 <span class="ot">&lt;-</span> <span class="fu">axn.mdt</span>(myMdt, <span class="at">x =</span> <span class="dv">16</span>, <span class="at">n =</span> <span class="dv">3</span>, <span class="at">i =</span> <span class="fl">0.10</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a><span class="fu">c</span>(<span class="at">APV =</span> <span class="dv">20000</span> <span class="sc">*</span> A691, <span class="at">annuity =</span> a691, <span class="at">premium =</span> <span class="dv">20000</span> <span class="sc">*</span> A691 <span class="sc">/</span> a691)</span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a><span class="do">##     APV annuity premium </span></span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a><span class="do">##  3000.0     2.4  1250.0</span></span></code></pre></div>
+<p>Benefits that depend on the cause are passed through
+<code>benefits</code>. <span class="citation">Finan (2014, Example
+68.1)</span> pays 1 for cause 1 and 2 for cause 2 over two years at
+<span class="math inline">\(i = 50\%\)</span> (printed answer 0.6852),
+and [Example 69.2] computes the benefit reserve <span class="math inline">\({}_2V = 11.091\)</span> of a 4-year term paying
+2000 for decrement 1 and 1000 for decrement 2, with annual premium 34
+and <span class="math inline">\(v = 0.95\)</span>:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>m681 <span class="ot">&lt;-</span> <span class="fu">new</span>(<span class="st">&quot;mdt&quot;</span>, <span class="at">table =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">50</span><span class="sc">:</span><span class="dv">51</span>, <span class="at">lx =</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">800</span>),</span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>                                      <span class="at">d1 =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">200</span>), <span class="at">d2 =</span> <span class="fu">c</span>(<span class="dv">300</span>, <span class="dv">300</span>)))</span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="do">## Added fictional decrement below last x and completed x and lx until zero.... </span></span>
+<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a><span class="do">## Completed the table at top, all decrements on first cause</span></span>
+<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a><span class="fu">Axn.mdt</span>(m681, <span class="at">x =</span> <span class="dv">50</span>, <span class="at">n =</span> <span class="dv">2</span>, <span class="at">i =</span> <span class="fl">0.5</span>, <span class="at">decrement =</span> <span class="fu">c</span>(<span class="st">&quot;d1&quot;</span>, <span class="st">&quot;d2&quot;</span>),</span>
+<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a>        <span class="at">benefits =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a><span class="do">## [1] 0.6851852</span></span>
+<span id="cb22-8"><a href="#cb22-8" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a>m692 <span class="ot">&lt;-</span> <span class="fu">new</span>(<span class="st">&quot;mdt&quot;</span>, <span class="at">table =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">41</span><span class="sc">:</span><span class="dv">43</span>, <span class="at">lx =</span> <span class="fu">c</span>(<span class="dv">800</span>, <span class="dv">776</span>, <span class="dv">752</span>),</span>
+<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a>                                      <span class="at">d1 =</span> <span class="dv">8</span>, <span class="at">d2 =</span> <span class="dv">16</span>))</span>
+<span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="do">## Added fictional decrement below last x and completed x and lx until zero.... </span></span>
+<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a><span class="do">## Completed the table at top, all decrements on first cause</span></span>
+<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a>i692 <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fl">0.95</span> <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a><span class="fu">Axn.mdt</span>(m692, <span class="at">x =</span> <span class="dv">42</span>, <span class="at">n =</span> <span class="dv">2</span>, <span class="at">i =</span> i692, <span class="at">decrement =</span> <span class="fu">c</span>(<span class="st">&quot;d1&quot;</span>, <span class="st">&quot;d2&quot;</span>),</span>
+<span id="cb22-15"><a href="#cb22-15" tabindex="-1"></a>        <span class="at">benefits =</span> <span class="fu">c</span>(<span class="dv">2000</span>, <span class="dv">1000</span>)) <span class="sc">-</span> <span class="dv">34</span> <span class="sc">*</span> <span class="fu">axn.mdt</span>(m692, <span class="at">x =</span> <span class="dv">42</span>, <span class="at">n =</span> <span class="dv">2</span>, <span class="at">i =</span> i692)</span>
+<span id="cb22-16"><a href="#cb22-16" tabindex="-1"></a><span class="do">## [1] 11.09072</span></span></code></pre></div>
+<p>Another example is inspired by data in <span class="citation">De
+Angelis, Paolo and Di Falco, L. (2016)</span>. We use life tables from
+that source and a small helper function (still based on single decrement
+tables) to compute the APV of a constant or variable annuity with
+multiple decrement, where benefits are payable while the annuitant is in
+the current state and cease upon transition to another state:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>axnmdt.firsttype <span class="ot">&lt;-</span> <span class="cf">function</span>(object, x, n, i, <span class="at">payment =</span> <span class="st">&quot;advance&quot;</span>, <span class="at">delta =</span> <span class="dv">0</span>) {</span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>  <span class="co"># delta is the annuity indexing</span></span>
+<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="dv">1</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span>(<span class="fu">class</span>(object) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;lifetable&quot;</span>, <span class="st">&quot;actuarialtable&quot;</span>, <span class="st">&quot;mdt&quot;</span>)))</span>
+<span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&quot;Error! Only lifetable, actuarialtable or mdt classes are accepted&quot;</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">missing</span>(object))</span>
+<span id="cb23-7"><a href="#cb23-7" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&quot;Error! Need a Multiple decrement table&quot;</span>)</span>
+<span id="cb23-8"><a href="#cb23-8" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">missing</span>(x))</span>
+<span id="cb23-9"><a href="#cb23-9" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&quot;Error! Need age!&quot;</span>)</span>
+<span id="cb23-10"><a href="#cb23-10" tabindex="-1"></a>  <span class="cf">if</span> (x <span class="sc">&gt;</span> <span class="fu">getOmega</span>(object)) {</span>
+<span id="cb23-11"><a href="#cb23-11" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&quot;Age greater than Omega&quot;</span>)</span>
+<span id="cb23-12"><a href="#cb23-12" tabindex="-1"></a>  }</span>
+<span id="cb23-13"><a href="#cb23-13" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">class</span>(object) <span class="sc">==</span> <span class="st">&quot;mdt&quot;</span>) {</span>
+<span id="cb23-14"><a href="#cb23-14" tabindex="-1"></a>    <span class="cf">if</span> (x <span class="sc">&lt;</span> <span class="fu">min</span>(object<span class="sc">@</span>table<span class="sc">$</span>x)) {</span>
+<span id="cb23-15"><a href="#cb23-15" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;Age lower than minimum age&quot;</span>)</span>
+<span id="cb23-16"><a href="#cb23-16" tabindex="-1"></a>    }</span>
+<span id="cb23-17"><a href="#cb23-17" tabindex="-1"></a>  }</span>
+<span id="cb23-18"><a href="#cb23-18" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">class</span>(object) <span class="sc">==</span> <span class="st">&quot;actuarialtable&quot;</span>) {</span>
+<span id="cb23-19"><a href="#cb23-19" tabindex="-1"></a>    <span class="cf">if</span> (x <span class="sc">&lt;</span> <span class="fu">min</span>(object<span class="sc">@</span>x)) {</span>
+<span id="cb23-20"><a href="#cb23-20" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;Age lower than minimum age&quot;</span>)</span>
+<span id="cb23-21"><a href="#cb23-21" tabindex="-1"></a>    }</span>
+<span id="cb23-22"><a href="#cb23-22" tabindex="-1"></a>  }</span>
+<span id="cb23-23"><a href="#cb23-23" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span>(<span class="fu">missing</span>(i))) {</span>
+<span id="cb23-24"><a href="#cb23-24" tabindex="-1"></a>    interest <span class="ot">&lt;-</span> i</span>
+<span id="cb23-25"><a href="#cb23-25" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb23-26"><a href="#cb23-26" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">class</span>(object) <span class="sc">==</span> <span class="st">&quot;actuarialtable&quot;</span>) {</span>
+<span id="cb23-27"><a href="#cb23-27" tabindex="-1"></a>      interest <span class="ot">&lt;-</span> object<span class="sc">@</span>interest</span>
+<span id="cb23-28"><a href="#cb23-28" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb23-29"><a href="#cb23-29" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;Needed Interest Rate &quot;</span>)</span>
+<span id="cb23-30"><a href="#cb23-30" tabindex="-1"></a>    }</span>
+<span id="cb23-31"><a href="#cb23-31" tabindex="-1"></a>  }</span>
+<span id="cb23-32"><a href="#cb23-32" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">missing</span>(n))</span>
+<span id="cb23-33"><a href="#cb23-33" tabindex="-1"></a>    n <span class="ot">&lt;-</span> (<span class="fu">getOmega</span>(object) <span class="sc">-</span> x)</span>
+<span id="cb23-34"><a href="#cb23-34" tabindex="-1"></a>  <span class="cf">if</span> (n <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb23-35"><a href="#cb23-35" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&quot;Contract duration equal to zero&quot;</span>)</span>
+<span id="cb23-36"><a href="#cb23-36" tabindex="-1"></a>  }</span>
+<span id="cb23-37"><a href="#cb23-37" tabindex="-1"></a>  probs <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n)</span>
+<span id="cb23-38"><a href="#cb23-38" tabindex="-1"></a>  times <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> n <span class="sc">-</span> <span class="dv">1</span>, <span class="at">by =</span> <span class="dv">1</span>)</span>
+<span id="cb23-39"><a href="#cb23-39" tabindex="-1"></a>  <span class="cf">if</span> (payment <span class="sc">==</span> <span class="st">&quot;arrears&quot;</span>) times <span class="ot">&lt;-</span> times <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb23-40"><a href="#cb23-40" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(times)) probs[j] <span class="ot">&lt;-</span> <span class="fu">pxt</span>(object, x, times[j])</span>
+<span id="cb23-41"><a href="#cb23-41" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">apply</span>(<span class="fu">cbind</span>(probs, ((<span class="dv">1</span> <span class="sc">+</span> interest) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> delta))<span class="sc">^-</span>times), <span class="dv">1</span>, prod))</span>
+<span id="cb23-42"><a href="#cb23-42" tabindex="-1"></a>  <span class="fu">return</span>(out)</span>
+<span id="cb23-43"><a href="#cb23-43" tabindex="-1"></a>}</span></code></pre></div>
+<p>Data and examples are taken from <span class="citation">De Angelis,
+Paolo and Di Falco, L. (2016)</span>:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;de_angelis_di_falco&quot;</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>HealthyMaleTable2013 <span class="ot">&lt;-</span> de_angelis_di_falco<span class="sc">$</span>HealthyMaleTable2013</span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>DAT <span class="ot">&lt;-</span> <span class="fu">new</span>(<span class="st">&quot;actuarialtable&quot;</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>  <span class="at">x =</span> de_angelis_di_falco<span class="sc">$</span>DisabledMaleLifeTable<span class="sc">$</span>age,</span>
+<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>  <span class="at">lx =</span> de_angelis_di_falco<span class="sc">$</span>DisabledMaleLifeTable<span class="sc">$</span><span class="st">&#39;2013&#39;</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" tabindex="-1"></a>  <span class="at">name =</span> <span class="st">&quot;DisabledTable&quot;</span>, <span class="at">i =</span> <span class="fl">0.03</span></span>
+<span id="cb24-7"><a href="#cb24-7" tabindex="-1"></a>)</span>
+<span id="cb24-8"><a href="#cb24-8" tabindex="-1"></a><span class="fu">axnmdt.firsttype</span>(DAT, <span class="at">x =</span> <span class="dv">65</span>, <span class="at">n =</span> <span class="dv">10</span>, <span class="at">i =</span> <span class="fl">0.03</span>, <span class="at">payment =</span> <span class="st">&quot;arrears&quot;</span>, <span class="at">delta =</span> <span class="fl">0.02</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" tabindex="-1"></a><span class="do">## [1] 3.73169</span></span>
+<span id="cb24-10"><a href="#cb24-10" tabindex="-1"></a><span class="fu">axnmdt.firsttype</span>(DAT, <span class="dv">65</span>, <span class="dv">10</span>, <span class="at">payment =</span> <span class="st">&quot;arrears&quot;</span>, <span class="at">delta =</span> <span class="fl">0.02</span>)</span>
+<span id="cb24-11"><a href="#cb24-11" tabindex="-1"></a><span class="do">## [1] 3.73169</span></span>
+<span id="cb24-12"><a href="#cb24-12" tabindex="-1"></a><span class="fu">axnmdt.firsttype</span>(DAT, <span class="dv">65</span>, <span class="dv">10</span>, <span class="at">payment =</span> <span class="st">&quot;arrears&quot;</span>, <span class="at">i =</span> <span class="fl">0.03</span>, <span class="at">delta =</span> <span class="fl">0.02</span>)</span>
+<span id="cb24-13"><a href="#cb24-13" tabindex="-1"></a><span class="do">## [1] 3.73169</span></span>
+<span id="cb24-14"><a href="#cb24-14" tabindex="-1"></a><span class="co"># Last case equal to axn</span></span>
+<span id="cb24-15"><a href="#cb24-15" tabindex="-1"></a><span class="fu">axnmdt.firsttype</span>(DAT, <span class="dv">65</span>, <span class="dv">10</span>, <span class="at">payment =</span> <span class="st">&quot;arrears&quot;</span>, <span class="at">delta =</span> <span class="dv">0</span>)</span>
+<span id="cb24-16"><a href="#cb24-16" tabindex="-1"></a><span class="do">## [1] 3.461472</span></span>
+<span id="cb24-17"><a href="#cb24-17" tabindex="-1"></a><span class="fu">axn</span>(DAT, <span class="dv">65</span>, <span class="dv">10</span>, <span class="at">payment =</span> <span class="st">&quot;arrears&quot;</span>)</span>
+<span id="cb24-18"><a href="#cb24-18" tabindex="-1"></a><span class="do">## [1] 3.461472</span></span></code></pre></div>
+</div>
+<div id="a-worked-example-on-real-cause-of-death-data-with-a-note-on-graduation" class="section level2">
+<h2>A worked example on real cause-of-death data, with a note on
+graduation</h2>
+<p>The examples above use small, illustrative tables. This section works
+through the full pipeline — from an official, publicly available
+cause-specific mortality report to a validated <code>mdt</code> object —
+using real data: Table 8 of <span class="citation">Arias et al.
+(2013)</span>, “United States Life Tables Eliminating Certain Causes of
+Death, 1999-2001”, published by the U.S. National Center for Health
+Statistics. Table 8 tabulates, for 22 five-year (and one open-ended) age
+bands from birth to 100+, the number of decrements attributable to each
+of 33 causes of death out of a radix of <span class="math inline">\(l_0
+= 10{,}000{,}000\)</span>.</p>
+<div id="from-an-official-report-to-a-mutually-exclusive-partition" class="section level3">
+<h3>From an official report to a mutually exclusive partition</h3>
+<p>A <code>mdt</code> object requires its
+non-<code>x</code>/<code>lx</code> columns to be a partition of total
+mortality: at every age the columns must sum to exactly the decrement
+implied by <code>lx</code>. The 33 causes tabulated by <span class="citation">Arias et al. (2013)</span>, however, are <em>not</em>
+mutually exclusive: several rows are parent categories that contain
+other rows as subtypes (e.g. “Malignant neoplasms” contains
+site-specific cancers such as colon, lung, breast and prostate), and
+others are cross-cutting aggregates that overlap several disease groups
+(e.g. “Alcohol-induced causes”). Summing all 33 columns as if they were
+disjoint would double count decrements.</p>
+<p>We therefore curate a mutually exclusive partition made of the 17
+top-level (non-nested, non-aggregate) causes of the original 33, plus a
+residual <code>other</code> category that closes the table to total
+mortality at every age. The columns kept are <code>septicemia</code>,
+<code>hiv</code>, <code>cancer</code>, <code>diabetes</code>,
+<code>alzheimer</code>, <code>heart_disease</code>,
+<code>hypertension</code>, <code>cerebrovascular</code>,
+<code>influenza_pneumonia</code>, <code>copd</code>,
+<code>pneumonitis</code>, <code>liver_disease</code>,
+<code>nephritis</code>, <code>congenital</code>, <code>accidents</code>,
+<code>suicide</code> and <code>homicide</code>; <code>other</code> is
+obtained, for each age band, as the total decrements minus the sum of
+these 17 columns, and is non-negative at every age band, confirming no
+double counting remains.</p>
+<p>We embed the resulting curated, mutually exclusive 5-year table below
+(<code>partition_sum</code> is the sum of the 17 named causes, kept only
+as a diagnostic column to show that
+<code>partition_sum + other == total_dx</code> at every age; it is
+dropped before building the <code>mdt</code>):</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>bandStart <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>, <span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">35</span>, <span class="dv">40</span>, <span class="dv">45</span>, <span class="dv">50</span>, <span class="dv">55</span>, <span class="dv">60</span>, <span class="dv">65</span>,</span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>               <span class="dv">70</span>, <span class="dv">75</span>, <span class="dv">80</span>, <span class="dv">85</span>, <span class="dv">90</span>, <span class="dv">95</span>, <span class="dv">100</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>cdc5yr <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a>  <span class="at">age_group =</span> <span class="fu">c</span>(<span class="st">&quot;0-1&quot;</span>, <span class="st">&quot;1-5&quot;</span>, <span class="st">&quot;5-10&quot;</span>, <span class="st">&quot;10-15&quot;</span>, <span class="st">&quot;15-20&quot;</span>, <span class="st">&quot;20-25&quot;</span>, <span class="st">&quot;25-30&quot;</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a>    <span class="st">&quot;30-35&quot;</span>, <span class="st">&quot;35-40&quot;</span>, <span class="st">&quot;40-45&quot;</span>, <span class="st">&quot;45-50&quot;</span>, <span class="st">&quot;50-55&quot;</span>, <span class="st">&quot;55-60&quot;</span>, <span class="st">&quot;60-65&quot;</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" tabindex="-1"></a>    <span class="st">&quot;65-70&quot;</span>, <span class="st">&quot;70-75&quot;</span>, <span class="st">&quot;75-80&quot;</span>, <span class="st">&quot;80-85&quot;</span>, <span class="st">&quot;85-90&quot;</span>, <span class="st">&quot;90-95&quot;</span>, <span class="st">&quot;95-100&quot;</span>,</span>
+<span id="cb25-7"><a href="#cb25-7" tabindex="-1"></a>    <span class="st">&quot;100 and over&quot;</span>),</span>
+<span id="cb25-8"><a href="#cb25-8" tabindex="-1"></a>  <span class="at">lx =</span> <span class="fu">c</span>(<span class="fl">10000000.0</span>, <span class="fl">9930523.0</span>, <span class="fl">9917600.0</span>, <span class="fl">9909689.0</span>, <span class="fl">9899801.0</span>, <span class="fl">9866403.0</span>,</span>
+<span id="cb25-9"><a href="#cb25-9" tabindex="-1"></a>    <span class="fl">9820252.0</span>, <span class="fl">9775095.0</span>, <span class="fl">9720086.0</span>, <span class="fl">9642151.0</span>, <span class="fl">9527362.0</span>, <span class="fl">9360142.0</span>,</span>
+<span id="cb25-10"><a href="#cb25-10" tabindex="-1"></a>    <span class="fl">9123237.0</span>, <span class="fl">8764226.0</span>, <span class="fl">8233035.0</span>, <span class="fl">7489085.0</span>, <span class="fl">6464402.0</span>, <span class="fl">5088466.0</span>,</span>
+<span id="cb25-11"><a href="#cb25-11" tabindex="-1"></a>    <span class="fl">3451511.0</span>, <span class="fl">1849572.0</span>, <span class="fl">687944.7</span>, <span class="fl">147917.1</span>),</span>
+<span id="cb25-12"><a href="#cb25-12" tabindex="-1"></a>  <span class="at">total_dx =</span> <span class="fu">c</span>(<span class="fl">69477.0</span>, <span class="fl">12923.0</span>, <span class="fl">7911.0</span>, <span class="fl">9888.0</span>, <span class="fl">33398.0</span>, <span class="fl">46151.0</span>, <span class="fl">45157.0</span>,</span>
+<span id="cb25-13"><a href="#cb25-13" tabindex="-1"></a>    <span class="fl">55009.0</span>, <span class="fl">77935.0</span>, <span class="fl">114789.0</span>, <span class="fl">167220.0</span>, <span class="fl">236905.0</span>, <span class="fl">359011.0</span>, <span class="fl">531191.0</span>,</span>
+<span id="cb25-14"><a href="#cb25-14" tabindex="-1"></a>    <span class="fl">743950.0</span>, <span class="fl">1024683.0</span>, <span class="fl">1375936.0</span>, <span class="fl">1636955.0</span>, <span class="fl">1601939.0</span>, <span class="fl">1161627.3</span>,</span>
+<span id="cb25-15"><a href="#cb25-15" tabindex="-1"></a>    <span class="fl">540027.6</span>, <span class="fl">147917.1</span>),</span>
+<span id="cb25-16"><a href="#cb25-16" tabindex="-1"></a>  <span class="at">partition_sum =</span> <span class="fu">c</span>(<span class="fl">20749.0</span>, <span class="fl">9384.9</span>, <span class="fl">6159.0</span>, <span class="fl">7847.6</span>, <span class="fl">29571.0</span>, <span class="fl">40140.9</span>,</span>
+<span id="cb25-17"><a href="#cb25-17" tabindex="-1"></a>    <span class="fl">38078.3</span>, <span class="fl">45424.2</span>, <span class="fl">63928.2</span>, <span class="fl">94335.2</span>, <span class="fl">138926.7</span>, <span class="fl">202948.7</span>, <span class="fl">315395.2</span>,</span>
+<span id="cb25-18"><a href="#cb25-18" tabindex="-1"></a>    <span class="fl">470524.7</span>, <span class="fl">658241.3</span>, <span class="fl">900367.8</span>, <span class="fl">1191618.0</span>, <span class="fl">1395849.7</span>, <span class="fl">1344478.8</span>,</span>
+<span id="cb25-19"><a href="#cb25-19" tabindex="-1"></a>    <span class="fl">958568.3</span>, <span class="fl">436904.4</span>, <span class="fl">116411.8</span>),</span>
+<span id="cb25-20"><a href="#cb25-20" tabindex="-1"></a>  <span class="at">other =</span> <span class="fu">c</span>(<span class="fl">48728.0</span>, <span class="fl">3538.1</span>, <span class="fl">1752.0</span>, <span class="fl">2040.4</span>, <span class="fl">3827.0</span>, <span class="fl">6010.1</span>, <span class="fl">7078.7</span>,</span>
+<span id="cb25-21"><a href="#cb25-21" tabindex="-1"></a>    <span class="fl">9584.8</span>, <span class="fl">14006.8</span>, <span class="fl">20453.8</span>, <span class="fl">28293.3</span>, <span class="fl">33956.3</span>, <span class="fl">43615.8</span>, <span class="fl">60666.3</span>,</span>
+<span id="cb25-22"><a href="#cb25-22" tabindex="-1"></a>    <span class="fl">85708.7</span>, <span class="fl">124315.2</span>, <span class="fl">184318.0</span>, <span class="fl">241105.3</span>, <span class="fl">257460.2</span>, <span class="fl">203059.0</span>, <span class="fl">103123.2</span>,</span>
+<span id="cb25-23"><a href="#cb25-23" tabindex="-1"></a>    <span class="fl">31505.3</span>),</span>
+<span id="cb25-24"><a href="#cb25-24" tabindex="-1"></a>  <span class="at">septicemia =</span> <span class="fu">c</span>(<span class="fl">722.6</span>, <span class="fl">247.7</span>, <span class="fl">91.8</span>, <span class="fl">76.5</span>, <span class="fl">105.3</span>, <span class="fl">194.7</span>, <span class="fl">257.8</span>, <span class="fl">418.8</span>,</span>
+<span id="cb25-25"><a href="#cb25-25" tabindex="-1"></a>    <span class="fl">671.8</span>, <span class="fl">1120.7</span>, <span class="fl">1847.0</span>, <span class="fl">2783.5</span>, <span class="fl">4280.8</span>, <span class="fl">6452.9</span>, <span class="fl">9611.9</span>, <span class="fl">13677.9</span>,</span>
+<span id="cb25-26"><a href="#cb25-26" tabindex="-1"></a>    <span class="fl">19662.0</span>, <span class="fl">23350.0</span>, <span class="fl">23250.0</span>, <span class="fl">15851.9</span>, <span class="fl">6872.4</span>, <span class="fl">1626.4</span>),</span>
+<span id="cb25-27"><a href="#cb25-27" tabindex="-1"></a>  <span class="at">hiv =</span> <span class="fu">c</span>(<span class="fl">28.3</span>, <span class="fl">43.0</span>, <span class="fl">58.0</span>, <span class="fl">62.8</span>, <span class="fl">88.2</span>, <span class="fl">427.6</span>, <span class="fl">1680.0</span>, <span class="fl">4167.0</span>, <span class="fl">6114.4</span>,</span>
+<span id="cb25-28"><a href="#cb25-28" tabindex="-1"></a>    <span class="fl">6706.2</span>, <span class="fl">5899.3</span>, <span class="fl">4113.8</span>, <span class="fl">2677.1</span>, <span class="fl">1727.4</span>, <span class="fl">1046.5</span>, <span class="fl">539.9</span>, <span class="fl">257.5</span>, <span class="fl">81.0</span>,</span>
+<span id="cb25-29"><a href="#cb25-29" tabindex="-1"></a>    <span class="fl">25.5</span>, <span class="fl">19.5</span>, <span class="fl">10.6</span>, <span class="fl">2.7</span>),</span>
+<span id="cb25-30"><a href="#cb25-30" tabindex="-1"></a>  <span class="at">cancer =</span> <span class="fu">c</span>(<span class="fl">187.9</span>, <span class="fl">1060.0</span>, <span class="fl">1201.0</span>, <span class="fl">1242.0</span>, <span class="fl">1814.4</span>, <span class="fl">2526.2</span>, <span class="fl">3518.9</span>,</span>
+<span id="cb25-31"><a href="#cb25-31" tabindex="-1"></a>    <span class="fl">6114.5</span>, <span class="fl">11915.0</span>, <span class="fl">23559.7</span>, <span class="fl">44358.6</span>, <span class="fl">77442.7</span>, <span class="fl">131212.1</span>, <span class="fl">198969.2</span>,</span>
+<span id="cb25-32"><a href="#cb25-32" tabindex="-1"></a>    <span class="fl">267824.2</span>, <span class="fl">332678.3</span>, <span class="fl">368548.5</span>, <span class="fl">334200.1</span>, <span class="fl">233736.2</span>, <span class="fl">113426.7</span>, <span class="fl">35785.0</span>,</span>
+<span id="cb25-33"><a href="#cb25-33" tabindex="-1"></a>    <span class="fl">6122.5</span>),</span>
+<span id="cb25-34"><a href="#cb25-34" tabindex="-1"></a>  <span class="at">diabetes =</span> <span class="fu">c</span>(<span class="fl">6.7</span>, <span class="fl">16.9</span>, <span class="fl">19.3</span>, <span class="fl">58.8</span>, <span class="fl">120.0</span>, <span class="fl">277.8</span>, <span class="fl">513.9</span>, <span class="fl">940.3</span>, <span class="fl">1524.6</span>,</span>
+<span id="cb25-35"><a href="#cb25-35" tabindex="-1"></a>    <span class="fl">2623.1</span>, <span class="fl">4656.5</span>, <span class="fl">8029.6</span>, <span class="fl">13462.8</span>, <span class="fl">20843.6</span>, <span class="fl">29206.0</span>, <span class="fl">37986.0</span>, <span class="fl">46899.8</span>,</span>
+<span id="cb25-36"><a href="#cb25-36" tabindex="-1"></a>    <span class="fl">48482.2</span>, <span class="fl">38608.7</span>, <span class="fl">21835.1</span>, <span class="fl">8005.9</span>, <span class="fl">1545.5</span>),</span>
+<span id="cb25-37"><a href="#cb25-37" tabindex="-1"></a>  <span class="at">alzheimer =</span> <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.9</span>, <span class="fl">0.8</span>, <span class="fl">2.4</span>, <span class="fl">2.8</span>, <span class="fl">8.6</span>, <span class="fl">42.5</span>,</span>
+<span id="cb25-38"><a href="#cb25-38" tabindex="-1"></a>    <span class="fl">126.0</span>, <span class="fl">482.8</span>, <span class="fl">1366.0</span>, <span class="fl">3477.9</span>, <span class="fl">9876.6</span>, <span class="fl">25418.6</span>, <span class="fl">49458.4</span>, <span class="fl">63722.0</span>,</span>
+<span id="cb25-39"><a href="#cb25-39" tabindex="-1"></a>    <span class="fl">54057.0</span>, <span class="fl">25433.7</span>, <span class="fl">5666.6</span>),</span>
+<span id="cb25-40"><a href="#cb25-40" tabindex="-1"></a>  <span class="at">heart_disease =</span> <span class="fu">c</span>(<span class="fl">1244.1</span>, <span class="fl">496.3</span>, <span class="fl">257.8</span>, <span class="fl">402.5</span>, <span class="fl">990.5</span>, <span class="fl">1632.3</span>, <span class="fl">2575.5</span>,</span>
+<span id="cb25-41"><a href="#cb25-41" tabindex="-1"></a>    <span class="fl">4841.8</span>, <span class="fl">9546.1</span>, <span class="fl">19013.9</span>, <span class="fl">33655.2</span>, <span class="fl">56478.6</span>, <span class="fl">92602.3</span>, <span class="fl">141365.9</span>,</span>
+<span id="cb25-42"><a href="#cb25-42" tabindex="-1"></a>    <span class="fl">202096.5</span>, <span class="fl">288960.8</span>, <span class="fl">415183.0</span>, <span class="fl">537740.9</span>, <span class="fl">577672.7</span>, <span class="fl">457905.7</span>, <span class="fl">227285.0</span>,</span>
+<span id="cb25-43"><a href="#cb25-43" tabindex="-1"></a>    <span class="fl">66431.5</span>),</span>
+<span id="cb25-44"><a href="#cb25-44" tabindex="-1"></a>  <span class="at">hypertension =</span> <span class="fu">c</span>(<span class="fl">3.3</span>, <span class="fl">4.2</span>, <span class="fl">1.6</span>, <span class="fl">3.2</span>, <span class="fl">11.4</span>, <span class="fl">33.8</span>, <span class="fl">64.9</span>, <span class="fl">138.3</span>, <span class="fl">220.6</span>,</span>
+<span id="cb25-45"><a href="#cb25-45" tabindex="-1"></a>    <span class="fl">485.8</span>, <span class="fl">838.2</span>, <span class="fl">1359.1</span>, <span class="fl">1972.7</span>, <span class="fl">3237.0</span>, <span class="fl">4635.8</span>, <span class="fl">6594.0</span>, <span class="fl">10279.8</span>,</span>
+<span id="cb25-46"><a href="#cb25-46" tabindex="-1"></a>    <span class="fl">14091.1</span>, <span class="fl">15639.9</span>, <span class="fl">12697.0</span>, <span class="fl">6581.1</span>, <span class="fl">1933.8</span>),</span>
+<span id="cb25-47"><a href="#cb25-47" tabindex="-1"></a>  <span class="at">cerebrovascular =</span> <span class="fu">c</span>(<span class="fl">278.6</span>, <span class="fl">123.9</span>, <span class="fl">71.7</span>, <span class="fl">106.2</span>, <span class="fl">164.9</span>, <span class="fl">324.5</span>, <span class="fl">513.9</span>,</span>
+<span id="cb25-48"><a href="#cb25-48" tabindex="-1"></a>    <span class="fl">926.9</span>, <span class="fl">1870.1</span>, <span class="fl">3586.8</span>, <span class="fl">5965.7</span>, <span class="fl">8723.2</span>, <span class="fl">13848.4</span>, <span class="fl">22185.8</span>, <span class="fl">34745.3</span>,</span>
+<span id="cb25-49"><a href="#cb25-49" tabindex="-1"></a>    <span class="fl">58994.0</span>, <span class="fl">100084.4</span>, <span class="fl">145206.2</span>, <span class="fl">161264.4</span>, <span class="fl">122436.7</span>, <span class="fl">54220.7</span>, <span class="fl">12630.6</span>),</span>
+<span id="cb25-50"><a href="#cb25-50" tabindex="-1"></a>  <span class="at">influenza_pneumonia =</span> <span class="fu">c</span>(<span class="fl">755.1</span>, <span class="fl">290.7</span>, <span class="fl">112.0</span>, <span class="fl">107.1</span>, <span class="fl">166.6</span>, <span class="fl">298.6</span>, <span class="fl">337.8</span>,</span>
+<span id="cb25-51"><a href="#cb25-51" tabindex="-1"></a>    <span class="fl">506.5</span>, <span class="fl">893.9</span>, <span class="fl">1322.6</span>, <span class="fl">1880.1</span>, <span class="fl">2539.4</span>, <span class="fl">3857.3</span>, <span class="fl">6272.5</span>, <span class="fl">9849.1</span>,</span>
+<span id="cb25-52"><a href="#cb25-52" tabindex="-1"></a>    <span class="fl">17726.2</span>, <span class="fl">31608.2</span>, <span class="fl">51735.7</span>, <span class="fl">64665.0</span>, <span class="fl">58841.1</span>, <span class="fl">32133.0</span>, <span class="fl">10956.1</span>),</span>
+<span id="cb25-53"><a href="#cb25-53" tabindex="-1"></a>  <span class="at">copd =</span> <span class="fu">c</span>(<span class="fl">94.0</span>, <span class="fl">124.7</span>, <span class="fl">112.0</span>, <span class="fl">195.6</span>, <span class="fl">218.0</span>, <span class="fl">262.2</span>, <span class="fl">313.4</span>, <span class="fl">429.9</span>, <span class="fl">686.0</span>,</span>
+<span id="cb25-54"><a href="#cb25-54" tabindex="-1"></a>    <span class="fl">1299.8</span>, <span class="fl">2657.7</span>, <span class="fl">5557.3</span>, <span class="fl">13792.5</span>, <span class="fl">27507.5</span>, <span class="fl">49137.5</span>, <span class="fl">76948.9</span>, <span class="fl">100455.3</span>,</span>
+<span id="cb25-55"><a href="#cb25-55" tabindex="-1"></a>    <span class="fl">105576.7</span>, <span class="fl">81889.6</span>, <span class="fl">41622.6</span>, <span class="fl">14325.5</span>, <span class="fl">2877.8</span>),</span>
+<span id="cb25-56"><a href="#cb25-56" tabindex="-1"></a>  <span class="at">pneumonitis =</span> <span class="fu">c</span>(<span class="fl">31.6</span>, <span class="fl">31.2</span>, <span class="fl">13.7</span>, <span class="fl">21.7</span>, <span class="fl">25.3</span>, <span class="fl">62.3</span>, <span class="fl">72.4</span>, <span class="fl">105.1</span>, <span class="fl">131.2</span>,</span>
+<span id="cb25-57"><a href="#cb25-57" tabindex="-1"></a>    <span class="fl">243.3</span>, <span class="fl">336.5</span>, <span class="fl">528.8</span>, <span class="fl">866.2</span>, <span class="fl">1408.2</span>, <span class="fl">2466.9</span>, <span class="fl">4832.3</span>, <span class="fl">8971.9</span>, <span class="fl">14562.1</span>,</span>
+<span id="cb25-58"><a href="#cb25-58" tabindex="-1"></a>    <span class="fl">17864.6</span>, <span class="fl">14771.2</span>, <span class="fl">7068.0</span>, <span class="fl">1928.4</span>),</span>
+<span id="cb25-59"><a href="#cb25-59" tabindex="-1"></a>  <span class="at">liver_disease =</span> <span class="fu">c</span>(<span class="fl">9.1</span>, <span class="fl">4.2</span>, <span class="fl">1.6</span>, <span class="fl">4.0</span>, <span class="fl">18.0</span>, <span class="fl">57.1</span>, <span class="fl">198.0</span>, <span class="fl">769.7</span>, <span class="fl">2337.2</span>,</span>
+<span id="cb25-60"><a href="#cb25-60" tabindex="-1"></a>    <span class="fl">4790.8</span>, <span class="fl">7989.0</span>, <span class="fl">8922.6</span>, <span class="fl">9780.0</span>, <span class="fl">11092.9</span>, <span class="fl">11344.1</span>, <span class="fl">10895.8</span>, <span class="fl">9658.5</span>,</span>
+<span id="cb25-61"><a href="#cb25-61" tabindex="-1"></a>    <span class="fl">6664.8</span>, <span class="fl">3434.6</span>, <span class="fl">1153.5</span>, <span class="fl">225.4</span>, <span class="fl">24.3</span>),</span>
+<span id="cb25-62"><a href="#cb25-62" tabindex="-1"></a>  <span class="at">nephritis =</span> <span class="fu">c</span>(<span class="fl">383.3</span>, <span class="fl">37.9</span>, <span class="fl">26.6</span>, <span class="fl">33.0</span>, <span class="fl">62.9</span>, <span class="fl">151.5</span>, <span class="fl">218.2</span>, <span class="fl">365.1</span>, <span class="fl">599.5</span>,</span>
+<span id="cb25-63"><a href="#cb25-63" tabindex="-1"></a>    <span class="fl">977.3</span>, <span class="fl">1607.2</span>, <span class="fl">2564.0</span>, <span class="fl">4302.1</span>, <span class="fl">7118.9</span>, <span class="fl">11608.2</span>, <span class="fl">16664.5</span>, <span class="fl">24123.1</span>,</span>
+<span id="cb25-64"><a href="#cb25-64" tabindex="-1"></a>    <span class="fl">29663.4</span>, <span class="fl">29579.4</span>, <span class="fl">21013.8</span>, <span class="fl">9269.0</span>, <span class="fl">2227.8</span>),</span>
+<span id="cb25-65"><a href="#cb25-65" tabindex="-1"></a>  <span class="at">congenital =</span> <span class="fu">c</span>(<span class="fl">13912.0</span>, <span class="fl">1349.1</span>, <span class="fl">472.9</span>, <span class="fl">495.9</span>, <span class="fl">573.3</span>, <span class="fl">586.8</span>, <span class="fl">543.4</span>,</span>
+<span id="cb25-66"><a href="#cb25-66" tabindex="-1"></a>    <span class="fl">596.6</span>, <span class="fl">578.2</span>, <span class="fl">636.4</span>, <span class="fl">732.9</span>, <span class="fl">848.9</span>, <span class="fl">1003.8</span>, <span class="fl">1066.8</span>, <span class="fl">970.3</span>, <span class="fl">879.6</span>,</span>
+<span id="cb25-67"><a href="#cb25-67" tabindex="-1"></a>    <span class="fl">1001.5</span>, <span class="fl">1063.5</span>, <span class="fl">870.6</span>, <span class="fl">504.0</span>, <span class="fl">236.0</span>, <span class="fl">56.6</span>),</span>
+<span id="cb25-68"><a href="#cb25-68" tabindex="-1"></a>  <span class="at">accidents =</span> <span class="fu">c</span>(<span class="fl">2249.1</span>, <span class="fl">4586.7</span>, <span class="fl">3332.5</span>, <span class="fl">3845.8</span>, <span class="fl">16420.4</span>, <span class="fl">19138.2</span>,</span>
+<span id="cb25-69"><a href="#cb25-69" tabindex="-1"></a>    <span class="fl">14938.4</span>, <span class="fl">14067.2</span>, <span class="fl">15926.3</span>, <span class="fl">17254.8</span>, <span class="fl">16556.9</span>, <span class="fl">14316.4</span>, <span class="fl">13565.0</span>,</span>
+<span id="cb25-70"><a href="#cb25-70" tabindex="-1"></a>    <span class="fl">13626.6</span>, <span class="fl">14401.4</span>, <span class="fl">17356.4</span>, <span class="fl">23649.9</span>, <span class="fl">29109.6</span>, <span class="fl">29211.3</span>, <span class="fl">21255.5</span>,</span>
+<span id="cb25-71"><a href="#cb25-71" tabindex="-1"></a>    <span class="fl">9191.2</span>, <span class="fl">2357.0</span>),</span>
+<span id="cb25-72"><a href="#cb25-72" tabindex="-1"></a>  <span class="at">suicide =</span> <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">12.9</span>, <span class="fl">655.5</span>, <span class="fl">3959.4</span>, <span class="fl">6077.0</span>, <span class="fl">6007.4</span>, <span class="fl">6197.6</span>,</span>
+<span id="cb25-73"><a href="#cb25-73" tabindex="-1"></a>    <span class="fl">6794.9</span>, <span class="fl">7200.1</span>, <span class="fl">7130.0</span>, <span class="fl">6521.5</span>, <span class="fl">6005.7</span>, <span class="fl">4995.4</span>, <span class="fl">4726.3</span>, <span class="fl">4904.1</span>,</span>
+<span id="cb25-74"><a href="#cb25-74" tabindex="-1"></a>    <span class="fl">5078.7</span>, <span class="fl">4297.4</span>, <span class="fl">2719.2</span>, <span class="fl">1042.0</span>, <span class="fl">214.9</span>, <span class="fl">18.9</span>),</span>
+<span id="cb25-75"><a href="#cb25-75" tabindex="-1"></a>  <span class="at">homicide =</span> <span class="fu">c</span>(<span class="fl">843.2</span>, <span class="fl">968.4</span>, <span class="fl">373.7</span>, <span class="fl">537.2</span>, <span class="fl">4832.4</span>, <span class="fl">8089.4</span>, <span class="fl">6323.6</span>,</span>
+<span id="cb25-76"><a href="#cb25-76" tabindex="-1"></a>    <span class="fl">4836.4</span>, <span class="fl">4115.3</span>, <span class="fl">3505.5</span>, <span class="fl">2773.4</span>, <span class="fl">2093.2</span>, <span class="fl">1683.3</span>, <span class="fl">1288.2</span>, <span class="fl">1093.5</span>,</span>
+<span id="cb25-77"><a href="#cb25-77" tabindex="-1"></a>    <span class="fl">852.3</span>, <span class="fl">737.2</span>, <span class="fl">566.6</span>, <span class="fl">325.3</span>, <span class="fl">135.1</span>, <span class="fl">46.9</span>, <span class="fl">5.4</span>)</span>
+<span id="cb25-78"><a href="#cb25-78" tabindex="-1"></a>)</span>
+<span id="cb25-79"><a href="#cb25-79" tabindex="-1"></a><span class="do">## sanity check: the curated partition closes exactly to total mortality</span></span>
+<span id="cb25-80"><a href="#cb25-80" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">all</span>(<span class="fu">abs</span>(cdc5yr<span class="sc">$</span>partition_sum <span class="sc">+</span> cdc5yr<span class="sc">$</span>other <span class="sc">-</span> cdc5yr<span class="sc">$</span>total_dx) <span class="sc">&lt;</span> <span class="fl">1e-6</span>))</span></code></pre></div>
+</div>
+<div id="graduating-from-5-year-bands-to-single-years-of-age" class="section level3">
+<h3>Graduating from 5-year bands to single years of age</h3>
+<p>The <code>mdt</code> class requires one row per single year of age,
+while Table 8 is tabulated in 5-year bands. A modern, purpose-built way
+to “ungroup” banded counts into single-year counts is Eilers’ penalized
+composite link model (PCLM, <span class="citation">Eilers
+(2007)</span>), implemented in the <strong>ungroup</strong> and
+<strong>DemoTools</strong> packages; it lets the within-band shape —
+including how the cause-of-death mix evolves within a band — be
+estimated smoothly, and is generally the preferred approach for this
+task.</p>
+<p><strong>This vignette does not use PCLM.</strong>
+<strong>lifecontingencies</strong> does not depend on
+<strong>ungroup</strong> or <strong>DemoTools</strong>, and adding
+either as a <code>Suggests</code> purely to compile one example was
+judged not worth the extra dependency surface. Instead, we graduate
+<code>lx</code> with a monotone cubic Hermite interpolant (the
+Fritsch-Carlson method, <span class="citation">Fritsch and Carlson
+(1980)</span>), available in base R as
+<code>stats::splinefun(..., method = &quot;monoH.FC&quot;)</code>, and then split
+each single-year total decrement across causes using each band’s own,
+fixed cause mix (i.e. the cause shares are constant within a band and
+only the total number of decrements is graduated). This is a materially
+weaker assumption than PCLM: real cause-of-death mixes drift gradually
+within a 5-year band (e.g. the balance between accidents and
+degenerative disease shifts within the 15-20 age band), and a
+constant-share assumption cannot reproduce that drift. The single-year
+figures produced below should therefore be read as a reasonable, fully
+reproducible, dependency-free approximation, <strong>not as a substitute
+for a proper PCLM ungrouping</strong>. Because the split is proportional
+to a graduated total that itself sums exactly across each band, the
+construction below reaggregates exactly back to the original 5-year,
+cause-specific totals (checked below), which a naive graduation might
+not guarantee.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>causeCols <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(cdc5yr),</span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>                      <span class="fu">c</span>(<span class="st">&quot;age_group&quot;</span>, <span class="st">&quot;lx&quot;</span>, <span class="st">&quot;total_dx&quot;</span>, <span class="st">&quot;partition_sum&quot;</span>, <span class="st">&quot;other&quot;</span>))</span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>causeCols <span class="ot">&lt;-</span> <span class="fu">c</span>(causeCols, <span class="st">&quot;other&quot;</span>)   <span class="co"># 17 named causes + residual</span></span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a><span class="do">## monotone Hermite (Fritsch-Carlson) graduation of lx, ages 0..100</span></span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a>lxFun <span class="ot">&lt;-</span> <span class="fu">splinefun</span>(<span class="at">x =</span> bandStart, <span class="at">y =</span> cdc5yr<span class="sc">$</span>lx, <span class="at">method =</span> <span class="st">&quot;monoH.FC&quot;</span>)</span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a>ages <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span></span>
+<span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a>lxSingle <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">lxFun</span>(ages), <span class="dv">0</span>)          <span class="co"># append the closing lx=0 at age 101</span></span>
+<span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a>dxTotalSingle <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fu">diff</span>(lxSingle)       <span class="co"># single-year total decrements, ages 0..100</span></span>
+<span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a>band <span class="ot">&lt;-</span> <span class="fu">findInterval</span>(ages, bandStart)  <span class="co"># which 5-year band each single age falls in</span></span>
+<span id="cb26-11"><a href="#cb26-11" tabindex="-1"></a></span>
+<span id="cb26-12"><a href="#cb26-12" tabindex="-1"></a>cdcSingle <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> ages, <span class="at">lx =</span> lxSingle[<span class="dv">1</span><span class="sc">:</span><span class="dv">101</span>])</span>
+<span id="cb26-13"><a href="#cb26-13" tabindex="-1"></a><span class="cf">for</span> (cs <span class="cf">in</span> causeCols) {</span>
+<span id="cb26-14"><a href="#cb26-14" tabindex="-1"></a>  shareBand <span class="ot">&lt;-</span> cdc5yr[[cs]] <span class="sc">/</span> cdc5yr<span class="sc">$</span>total_dx</span>
+<span id="cb26-15"><a href="#cb26-15" tabindex="-1"></a>  cdcSingle[[cs]] <span class="ot">&lt;-</span> dxTotalSingle <span class="sc">*</span> shareBand[band]</span>
+<span id="cb26-16"><a href="#cb26-16" tabindex="-1"></a>}</span>
+<span id="cb26-17"><a href="#cb26-17" tabindex="-1"></a></span>
+<span id="cb26-18"><a href="#cb26-18" tabindex="-1"></a><span class="do">## verify exact reaggregation back to the original 5-year cause totals</span></span>
+<span id="cb26-19"><a href="#cb26-19" tabindex="-1"></a>recheck <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(cdcSingle[causeCols],</span>
+<span id="cb26-20"><a href="#cb26-20" tabindex="-1"></a>                      <span class="at">by =</span> <span class="fu">list</span>(<span class="at">age_group =</span> cdc5yr<span class="sc">$</span>age_group[band]), <span class="at">FUN =</span> sum)</span>
+<span id="cb26-21"><a href="#cb26-21" tabindex="-1"></a>recheck <span class="ot">&lt;-</span> recheck[<span class="fu">match</span>(cdc5yr<span class="sc">$</span>age_group, recheck<span class="sc">$</span>age_group), ]</span>
+<span id="cb26-22"><a href="#cb26-22" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">abs</span>(<span class="fu">as.matrix</span>(recheck[causeCols]) <span class="sc">-</span> <span class="fu">as.matrix</span>(cdc5yr[causeCols])))</span>
+<span id="cb26-23"><a href="#cb26-23" tabindex="-1"></a><span class="do">## [1] 2.910383e-11</span></span></code></pre></div>
+</div>
+<div id="building-and-validating-the-mdt-object" class="section level3">
+<h3>Building and validating the mdt object</h3>
+<p>The single-year table <code>cdcSingle</code> (columns <code>x</code>,
+<code>lx</code> and the 18 mutually exclusive causes) is now a valid
+input for <code>new(&quot;mdt&quot;, ...)</code>; because it already spans exactly
+<span class="math inline">\(x = 0, \ldots, 100\)</span> and closes
+exactly to <code>lx[0]</code>, no meaningful synthetic bottom- or
+top-completion is needed from <code>.tableSanitizer</code> (described
+earlier in this vignette). At this scale, floating-point arithmetic can
+still make the very last row’s decrements sum to a value that differs
+from <code>lx</code> by a fraction of a unit, in which case
+<code>.tableSanitizer</code> adds one further, economically negligible
+completion row at <span class="math inline">\(x = 101\)</span> — a
+harmless artifact of exact floating-point comparison, not a data or
+modelling error.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a>cdcMdt <span class="ot">&lt;-</span> <span class="fu">new</span>(<span class="st">&quot;mdt&quot;</span>,</span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>              <span class="at">name =</span> <span class="st">&quot;NCHS US Life Table 1999-2001, cause-specific (Table 8)&quot;</span>,</span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>              <span class="at">table =</span> cdcSingle)</span>
+<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a><span class="do">## Completed the table at top, all decrements on first cause</span></span>
+<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a><span class="fu">getOmega</span>(cdcMdt)</span>
+<span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a><span class="do">## [1] 101</span></span>
+<span id="cb27-7"><a href="#cb27-7" tabindex="-1"></a><span class="fu">getDecrements</span>(cdcMdt)</span>
+<span id="cb27-8"><a href="#cb27-8" tabindex="-1"></a><span class="do">##  [1] &quot;septicemia&quot;          &quot;hiv&quot;                 &quot;cancer&quot;             </span></span>
+<span id="cb27-9"><a href="#cb27-9" tabindex="-1"></a><span class="do">##  [4] &quot;diabetes&quot;            &quot;alzheimer&quot;           &quot;heart_disease&quot;      </span></span>
+<span id="cb27-10"><a href="#cb27-10" tabindex="-1"></a><span class="do">##  [7] &quot;hypertension&quot;        &quot;cerebrovascular&quot;     &quot;influenza_pneumonia&quot;</span></span>
+<span id="cb27-11"><a href="#cb27-11" tabindex="-1"></a><span class="do">## [10] &quot;copd&quot;                &quot;pneumonitis&quot;         &quot;liver_disease&quot;      </span></span>
+<span id="cb27-12"><a href="#cb27-12" tabindex="-1"></a><span class="do">## [13] &quot;nephritis&quot;           &quot;congenital&quot;          &quot;accidents&quot;          </span></span>
+<span id="cb27-13"><a href="#cb27-13" tabindex="-1"></a><span class="do">## [16] &quot;suicide&quot;             &quot;homicide&quot;            &quot;other&quot;</span></span>
+<span id="cb27-14"><a href="#cb27-14" tabindex="-1"></a><span class="fu">isTRUE</span>(<span class="fu">validObject</span>(cdcMdt))</span>
+<span id="cb27-15"><a href="#cb27-15" tabindex="-1"></a><span class="do">## [1] TRUE</span></span></code></pre></div>
+<p>We can now use the same
+<code>dxt</code>/<code>qxt</code>/<code>pxt</code> functions used
+throughout this vignette on a real, cause-specific national life table.
+For instance, at age 70:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="fu">qxt</span>(cdcMdt, <span class="at">x =</span> <span class="dv">70</span>, <span class="at">t =</span> <span class="dv">1</span>)                          <span class="co"># total decrement rate</span></span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="do">## [1] 0.02421519</span></span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a><span class="fu">qxt</span>(cdcMdt, <span class="at">x =</span> <span class="dv">70</span>, <span class="at">t =</span> <span class="dv">1</span>, <span class="at">decrement =</span> <span class="st">&quot;cancer&quot;</span>)     <span class="co"># cancer only</span></span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a><span class="do">## [1] 0.007861816</span></span>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a><span class="fu">qxt</span>(cdcMdt, <span class="at">x =</span> <span class="dv">70</span>, <span class="at">t =</span> <span class="dv">1</span>, <span class="at">decrement =</span> <span class="st">&quot;heart_disease&quot;</span>)</span>
+<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a><span class="do">## [1] 0.006828689</span></span>
+<span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a><span class="fu">qxt</span>(cdcMdt, <span class="at">x =</span> <span class="dv">70</span>, <span class="at">t =</span> <span class="dv">1</span>, <span class="at">decrement =</span> <span class="st">&quot;cancer&quot;</span>) <span class="sc">/</span></span>
+<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a>  <span class="fu">qxt</span>(cdcMdt, <span class="at">x =</span> <span class="dv">70</span>, <span class="at">t =</span> <span class="dv">1</span>)                          <span class="co"># cancer&#39;s share of q70</span></span>
+<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a><span class="do">## [1] 0.3246646</span></span></code></pre></div>
+<p>At age 70 in this table, cancer alone accounts for roughly a third of
+all decrements, illustrating how a <code>mdt</code> object built this
+way lets standard <strong>lifecontingencies</strong> functions
+(<code>dxt</code>, <code>qxt</code>, <code>pxt</code>,
+<code>Axn.mdt</code>, …) be applied directly to official, cause-specific
+national mortality data, once the table has been reduced to a mutually
+exclusive partition and graduated to single years of age.</p>
+</div>
+</div>
+<div id="competing-risks-analysis-mdttolong" class="section level2">
+<h2>Competing-risks analysis: <code>mdtToLong()</code></h2>
+<p>A <code>mdt</code> object is a life-table summary of a
+competing-risks process. For analyses with standard survival tools,
+<code>mdtToLong</code> turns it into an aggregated long data set: one
+row per (exit time, cause), a <code>status</code> factor whose first
+level is <code>&quot;censored&quot;</code> (the layout expected by
+<code>survival::Surv</code> for multi-state data) and a
+<code>count</code> column to be used as case weights. Lives still in the
+table at the end of the follow-up are censored there.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>valdezLong <span class="ot">&lt;-</span> <span class="fu">mdtToLong</span>(valdezMdt, <span class="at">x =</span> <span class="dv">50</span>, <span class="at">t =</span> <span class="dv">5</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a><span class="fu">head</span>(valdezLong)</span>
+<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a><span class="do">##   time age    status count</span></span>
+<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a><span class="do">## 1    1  51     heart  5168</span></span>
+<span id="cb29-5"><a href="#cb29-5" tabindex="-1"></a><span class="do">## 2    1  51 accidents  1157</span></span>
+<span id="cb29-6"><a href="#cb29-6" tabindex="-1"></a><span class="do">## 3    1  51     other  4293</span></span>
+<span id="cb29-7"><a href="#cb29-7" tabindex="-1"></a><span class="do">## 4    2  52     heart  5363</span></span>
+<span id="cb29-8"><a href="#cb29-8" tabindex="-1"></a><span class="do">## 5    2  52 accidents  1206</span></span>
+<span id="cb29-9"><a href="#cb29-9" tabindex="-1"></a><span class="do">## 6    2  52     other  5162</span></span></code></pre></div>
+<p>With exits placed at the end of the year of age (the default), the
+Aalen-Johansen estimate of the cumulative incidence of each cause
+computed by <strong>survival</strong> coincides with the decrement
+probabilities of the table:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">requireNamespace</span>(<span class="st">&quot;survival&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> survival<span class="sc">::</span><span class="fu">survfit</span>(survival<span class="sc">::</span><span class="fu">Surv</span>(time, status) <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb30-3"><a href="#cb30-3" tabindex="-1"></a>                           <span class="at">data =</span> valdezLong, <span class="at">weights =</span> count)</span>
+<span id="cb30-4"><a href="#cb30-4" tabindex="-1"></a>  aj <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit, <span class="at">times =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)<span class="sc">$</span>pstate[, <span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb30-5"><a href="#cb30-5" tabindex="-1"></a>  <span class="fu">colnames</span>(aj) <span class="ot">&lt;-</span> <span class="fu">getDecrements</span>(valdezMdt)</span>
+<span id="cb30-6"><a href="#cb30-6" tabindex="-1"></a>  byTable <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">getDecrements</span>(valdezMdt), <span class="cf">function</span>(d)</span>
+<span id="cb30-7"><a href="#cb30-7" tabindex="-1"></a>    <span class="fu">qxt</span>(valdezMdt, <span class="at">x =</span> <span class="dv">50</span>, <span class="at">t =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">decrement =</span> d))</span>
+<span id="cb30-8"><a href="#cb30-8" tabindex="-1"></a>  <span class="fu">max</span>(<span class="fu">abs</span>(aj <span class="sc">-</span> byTable))</span>
+<span id="cb30-9"><a href="#cb30-9" tabindex="-1"></a>}</span>
+<span id="cb30-10"><a href="#cb30-10" tabindex="-1"></a><span class="do">## [1] 5.290907e-17</span></span></code></pre></div>
+<p>The same conversion applies to the cause-specific national table
+built above, e.g. to obtain the probability that a life aged 70
+eventually dies of cancer or of heart disease:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>cdcLong <span class="ot">&lt;-</span> <span class="fu">mdtToLong</span>(cdcMdt, <span class="at">x =</span> <span class="dv">70</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a><span class="fu">tapply</span>(cdcLong<span class="sc">$</span>count, cdcLong<span class="sc">$</span>status, sum)[<span class="fu">c</span>(<span class="st">&quot;cancer&quot;</span>, <span class="st">&quot;heart_disease&quot;</span>)] <span class="sc">/</span></span>
+<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a>  cdcMdt<span class="sc">@</span>table<span class="sc">$</span>lx[cdcMdt<span class="sc">@</span>table<span class="sc">$</span>x <span class="sc">==</span> <span class="dv">70</span>]</span>
+<span id="cb31-4"><a href="#cb31-4" tabindex="-1"></a><span class="do">##        cancer heart_disease </span></span>
+<span id="cb31-5"><a href="#cb31-5" tabindex="-1"></a><span class="do">##     0.1902098     0.3433236</span></span></code></pre></div>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-ariasNVSR2013" class="csl-entry">
+Arias, Elizabeth, Lester R. Curtin, Rong Wei, and Robert N. Anderson.
+2013. <span>“United States Life Tables Eliminating Certain Causes of
+Death, 1999–2001.”</span> <em>National Vital Statistics Reports</em> 61
+(9): 1–128.
+</div>
+<div id="ref-chambers2008software" class="csl-entry">
+Chambers, J. M. 2008. <em>Software for Data Analysis: Programming with
+</em>. Statistics and Computing. Springer-Verlag.
+</div>
+<div id="ref-de2016assicurazioni" class="csl-entry">
+De Angelis, Paolo, and Di Falco, L. 2016. <em><span class="nocase">Assicurazioni sulla salute: caratteristiche, modelli
+attuariali e basi tecniche</span></em>. Il Mulino. Il Mulino.
+</div>
+<div id="ref-deshmukh2012multiple" class="csl-entry">
+Deshmukh, S. R. 2012. <em>Multiple Decrement Models in Insurance: An
+Introduction Using </em>. SpringerLink : B<span>ü</span>cher. Springer.
+</div>
+<div id="ref-eilers2007pclm" class="csl-entry">
+Eilers, Paul H. C. 2007. <span>“Ill-Posed Problems with Counts, the
+Composite Link Model and Penalized Likelihood.”</span> <em>Statistical
+Modelling</em> 7 (3): 239–54.
+</div>
+<div id="ref-finanMLC" class="csl-entry">
+Finan, Marcel A. 2014. <em>A Reading of the Theory of Life Contingency
+Models: A Preparation for Exam MLC</em>. Lecture notes.
+</div>
+<div id="ref-fritschCarlson1980" class="csl-entry">
+Fritsch, F. N., and R. E. Carlson. 1980. <span>“Monotone Piecewise Cubic
+Interpolation.”</span> <em>SIAM Journal on Numerical Analysis</em> 17
+(2): 238–46.
+</div>
+<div id="ref-valdezSlides" class="csl-entry">
+Valdez, Eduardo. 2011. <em><span>Multiple Decrement Models</span>: Math
+3631 Actuarial Mathematics II</em>. Lecture notes.
+</div>
+<div id="ref-willekens2014multistate" class="csl-entry">
+Willekens, F. 2014. <em>Multistate Analysis of Life Histories with
+r</em>. Use r! Springer International Publishing.
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -15,8 +15,12 @@
 A class to store multiple decrement tables
 }
 \section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("mdt", name, table, ...)}.
-They store absolute decrements
+Objects can be created by calls of the form \code{new("mdt", name, table,
+bottomCompletionSurvival, ...)}. They store absolute decrements.
+\code{bottomCompletionSurvival} (default \code{0.99}) is the one-year
+survival ratio used to synthetically back-fill ages below the lowest age
+supplied in \code{table}; it does not affect rows for ages actually
+supplied.
 }
 \section{Slots}{
   \describe{
@@ -31,8 +35,8 @@ They store absolute decrements
     \item{initialize}{\code{signature(.Object = "mdt")}: method to initialize the class }
     \item{print}{\code{signature(x = "mdt")}: tabulate absolute decrement rates }
     \item{show}{\code{signature(object = "mdt")}: show rates of decrement }
-    \item{coerce}{\code{signature(from = "mdt", to = "markovchainList")}: coercing to \code{markovchainList} objects }
-    \item{coerce}{\code{signature(from = "mdt", to = "data.frame")}: coercing to \code{markovchainList} objects }
+    \item{coerce}{\code{signature(from = "mdt", to = "markovchainList")}: coercing to \code{markovchainList} objects; available only when the optional \pkg{markovchain} package is installed }
+    \item{coerce}{\code{signature(from = "mdt", to = "data.frame")}: coercing to \code{data.frame} }
     \item{summary}{\code{signature(object = "mdt")}: it returns summary information about the object }
 	 }
 }
